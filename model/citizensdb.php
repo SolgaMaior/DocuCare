@@ -18,7 +18,7 @@ function get_citizens_by_purok($purokID)
         $statement->closeCursor();
         return $citizens;
     } else {
-        // Fixed: Removed :purokID binding since there's no parameter in this query
+
         $query = 'SELECT * FROM citizens ORDER BY lastname';
         $statement = $db->prepare($query);
         $statement->execute();
@@ -28,7 +28,7 @@ function get_citizens_by_purok($purokID)
     }
 }
 
-function add_citizen($citID,  $firstname, $middlename, $lastname, $purokID, $age, $sex, $civilstatus, $occupation, $contactnum)
+function add_citizen($firstname, $middlename, $lastname, $purokID, $age, $sex, $civilstatus, $occupation, $contactnum)
 {
     global $db;
 
@@ -39,7 +39,6 @@ function add_citizen($citID,  $firstname, $middlename, $lastname, $purokID, $age
                     ( :firstname, :middlename, :lastname, :purokID, :age, :sex, :civilstatus, :occupation, :contactnum)';
 
     $statement = $db->prepare($query);
-    $statement->bindValue(':citID', $citID);
     $statement->bindValue(':firstname', $firstname);
     $statement->bindValue(':middlename', $middlename);
     $statement->bindValue(':lastname', $lastname);
@@ -54,16 +53,18 @@ function add_citizen($citID,  $firstname, $middlename, $lastname, $purokID, $age
 }
 
 
-function delete_citizen($citID)
+function archive_citizen($citID)
 {
     global $db;
-    $query = 'DELETE FROM citizens
-                     WHERE citID = :citID';
+    $query = 'UPDATE citizens
+              SET isArchived = 1, archivedDate = NOW()
+              WHERE citID = :citID';
     $statement = $db->prepare($query);
     $statement->bindValue(':citID', $citID);
     $statement->execute();
     $statement->closeCursor();
 }
+
 
 function update_citizen($citID, $firstname, $middlename, $lastname, $purokID, $age, $sex, $civilstatus, $occupation, $contactnum)
 {
