@@ -25,9 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_citizen'])) {
   exit;
 }
 
-$purokID = isset($_GET['purokID']) ? $_GET['purokID'] : null;
-$citizens = get_citizens_by_purok($purokID);
+$purokID = isset($_GET['purokID']) ? $_GET['purokID'] : 'all';
 
+if ($purokID === 'archived') {
+  $citizens = get_archived_citizens();
+} else {
+  $citizens = get_citizens_by_purok($purokID);
+}
 ?>
 
 
@@ -85,6 +89,7 @@ $citizens = get_citizens_by_purok($purokID);
             <?php for ($i = 1; $i <= 5; $i++): ?>
               <option value="<?= $i ?>" <?= $purokID == $i ? 'selected' : '' ?>>Purok <?= $i ?></option>
             <?php endfor; ?>
+            <option value="archived" <?= $purokID === 'archived' ? 'selected' : '' ?>>Archived</option>
           </select>
         </form>
         <button class="btn btn-primary" onclick="showForm()">+ Add Record</button>

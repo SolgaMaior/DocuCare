@@ -32,7 +32,6 @@ switch ($action) {
         break;
 
     case 'add_citizen':
-        // handle add logic
         header("Location: index.php?success=1");
         exit;
         break;

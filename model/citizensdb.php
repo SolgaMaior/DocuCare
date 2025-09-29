@@ -36,13 +36,18 @@ function get_citizens_by_purok($purokID = null)
 function get_archived_citizens()
 {
     global $db;
-    $query = 'SELECT * FROM citizens WHERE isArchived = 1 ORDER BY lastname';
+    $query = 'SELECT c.citID, c.firstname, c.middlename, c.lastname, p.purokName AS purok
+          FROM citizens c
+          JOIN purok p ON c.purokID = p.purokID
+          WHERE c.isArchived = 1
+          ORDER BY c.lastname';
     $statement = $db->prepare($query);
     $statement->execute();
     $citizens = $statement->fetchAll();
     $statement->closeCursor();
     return $citizens;
 }
+
 
 function restore_citizen($citID)
 {
