@@ -1,15 +1,14 @@
-<?php if (isset($_GET['success'])): ?>
-  <div style="background: #d4edda; color: #155724; padding: 10px; margin-bottom: 10px; border: 1px solid #c3e6cb;">
-    ✅ Citizen added successfully!
-  </div>
-<?php endif; ?>
-
-
 <?php
-$purokID = isset($_GET['purokID']) ? $_GET['purokID'] : null;
-$citizens = get_citizens_by_purok($purokID);
 
-// Handle form submission for adding new citizen
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_citizen'])) {
+  $citID = $_POST['citID'];
+
+  archive_citizen($citID);
+  header("Location: index.php?archived=1");
+  exit;
+}
+
+// --- ADD NEW CITIZEN ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_citizen'])) {
   $firstname = $_POST['first_name'];
   $middlename = $_POST['middle_name'];
@@ -21,11 +20,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_citizen'])) {
   $occupation = $_POST['occupation'];
   $contactnum = $_POST['contactnum'];
 
-  add_citizen(null, $firstname, $middlename, $lastname, $purokID, $age, $sex, $civilstatus, $occupation, $contactnum);
+  add_citizen($firstname, $middlename, $lastname, $purokID, $age, $sex, $civilstatus, $occupation, $contactnum);
   header("Location: index.php?success=1");
   exit;
 }
+
+$purokID = isset($_GET['purokID']) ? $_GET['purokID'] : null;
+$citizens = get_citizens_by_purok($purokID);
+
 ?>
+
+
+
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,23 +66,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_citizen'])) {
       <a href="logout.php" class="logout">Logout</a>
     </div>
 
+    <!-- Alerts -->
+    <?php if (isset($_GET['success'])): ?>
+      <div class="alert success">✅ Citizen added successfully!</div>
+    <?php elseif (isset($_GET['isArchived'])): ?>
+      <div class="alert warning">⚠️ Citizen archived successfully!</div>
+    <?php endif; ?>
+
     <!-- Top Bar -->
     <div class="top-bar" id="top-controls">
       <div class="search-box">
         <input type="text" placeholder="Search...">
       </div>
       <div class="controls">
-        <form method="GET" action="record.php">
+        <form method="GET" action="index.php">
           <select name="purokID" onchange="this.form.submit()">
-            <option value="">All Puroks</option>
-            <option value="1" <?= $purokID == 1 ? 'selected' : '' ?>>Purok 1</option>
-            <option value="2" <?= $purokID == 2 ? 'selected' : '' ?>>Purok 2</option>
-            <option value="3" <?= $purokID == 3 ? 'selected' : '' ?>>Purok 3</option>
-            <option value="4" <?= $purokID == 4 ? 'selected' : '' ?>>Purok 4</option>
-            <option value="5" <?= $purokID == 5 ? 'selected' : '' ?>>Purok 5</option>
+            <option value="all" <?= $purokID === 'all' || empty($purokID) ? 'selected' : '' ?>>All Puroks</option>
+            <?php for ($i = 1; $i <= 5; $i++): ?>
+              <option value="<?= $i ?>" <?= $purokID == $i ? 'selected' : '' ?>>Purok <?= $i ?></option>
+            <?php endfor; ?>
           </select>
         </form>
-        <button class="btn btn-outline">Filter</button>
         <button class="btn btn-primary" onclick="showForm()">+ Add Record</button>
       </div>
     </div>
@@ -93,20 +107,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_citizen'])) {
         <tbody id="records-table">
           <?php if (!empty($citizens)): ?>
             <?php foreach ($citizens as $citizen): ?>
-              <tr>
-                <td><img src="https://via.placeholder.com/50" alt="Photo"></td>
-                <td><?= htmlspecialchars($citizen['lastname']); ?></td>
-                <td><?= htmlspecialchars($citizen['firstname']); ?></td>
-                <td><?= htmlspecialchars($citizen['middlename']); ?></td>
-                <td><?= htmlspecialchars($citizen['purokID']); ?></td>
-                <td>
-                  <form method="POST" action="delete_citizen.php" style="display:inline;">
-                    <input type="hidden" name="citID" value="<?= $citizen['citID']; ?>">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                  </form>
-                  <button class="btn btn-outline" onclick="editCitizen(<?= $citizen['citID']; ?>)">Edit</button>
-                </td>
-              </tr>
+              <?php if (!isset($citizen['archived']) || $citizen['archived'] == 0): ?>
+                <tr>
+                  <td><img src="https://via.placeholder.com/50" alt="Photo"></td>
+                  <td><?= htmlspecialchars($citizen['lastname']); ?></td>
+                  <td><?= htmlspecialchars($citizen['firstname']); ?></td>
+                  <td><?= htmlspecialchars($citizen['middlename']); ?></td>
+                  <td><?= htmlspecialchars($citizen['purok']); ?></td>
+                  <td>
+                    <form method="POST" action="index.php" style="display:inline;">
+                      <input type="hidden" name="action" value="archive_citizen">
+                      <input type="hidden" name="citID" value="<?= htmlspecialchars($citizen['citID']) ?>">
+                      <button type="submit" class="btn btn-outline" onclick="return confirm('Archive this record?');">
+                        Archive
+                      </button>
+                    </form>
+                    <button class="btn btn-outline" onclick="editCitizen(<?= $citizen['citID']; ?>)">Edit</button>
+                  </td>
+                </tr>
+              <?php endif; ?>
             <?php endforeach; ?>
           <?php else: ?>
             <tr>
