@@ -1,12 +1,19 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_citizen'])) {
-  $citID = $_POST['citID'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if ($_POST['action'] === 'archive_citizen') {
+    archive_citizen($_POST['citID']);
+    header("Location: index.php?archived=1");
+    exit;
+  }
 
-  archive_citizen($citID);
-  header("Location: index.php?archived=1");
-  exit;
+  if ($_POST['action'] === 'unarchive_citizen') {
+    restore_citizen($_POST['citID']);
+    header("Location: index.php?unarchived=1");
+    exit;
+  }
 }
+
 
 // --- ADD NEW CITIZEN ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_citizen'])) {
@@ -121,12 +128,14 @@ if ($purokID === 'archived') {
                   <td><?= htmlspecialchars($citizen['purok']); ?></td>
                   <td>
                     <form method="POST" action="index.php" style="display:inline;">
-                      <input type="hidden" name="action" value="archive_citizen">
+                      <input type="hidden" name="action" value="<?= $citizen['isArchived'] == 1 ? 'unarchive_citizen' : 'archive_citizen' ?>">
                       <input type="hidden" name="citID" value="<?= htmlspecialchars($citizen['citID']) ?>">
-                      <button type="submit" class="btn btn-outline" onclick="return confirm('Archive this record?');">
-                        Archive
+                      <button type="submit" class="btn btn-outline"
+                        onclick="return confirm('<?= $citizen['isArchived'] == 1 ? 'Remove this record from archive?' : 'Archive this record?' ?>');">
+                        <?= $citizen['isArchived'] == 1 ? 'Unarchive' : 'Archive' ?>
                       </button>
                     </form>
+
                     <button class="btn btn-outline" onclick="editCitizen(<?= $citizen['citID']; ?>)">Edit</button>
                   </td>
                 </tr>

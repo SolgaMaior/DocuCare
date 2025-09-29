@@ -6,7 +6,7 @@ function get_citizens_by_purok($purokID = null)
 
     if ($purokID === 'all' || empty($purokID)) {
         // Show all citizens
-        $query = 'SELECT c.citID, c.firstname, c.middlename, c.lastname, p.purokName AS purok
+        $query = 'SELECT c.citID, c.firstname, c.middlename, c.lastname, c.isArchived, p.purokName AS purok
                   FROM citizens c
                   JOIN purok p ON c.purokID = p.purokID
                   WHERE c.isArchived = 0
@@ -15,7 +15,7 @@ function get_citizens_by_purok($purokID = null)
         $statement->execute();
     } else {
         // Filter by specific purok
-        $query = 'SELECT c.citID, c.firstname, c.middlename, c.lastname, p.purokName AS purok
+        $query = 'SELECT c.citID, c.firstname, c.middlename, c.lastname, c.isArchived, p.purokName AS purok
                   FROM citizens c
                   JOIN purok p ON c.purokID = p.purokID
                   WHERE c.isArchived = 0
@@ -36,7 +36,7 @@ function get_citizens_by_purok($purokID = null)
 function get_archived_citizens()
 {
     global $db;
-    $query = 'SELECT c.citID, c.firstname, c.middlename, c.lastname, p.purokName AS purok
+    $query = 'SELECT c.citID, c.firstname, c.middlename, c.lastname, c.isArchived, p.purokName AS purok
           FROM citizens c
           JOIN purok p ON c.purokID = p.purokID
           WHERE c.isArchived = 1
@@ -53,7 +53,7 @@ function restore_citizen($citID)
 {
     global $db;
     $query = 'UPDATE citizens
-              SET isArchived = 0, archivedDate = NULL
+              SET isArchived = 0
               WHERE citID = :citID';
     $statement = $db->prepare($query);
     $statement->bindValue(':citID', $citID);
