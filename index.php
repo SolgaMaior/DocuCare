@@ -1,158 +1,62 @@
 <?php
-require_once('model/databases/citizensdb.php');
-require_once('model/databases/db_con.php');
-require_once('model/file_handler.php');
+// Simple router for DocuCare application
+// Routes requests based on REQUEST_URI
 
-// Initialize variables
-$citizenID = filter_input(INPUT_POST, 'citizenID', FILTER_VALIDATE_INT);
-$purokID = filter_input(INPUT_POST, 'purokID', FILTER_VALIDATE_INT);
+// Get the request URI and parse it
+$requestUri = $_SERVER['REQUEST_URI'];
+$path = parse_url($requestUri, PHP_URL_PATH);
 
-if (!$purokID) {
-    $purokID = filter_input(INPUT_GET, 'purokID', FILTER_VALIDATE_INT);
+// Remove the base directory from the path if it exists
+$baseDir = dirname($_SERVER['SCRIPT_NAME']);
+if ($baseDir !== '/') {
+    $path = substr($path, strlen($baseDir));
 }
 
-// Get action from POST or GET
-$action = filter_input(INPUT_POST, 'action');
-if (!$action) {
-    $action = filter_input(INPUT_GET, 'action');
+// Remove leading slash
+$path = ltrim($path, '/');
+
+// Debug: Let's see what path we're getting
+if (isset($_GET['debug'])) {
+    echo "Request URI: " . $requestUri . "<br>";
+    echo "Parsed Path: " . $path . "<br>";
+    echo "Base Dir: " . $baseDir . "<br>";
+    echo "Script Name: " . $_SERVER['SCRIPT_NAME'] . "<br>";
+    exit;
 }
-if (!$action) {
-    $action = 'list_citizens';
-}
 
-// Handle POST actions before any output
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    if ($action === 'add_citizen') {
-        $citID = filter_input(INPUT_POST, 'citID', FILTER_VALIDATE_INT);
-        $firstname = trim(filter_input(INPUT_POST, 'first_name', FILTER_SANITIZE_STRING)) ?? '';
-        $middlename = trim(filter_input(INPUT_POST, 'middle_name', FILTER_SANITIZE_STRING)) ?? '';
-        $lastname = trim(filter_input(INPUT_POST, 'last_name', FILTER_SANITIZE_STRING)) ?? '';
-        $purokID = filter_input(INPUT_POST, 'purok', FILTER_VALIDATE_INT);
-        $age = filter_input(INPUT_POST, 'age', FILTER_VALIDATE_INT);
-        $sex = filter_input(INPUT_POST, 'sex', FILTER_SANITIZE_STRING);
-        $civilstatus = filter_input(INPUT_POST, 'civilstatus', FILTER_SANITIZE_STRING);
-        $occupation = trim(filter_input(INPUT_POST, 'occupation', FILTER_SANITIZE_STRING)) ?? '';
-        $contactnum = trim(filter_input(INPUT_POST, 'contactnum', FILTER_SANITIZE_STRING)) ?? '';
-
-        // Basic validation for required fields
-        $missingRequired = (
-            $firstname === '' ||
-            $lastname === '' ||
-            $purokID === null ||
-            $age === null ||
-            $sex === null || $sex === '' ||
-            $civilstatus === null || $civilstatus === '' ||
-            $occupation === '' ||
-            $contactnum === ''
-        );
-        if ($missingRequired) {
-            $redirectPurok = $_GET['purokID'] ?? 'all';
-            header("Location: index.php?purokID=" . urlencode($redirectPurok) . "&error=missing_required_fields");
-            exit;
-        }
-
-        // Handle image upload
-        $imagePath = null;
-        if (isset($_FILES['profileImage']) && $_FILES['profileImage']['error'] !== UPLOAD_ERR_NO_FILE) {
-            makePatientDirectory($firstname, $lastname);
-            $result = handleImageUpload($_FILES['profileImage'], $firstname, $lastname);
-
-            if ($result['success']) {
-                $imagePath = $result['path'];
-            }
-        }
-
-        // Handle medical files upload using the existing storeFile function
-        $medicalFiles = [];
-        if (isset($_FILES['medical_files']) && !empty($_FILES['medical_files']['name'][0])) {
-            $medicalCondition = trim(filter_input(INPUT_POST, 'medical_condition', FILTER_SANITIZE_STRING)) ?? '';
-            $medicalNotes = trim(filter_input(INPUT_POST, 'medical_notes', FILTER_SANITIZE_STRING)) ?? '';
-            
-            // Process each uploaded file
-            foreach ($_FILES['medical_files']['name'] as $key => $filename) {
-                if ($_FILES['medical_files']['error'][$key] === UPLOAD_ERR_OK) {
-                    // Create a single file array for the storeFile function
-                    $fileArray = [
-                        'name' => $_FILES['medical_files']['name'][$key],
-                        'type' => $_FILES['medical_files']['type'][$key],
-                        'tmp_name' => $_FILES['medical_files']['tmp_name'][$key],
-                        'error' => $_FILES['medical_files']['error'][$key],
-                        'size' => $_FILES['medical_files']['size'][$key]
-                    ];
-                    
-                    // Use the existing storeFile function with file index
-                    $result = storeFile($fileArray, $firstname, $lastname, $key);
-                    
-                    if ($result['success']) {
-                        $medicalFiles[] = [
-                            'path' => $result['path'],
-                            'filename' => $result['filename'],
-                            'original_name' => $filename,
-                            'condition' => $medicalCondition,
-                            'notes' => $medicalNotes
-                        ];
-                    }
-                }
-            }
-        }
-
-        if ($citID) {
-            // Edit existing record
-            update_citizen($citID, $firstname, $middlename, $lastname, $purokID, $age, $sex, $civilstatus, $occupation, $contactnum, $imagePath);
-        } else {
-            // Add new record
-            add_citizen($firstname, $middlename, $lastname, $purokID, $age, $sex, $civilstatus, $occupation, $contactnum, $imagePath);
-        }
-
-        // Redirect with success message and preserve purokID filter
-        $redirectPurok = $_GET['purokID'] ?? 'all';
-        $successMessage = "success=1";
+// Route based on the path
+switch ($path) {
+    case '':
+    case 'index.php':
+    case 'home':
         
-        // Add medical files upload success message if files were uploaded
-        if (!empty($medicalFiles)) {
-            $successMessage .= "&medical_uploaded=1&files_count=" . count($medicalFiles);
-        }
+        include('record_view.php');
+        break;
         
-        header("Location: index.php?purokID=" . urlencode($redirectPurok) . "&" . $successMessage);
-        exit;
-    }
-
-
-
-
-
-
-
-
-
-    if ($action === 'archive_citizen') {
-        $citID = filter_input(INPUT_POST, 'citID', FILTER_VALIDATE_INT);
-        if ($citID) {
-            archive_citizen($citID);
-        }
-        // Preserve current purok filter
-        $redirectPurok = $_GET['purokID'] ?? 'all';
-        header("Location: index.php?purokID=" . urlencode($redirectPurok) . "&archived=1");
-        exit;
-    }
-
-    if ($action === 'unarchive_citizen') {
-        $citID = filter_input(INPUT_POST, 'citID', FILTER_VALIDATE_INT);
-        if ($citID) {
-            restore_citizen($citID);
-        }
-        header("Location: index.php?purokID=archived&unarchived=1");
-        exit;
-    }
-
+    case 'record':
+    case 'records':
+    case 'record_view':
+        
+        include('record_view.php');
+        break;
+        
+    case 'dashboard':
+        // Dashboard view (placeholder for future implementation)
+        
+        break;
+        
+    case 'reports':
+        // Reports view (placeholder for future implementation)
+        
+        break;
+        
+    default:
+        // 404 - Page not found
+        http_response_code(404);
+        echo '<h1>404 - Page Not Found</h1>';
+        echo '<p>The requested page "' . htmlspecialchars($path) . '" was not found.</p>';
+        echo '<p>Debug info: Request URI = ' . htmlspecialchars($requestUri) . ', Path = ' . htmlspecialchars($path) . '</p>';
+        echo '<a href="index.php">Go to Records</a>';
+        break;
 }
-
-
-
-// Get data for display (only after POST handling)
-$purokID = $_GET['purokID'] ?? 'all';
-$citizens = ($purokID === 'archived') ? get_archived_citizens() : get_citizens_by_purok($purokID);
-
-// Include view
-include('view/record.php');
+?>

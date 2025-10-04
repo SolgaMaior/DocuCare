@@ -35,7 +35,7 @@
       </div>
 
       <div class="controls">
-        <form method="GET" action="index.php">
+        <form method="GET" action="record_view.php">
           <select id="filter" name="purokID" onchange="this.form.submit()">
             <option value="all" <?= $purokID === 'all' ? 'selected' : '' ?>>All Puroks</option>
             <?php for ($i = 1; $i <= 5; $i++): ?>
@@ -78,7 +78,7 @@
                 <td><?= htmlspecialchars($citizen['purokID']); ?></td>
                 <td style="display: flex; gap: 5px; border: none; align-content: center; margin-top: .6rem;">
                   <!-- Archive / Unarchive -->
-                  <form method="POST" action="index.php" style="display: inline;">
+                  <form method="POST" action="record_view.php" style="display: inline;">
                     <input type="hidden" name="action"
                       value="<?= $citizen['isArchived'] == 1 ? 'unarchive_citizen' : 'archive_citizen' ?>">
                     <input type="hidden" name="citID" value="<?= htmlspecialchars($citizen['citID']) ?>">
@@ -112,7 +112,7 @@
 
     <!-- Add/Edit Form -->
     <div id="form-section" style="display:none;">
-      <form method="POST" action="index.php" enctype="multipart/form-data">
+      <form method="POST" action="record_view.php" enctype="multipart/form-data">
         <input type="hidden" name="citID" id="citID">
         <input type="hidden" name="action" id="formAction" value="add_citizen">
 

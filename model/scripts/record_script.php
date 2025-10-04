@@ -29,13 +29,6 @@
   <?php endforeach; ?>
 
 
-
-
-
-
-
-
-
   function showForm() {
     document.getElementById('formAction').value = 'add_citizen';
     document.getElementById('submitButton').textContent = 'Submit';
