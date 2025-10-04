@@ -1,34 +1,41 @@
 <?php
+require_once('model\file_handler.php');
 
-function get_citizens_by_purok($purokID = null)
+function get_citizens_by_id($citID)
+{
+    global $db;
+    $query = 'SELECT citID, firstname, middlename, lastname, age, sex, civilstatus, occupation, contactnum, purokID
+          FROM citizens
+          WHERE c.citID = :citID';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':citID', $citID);
+    $statement->execute();
+    $citizen = $statement->fetch();
+    $statement->closeCursor();
+    return $citizen;
+}
+
+function get_citizens_by_purok($purokID)
 {
     global $db;
 
-    if ($purokID === 'all' || empty($purokID)) {
-        // Show all citizens
-        $query = 'SELECT c.citID, c.firstname, c.middlename, c.lastname, c.isArchived, p.purokName AS purok
-                  FROM citizens c
-                  JOIN purok p ON c.purokID = p.purokID
-                  WHERE c.isArchived = 0
-                  ORDER BY c.lastname';
+    if ($purokID === 'all') {
+        $query = "SELECT citID, firstname, middlename, lastname, age, sex, civilstatus, occupation, contactnum, purokID, isArchived 
+                  FROM citizens WHERE isArchived = 0
+                  ORDER BY lastname";
         $statement = $db->prepare($query);
-        $statement->execute();
     } else {
-        // Filter by specific purok
-        $query = 'SELECT c.citID, c.firstname, c.middlename, c.lastname, c.isArchived, p.purokName AS purok
-                  FROM citizens c
-                  JOIN purok p ON c.purokID = p.purokID
-                  WHERE c.isArchived = 0
-                  AND c.purokID = :purokID
-                  ORDER BY c.lastname';
+        $query = "SELECT citID, firstname, middlename, lastname, age, sex, civilstatus, occupation, contactnum, purokID, isArchived 
+                  FROM citizens
+                  WHERE purokID = :purokID AND isArchived = 0";
         $statement = $db->prepare($query);
-        $statement->bindValue(':purokID', $purokID, PDO::PARAM_INT);
-        $statement->execute();
+        $statement->bindValue(':purokID', $purokID);
     }
 
-    $citizens = $statement->fetchAll();
+    $statement->execute();
+    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     $statement->closeCursor();
-    return $citizens;
+    return $result;
 }
 
 
@@ -36,11 +43,10 @@ function get_citizens_by_purok($purokID = null)
 function get_archived_citizens()
 {
     global $db;
-    $query = 'SELECT c.citID, c.firstname, c.middlename, c.lastname, c.isArchived, p.purokName AS purok
-          FROM citizens c
-          JOIN purok p ON c.purokID = p.purokID
-          WHERE c.isArchived = 1
-          ORDER BY c.lastname';
+    $query = "SELECT citID, firstname, middlename, lastname, age, sex, civilstatus, occupation, contactnum, purokID, isArchived 
+            FROM citizens
+              WHERE isArchived = 1
+              ORDER BY lastname";
     $statement = $db->prepare($query);
     $statement->execute();
     $citizens = $statement->fetchAll();
@@ -65,12 +71,11 @@ function restore_citizen($citID)
 function add_citizen($firstname, $middlename, $lastname, $purokID, $age, $sex, $civilstatus, $occupation, $contactnum)
 {
     global $db;
-
-
     $query = 'INSERT INTO citizens
                     (firstname, middlename, lastname, purokID, age, sex, civilstatus, occupation, contactnum )
                     VALUES
                     ( :firstname, :middlename, :lastname, :purokID, :age, :sex, :civilstatus, :occupation, :contactnum)';
+
 
     $statement = $db->prepare($query);
     $statement->bindValue(':firstname', $firstname);
@@ -103,16 +108,18 @@ function archive_citizen($citID)
 function update_citizen($citID, $firstname, $middlename, $lastname, $purokID, $age, $sex, $civilstatus, $occupation, $contactnum)
 {
     global $db;
-    $query = 'UPDATE citizens
-                     SET firstname = :firstname,
-                         middlename = :middlename,
-                         lastname = :lastname,
-                         age = :age,
-                         sex = :sex,
-                         civilstatus = :civilstatus,
-                         occupation = :occupation,
-                         contactnumber = :contactnumber
-                     WHERE citID = :citID';
+    $query = "UPDATE citizens 
+              SET firstname = :firstname,
+                  middlename = :middlename,
+                  lastname = :lastname,
+                  purokID = :purokID,
+                  age = :age,
+                  sex = :sex,
+                  civilstatus = :civilstatus,
+                  occupation = :occupation,
+                  contactnum = :contactnum
+              WHERE citID = :citID";
+
     $statement = $db->prepare($query);
     $statement->bindValue(':citID', $citID);
     $statement->bindValue(':firstname', $firstname);
@@ -123,7 +130,22 @@ function update_citizen($citID, $firstname, $middlename, $lastname, $purokID, $a
     $statement->bindValue(':sex', $sex);
     $statement->bindValue(':civilstatus', $civilstatus);
     $statement->bindValue(':occupation', $occupation);
-    $statement->bindValue(':contactnumber', $contactnum);
+    $statement->bindValue(':contactnum', $contactnum);
     $statement->execute();
     $statement->closeCursor();
+}
+
+
+function checkCitizenExists($firstname, $middlename, $lastname)
+{
+    global $db;
+    $query = 'SELECT COUNT(*) FROM citizens WHERE firstname = :firstname AND middlename = :middlename AND lastname = :lastname';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':firstname', $firstname);
+    $statement->bindValue(':middlename', $middlename);
+    $statement->bindValue(':lastname', $lastname);
+    $statement->execute();
+    $count = $statement->fetchColumn();
+    $statement->closeCursor();
+    return $count > 0;
 }

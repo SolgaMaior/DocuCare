@@ -1,53 +1,3 @@
-<?php
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if ($_POST['action'] === 'archive_citizen') {
-    archive_citizen($_POST['citID']);
-    header("Location: index.php?archived=1");
-    exit;
-  }
-
-  if ($_POST['action'] === 'unarchive_citizen') {
-    restore_citizen($_POST['citID']);
-    header("Location: index.php?unarchived=1");
-    exit;
-  }
-}
-
-
-// --- ADD NEW CITIZEN ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_citizen'])) {
-  $firstname = $_POST['first_name'];
-  $middlename = $_POST['middle_name'];
-  $lastname = $_POST['last_name'];
-  $purokID = $_POST['purok'];
-  $age = $_POST['age'];
-  $sex = $_POST['sex'];
-  $civilstatus = $_POST['civilstatus'];
-  $occupation = $_POST['occupation'];
-  $contactnum = $_POST['contactnum'];
-
-  add_citizen($firstname, $middlename, $lastname, $purokID, $age, $sex, $civilstatus, $occupation, $contactnum);
-  header("Location: index.php?success=1");
-  exit;
-}
-
-$purokID = isset($_GET['purokID']) ? $_GET['purokID'] : 'all';
-
-if ($purokID === 'archived') {
-  $citizens = get_archived_citizens();
-} else {
-  $citizens = get_citizens_by_purok($purokID);
-}
-?>
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,7 +9,9 @@ if ($purokID === 'archived') {
 </head>
 
 <body>
-  <!-- Sidebar -->
+
+  <?php if (!empty($successMessage)) echo $successMessage; ?>
+
   <div class="sidebar">
     <h2>Docu-care</h2>
     <ul class="menu">
@@ -70,40 +22,33 @@ if ($purokID === 'archived') {
     </ul>
   </div>
 
-  <!-- Main Content -->
   <div class="content">
     <div class="header">
       <h2 id="page-title">Citizen Records</h2>
       <a href="logout.php" class="logout">Logout</a>
     </div>
 
-    <!-- Alerts -->
-    <?php if (isset($_GET['success'])): ?>
-      <div class="alert success">✅ Citizen added successfully!</div>
-    <?php elseif (isset($_GET['isArchived'])): ?>
-      <div class="alert warning">⚠️ Citizen archived successfully!</div>
-    <?php endif; ?>
-
-    <!-- Top Bar -->
     <div class="top-bar" id="top-controls">
       <div class="search-box">
-        <input type="text" placeholder="Search...">
+        <input type="text" placeholder="Search..." id="searchInput" onkeyup="filterTable()">
       </div>
+
       <div class="controls">
         <form method="GET" action="index.php">
           <select name="purokID" onchange="this.form.submit()">
-            <option value="all" <?= $purokID === 'all' || empty($purokID) ? 'selected' : '' ?>>All Puroks</option>
+            <option value="all" <?= $purokID === 'all' ? 'selected' : '' ?>>All Puroks</option>
             <?php for ($i = 1; $i <= 5; $i++): ?>
               <option value="<?= $i ?>" <?= $purokID == $i ? 'selected' : '' ?>>Purok <?= $i ?></option>
             <?php endfor; ?>
             <option value="archived" <?= $purokID === 'archived' ? 'selected' : '' ?>>Archived</option>
           </select>
         </form>
+
         <button class="btn btn-primary" onclick="showForm()">+ Add Record</button>
       </div>
     </div>
 
-    <!-- Records Table -->
+    <!-- Citizens Table -->
     <div id="records-section">
       <table>
         <thead>
@@ -116,30 +61,37 @@ if ($purokID === 'archived') {
             <th>Action</th>
           </tr>
         </thead>
-        <tbody id="records-table">
+
+        <tbody id="citizenTableBody">
           <?php if (!empty($citizens)): ?>
             <?php foreach ($citizens as $citizen): ?>
-              <?php if (!isset($citizen['archived']) || $citizen['archived'] == 0): ?>
-                <tr>
-                  <td><img src="https://via.placeholder.com/50" alt="Photo"></td>
-                  <td><?= htmlspecialchars($citizen['lastname']); ?></td>
-                  <td><?= htmlspecialchars($citizen['firstname']); ?></td>
-                  <td><?= htmlspecialchars($citizen['middlename']); ?></td>
-                  <td><?= htmlspecialchars($citizen['purok']); ?></td>
-                  <td>
-                    <form method="POST" action="index.php" style="display:inline;">
-                      <input type="hidden" name="action" value="<?= $citizen['isArchived'] == 1 ? 'unarchive_citizen' : 'archive_citizen' ?>">
-                      <input type="hidden" name="citID" value="<?= htmlspecialchars($citizen['citID']) ?>">
-                      <button type="submit" class="btn btn-outline"
-                        onclick="return confirm('<?= $citizen['isArchived'] == 1 ? 'Remove this record from archive?' : 'Archive this record?' ?>');">
-                        <?= $citizen['isArchived'] == 1 ? 'Unarchive' : 'Archive' ?>
-                      </button>
-                    </form>
+              <tr>
+                <td>
+                  <img src="<?= get_profile_image_path($citizen['firstname'], $citizen['lastname']) ?: 'resources/defaultprofile.png' ?>"
+                    alt="Photo"
+                    onerror="this.src='resources/defaultprofile.png'">
+                </td>
+                <td><?= htmlspecialchars($citizen['lastname']); ?></td>
+                <td><?= htmlspecialchars($citizen['firstname']); ?></td>
+                <td><?= htmlspecialchars($citizen['middlename']); ?></td>
+                <td><?= htmlspecialchars($citizen['purokID']); ?></td>
+                <td>
+                  <!-- Archive / Unarchive -->
+                  <form method="POST" action="index.php" style="display:inline;">
+                    <input type="hidden" name="action"
+                      value="<?= $citizen['isArchived'] == 1 ? 'unarchive_citizen' : 'archive_citizen' ?>">
+                    <input type="hidden" name="citID" value="<?= htmlspecialchars($citizen['citID']) ?>">
+                    <button type="submit" class="btn btn-outline"
+                      onclick="return confirm('<?= $citizen['isArchived'] == 1 ? 'Remove from archive?' : 'Archive this record?' ?>');">
+                      <?= $citizen['isArchived'] == 1 ? 'Unarchive' : 'Archive' ?>
+                    </button>
+                  </form>
 
-                    <button class="btn btn-outline" onclick="editCitizen(<?= $citizen['citID']; ?>)">Edit</button>
-                  </td>
-                </tr>
-              <?php endif; ?>
+                  <!-- Edit -->
+                  <button type="button" class="btn btn-outline"
+                    onclick="showEditForm(<?= $citizen['citID']; ?>)">Edit</button>
+                </td>
+              </tr>
             <?php endforeach; ?>
           <?php else: ?>
             <tr>
@@ -150,32 +102,58 @@ if ($purokID === 'archived') {
       </table>
     </div>
 
-    <!-- Add Record Form -->
-    <div id="form-section" style="display: none;">
-      <form method="POST" enctype="multipart/form-data">
+    <!-- Add/Edit Form -->
+    <div id="form-section" style="display:none;">
+      <form method="POST" action="index.php" enctype="multipart/form-data">
+        <input type="hidden" name="citID" id="citID">
+        <input type="hidden" name="action" id="formAction" value="add_citizen">
+
         <div class="card">
+          <!-- Profile Image Upload -->
           <div class="upload-section">
-            <img id="profilePreview" src="https://via.placeholder.com/100" alt="Profile">
-            <button class="btn btn-primary" type="button" onclick="document.getElementById('uploadInput').click()">Upload new</button>
-            <input type="file" id="uploadInput" accept="image/*" onchange="previewImage(event)">
+            <img id="profilePreview"
+              src="resources/defaultprofile.png"
+              alt="Profile"
+              onerror="this.src='resources/defaultprofile.png'">
+            <br>
+            <button class="btn btn-primary" type="button"
+              onclick="document.getElementById('uploadInput').click()">Upload Photo</button>
+            <input type="file" name="profileImage" id="uploadInput" accept="image/*"
+              onchange="previewImage(event)" hidden>
+            <br><br>
           </div>
 
-          <h3>Personal details</h3>
+          <h3>Personal Details</h3>
           <div class="form-grid">
-            <input type="text" name="last_name" id="lastName" placeholder="Last Name" required>
-            <input type="text" name="first_name" id="firstName" placeholder="First Name" required>
-            <input type="text" name="middle_name" id="middleName" placeholder="Middle Name">
-            <input type="text" name="sex" id="sex" placeholder="Sex" required>
-            <input type="number" name="age" id="age" placeholder="Age" required>
-            <input type="text" name="civilstatus" id="civilstatus" placeholder="Civil Status">
-            <input type="text" name="occupation" id="occupation" placeholder="Occupation">
-            <input type="text" name="contactnum" id="contactnum" placeholder="Contact Number">
-            <input type="text" name="purok" id="purok" placeholder="Purok ID" required>
+            <input type="text" name="last_name" id="lastName" placeholder="Last Name" required autocomplete="off">
+            <input type="text" name="first_name" id="firstName" placeholder="First Name" required autocomplete="off">
+            <input type="text" name="middle_name" id="middleName" placeholder="Middle Name" autocomplete="off">
+            <select name="sex" id="sex" required style="width: 84%; padding: 10px; border: 1px solid #ccc; background-color: #fff; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; box-sizing: border-box; color: #707070ff;" onchange="this.style.color = this.value ? '#333' : '#707070ff'">
+              <option value="">Select Sex</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+            <input type="number" name="age" id="age" placeholder="Age" required autocomplete="off" min="0" max="150">
+            <select name="civilstatus" id="civilstatus" required style="width: 84%; padding: 10px; border: 1px solid #ccc; background-color: #fff; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; box-sizing: border-box; color: #707070ff;" onchange="this.style.color = this.value ? '#333' : '#707070ff'">
+              <option value="">Select Civil Status</option>
+              <option value="Single">Single</option>
+              <option value="Married">Married</option>
+              <option value="Widowed">Widowed</option>
+              <option value="Separated">Separated</option>
+            </select>
+            <input type="text" name="occupation" id="occupation" placeholder="Occupation" required autocomplete="off">
+            <input type="tel" name="contactnum" id="contactnum" placeholder="Contact Number" required autocomplete="off" pattern="[0-9]{10,11}">
+            <select name="purok" id="purok" required style="width: 84%; padding: 10px; border: 1px solid #ccc; background-color: #fff; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; box-sizing: border-box; color: #707070ff;" onchange="this.style.color = this.value ? '#333' : '#707070ff'">
+              <option value="">Select Purok</option>
+              <?php for ($i = 1; $i <= 5; $i++): ?>
+                <option value="<?= $i ?>">Purok <?= $i ?></option>
+              <?php endfor; ?>
+            </select>
           </div>
 
           <div class="actions">
             <button type="button" class="btn btn-outline" onclick="showTable()">Cancel</button>
-            <button type="submit" name="add_citizen" class="btn btn-primary">Submit</button>
+            <button type="submit" id="submitButton" class="btn btn-primary">Submit</button>
           </div>
         </div>
       </form>
@@ -183,26 +161,124 @@ if ($purokID === 'archived') {
   </div>
 
   <script>
+    const citizensData = <?= json_encode($citizens); ?>;
+
     function showForm() {
+      // Reset form for new entry
+      document.getElementById('formAction').value = 'add_citizen';
+      document.getElementById('submitButton').textContent = 'Submit';
+      document.getElementById('citID').value = '';
+
+      // Clear all inputs
+      document.querySelectorAll('#form-section input[type="text"], #form-section input[type="number"], #form-section input[type="tel"]').forEach(i => i.value = '');
+
+      // Reset selects and set color to gray
+      document.querySelectorAll('#form-section select').forEach(s => {
+        s.selectedIndex = 0;
+        s.style.color = '#999';
+      });
+
+      // Reset image preview
+      document.getElementById('profilePreview').src = 'resources/defaultprofile.png';
+      document.getElementById('uploadInput').value = '';
+
+      // Toggle sections
       document.getElementById("records-section").style.display = "none";
       document.getElementById("form-section").style.display = "block";
+      document.getElementById("top-controls").style.display = "none";
     }
 
     function showTable() {
       document.getElementById("form-section").style.display = "none";
       document.getElementById("records-section").style.display = "block";
+      document.getElementById("top-controls").style.display = "flex";
     }
 
     function previewImage(event) {
-      const reader = new FileReader();
-      reader.onload = function() {
-        document.getElementById('profilePreview').src = reader.result;
+      const file = event.target.files[0];
+      if (file) {
+        // Validate file type
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+          alert('Please select a valid image file (JPG, PNG, GIF, or WebP)');
+          event.target.value = '';
+          return;
+        }
+
+        // Validate file size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert('File is too large. Maximum size is 5MB');
+          event.target.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById('profilePreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
       }
-      reader.readAsDataURL(event.target.files[0]);
     }
 
-    function editCitizen(id) {
-      alert("Edit function for citizen ID " + id + " not implemented yet.");
+    function showEditForm(citID) {
+      const citizen = citizensData.find(c => c.citID == citID);
+      if (!citizen) return alert('Citizen not found.');
+
+      // Fill form with existing data
+      document.getElementById('citID').value = citizen.citID;
+      document.getElementById('firstName').value = citizen.firstname;
+      document.getElementById('middleName').value = citizen.middlename || '';
+      document.getElementById('lastName').value = citizen.lastname;
+      document.getElementById('age').value = citizen.age;
+
+      // Set select values and update color
+      const sexSelect = document.getElementById('sex');
+      sexSelect.value = citizen.sex;
+      sexSelect.style.color = sexSelect.value ? '#333' : '#999';
+
+      const civilstatusSelect = document.getElementById('civilstatus');
+      civilstatusSelect.value = citizen.civilstatus;
+      civilstatusSelect.style.color = civilstatusSelect.value ? '#333' : '#999';
+
+      document.getElementById('occupation').value = citizen.occupation;
+      document.getElementById('contactnum').value = citizen.contactnum;
+
+      const purokSelect = document.getElementById('purok');
+      purokSelect.value = citizen.purokID;
+      purokSelect.style.color = purokSelect.value ? '#333' : '#999';
+
+      // Load existing photo
+      if (citizen.photo) {
+        document.getElementById('profilePreview').src = citizen.photo;
+      } else {
+        document.getElementById('profilePreview').src = 'resources/defaultprofile.png';
+      }
+
+      // Switch to edit mode
+      document.getElementById('formAction').value = 'add_citizen';
+      document.getElementById('submitButton').textContent = 'Update';
+      document.getElementById("records-section").style.display = "none";
+      document.getElementById("form-section").style.display = "block";
+      document.getElementById("top-controls").style.display = "none";
+    }
+
+    function filterTable() {
+      const searchValue = document.getElementById('searchInput').value.toLowerCase();
+      const rows = document.querySelectorAll("#citizenTableBody tr");
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchValue) ? "" : "none";
+      });
+    }
+
+    // Auto-hide alert after 3 seconds
+    const alertMessage = document.getElementById('alertMessage');
+    if (alertMessage) {
+      setTimeout(() => {
+        alertMessage.style.opacity = '0';
+        setTimeout(() => alertMessage.remove(), 500);
+      }, 3000);
     }
   </script>
 </body>
