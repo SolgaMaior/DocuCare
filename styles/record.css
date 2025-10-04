@@ -129,6 +129,17 @@ td img {
   color: #fff;
 }
 
+#filter {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  color: #333;
+}
+
+
+
 .btn-outline {
   background: #fff;
   border: 1px solid #2e72a5;
@@ -151,10 +162,13 @@ td img {
 /* Upload Section */
 .upload-section {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 15px;
   margin-bottom: 30px;
+}
+
+.upload-section button {
+  align-self: center;
 }
 
 .upload-section img {
@@ -177,7 +191,8 @@ td img {
   margin-bottom: 20px;
 }
 
-.form-grid input{
+.form-grid input,
+.form-grid select {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -187,7 +202,38 @@ td img {
   font-size: 14px;
   color: #333;
   box-sizing: border-box;
- 
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Add custom dropdown arrow for select */
+.form-grid select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23333' d='M1.41 0L6 4.59L10.59 0L12 1.41l-6 6l-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  padding-right: 35px;
+}
+
+/* Gray color for placeholder option in select */
+.form-grid select option[value=""] {
+  color: #999;
+}
+
+/* Black color for selected value */
+.form-grid select:not([value=""]) {
+  color: #333;
+}
+
+/* Gray color when no option selected (uses invalid pseudo-class) */
+.form-grid select:invalid {
+  color: #999;
+}
+
+/* Black color when valid option selected */
+.form-grid select:valid {
+  color: #333;
 }
 
 .form-grid input:focus,
@@ -219,7 +265,19 @@ td img {
   font-weight: 500;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 9999;
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.5s ease;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .alert-success {

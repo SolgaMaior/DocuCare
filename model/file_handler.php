@@ -85,7 +85,7 @@ function handleImageUpload($imageFile, $firstname, $lastname)
 
 function get_profile_image_path($firstname, $lastname)
 {
-    // Assuming your structure is: htdocs/yourproject/uploads/profiles/LastnameFirstname/profile_image/
+
     $relativePath = '/PatientFolder/' . $lastname . $firstname . '/profile_image/';
     $absolutePath = $_SERVER['DOCUMENT_ROOT'] . '/' . $relativePath;
 
