@@ -1,14 +1,13 @@
 <script>
-  // Prevent back button after page reload
   (function() {
     // Clear browser history and replace current state
     if (window.history && window.history.replaceState) {
       // Replace current state with a new one
       window.history.replaceState(null, null, window.location.href);
-      
+
       // Add a new state to the history
       window.history.pushState(null, null, window.location.href);
-      
+
       // Listen for back button attempts
       window.addEventListener('popstate', function(event) {
         // Push the current state again to prevent going back
@@ -17,12 +16,23 @@
     }
   })();
 
+
+
+
   const citizensData = <?= json_encode($citizens); ?>;
   const citizenPhotos = {};
 
   <?php foreach ($citizens as $citizen): ?>
     citizenPhotos[<?= $citizen['citID'] ?>] = <?= json_encode(get_profile_image_path($citizen['firstname'], $citizen['lastname']) ?: 'resources/defaultprofile.png') ?>;
   <?php endforeach; ?>
+
+
+
+
+
+
+
+
 
   function showForm() {
     document.getElementById('formAction').value = 'add_citizen';
@@ -40,11 +50,21 @@
     document.getElementById("top-controls").style.display = "none";
   }
 
+
+
+
+
   function showTable() {
     document.getElementById("form-section").style.display = "none";
     document.getElementById("records-section").style.display = "block";
     document.getElementById("top-controls").style.display = "flex";
   }
+
+
+
+
+
+
 
   function previewImage(event) {
     const file = event.target.files[0];
@@ -69,6 +89,11 @@
       reader.readAsDataURL(file);
     }
   }
+
+
+
+
+
 
   function showEditForm(citID) {
     const citizen = citizensData.find(c => c.citID == citID);
@@ -101,6 +126,11 @@
     document.getElementById("form-section").style.display = "block";
     document.getElementById("top-controls").style.display = "none";
   }
+
+
+
+
+
 
   function filterTable() {
     const searchValue = document.getElementById('searchInput').value.toLowerCase();

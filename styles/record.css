@@ -327,3 +327,8 @@ td img {
     align-items: flex-start;
   }
 }
+
+#addFile{
+  width: 40%;
+  align-content: left;
+}

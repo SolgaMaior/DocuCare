@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Citizen Records - DocuCare</title>
   <link rel="stylesheet" href="styles/record.css">
+  <link rel="stylesheet" href="resources/dropify/dist/css/dropify.min.css">
 </head>
 
 <body>
@@ -172,6 +173,62 @@
                   <option value="<?= $i ?>">Purok <?= $i ?></option>
                 <?php endfor; ?>
               </select>
+            </div>
+          </div>
+
+          <div id="addFile">
+            <h3>Medical Records</h3>
+            <div>
+              <label for="medicalCondition">Medical Condition</label>
+              <input type="text" name="medical_condition[]" id="medicalCondition" autocomplete="off">
+            </div>
+            <div>
+              <h2>Upload Medical Records</h2>
+              <input type="file" class="dropify" data-default-file="url_of_your_file" multiple />
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+              <script src="resources/dropify/dist/js/dropify.min.js"></script>
+              <script>
+                $(document).ready(function() {
+                  // Basic
+                  $('.dropify').dropify();
+
+                  // Translated
+                  $('.dropify-fr').dropify({
+                    messages: {
+                      default: 'Glissez-déposez un fichier ici ou cliquez',
+                      replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+                      remove: 'Supprimer',
+                      error: 'Désolé, le fichier trop volumineux'
+                    }
+                  });
+
+                  // Used events
+                  var drEvent = $('#input-file-events').dropify();
+
+                  drEvent.on('dropify.beforeClear', function(event, element) {
+                    return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+                  });
+
+                  drEvent.on('dropify.afterClear', function(event, element) {
+                    alert('File deleted');
+                  });
+
+                  drEvent.on('dropify.errors', function(event, element) {
+                    console.log('Has Errors');
+                  });
+
+                  var drDestroy = $('#input-file-to-destroy').dropify();
+                  drDestroy = drDestroy.data('dropify')
+                  $('#toggleDropify').on('click', function(e) {
+                    e.preventDefault();
+                    if (drDestroy.isDropified()) {
+                      drDestroy.destroy();
+                    } else {
+                      drDestroy.init();
+                    }
+                  })
+                });
+              </script>
             </div>
           </div>
 

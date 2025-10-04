@@ -60,6 +60,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+
+
+
+
+
+
+
+
     if ($action === 'archive_citizen') {
         $citID = filter_input(INPUT_POST, 'citID', FILTER_VALIDATE_INT);
         if ($citID) {
