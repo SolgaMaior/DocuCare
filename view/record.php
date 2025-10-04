@@ -122,30 +122,57 @@
 
           <h3>Personal Details</h3>
           <div class="form-grid">
-            <input type="text" name="last_name" id="lastName" placeholder="Last Name" required autocomplete="off">
-            <input type="text" name="first_name" id="firstName" placeholder="First Name" required autocomplete="off">
-            <input type="text" name="middle_name" id="middleName" placeholder="Middle Name" autocomplete="off">
-            <select name="sex" id="sex" required style="width: 100%; padding: 10px; border: 1px solid #ccc; background-color: #fff; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; box-sizing: border-box; color: #707070ff;" onchange="this.style.color = this.value ? '#333' : '#707070ff'">
-              <option value="">Select Sex</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-            <input type="number" name="age" id="age" placeholder="Age" required autocomplete="off" min="0" max="150">
-            <select name="civilstatus" id="civilstatus" required style="width: 100%; padding: 10px; border: 1px solid #ccc; background-color: #fff; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; box-sizing: border-box; color: #707070ff;" onchange="this.style.color = this.value ? '#333' : '#707070ff'">
-              <option value="">Select Civil Status</option>
-              <option value="Single">Single</option>
-              <option value="Married">Married</option>
-              <option value="Widowed">Widowed</option>
-              <option value="Separated">Separated</option>
-            </select>
-            <input type="text" name="occupation" id="occupation" placeholder="Occupation" required autocomplete="off">
-            <input type="tel" name="contactnum" id="contactnum" placeholder="Contact Number" required autocomplete="off" pattern="[0-9]{10,11}">
-            <select name="purok" id="purok" required style="width: 100%; padding: 10px; border: 1px solid #ccc; background-color: #fff; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; box-sizing: border-box; color: #707070ff;" onchange="this.style.color = this.value ? '#333' : '#707070ff'">
-              <option value="">Select Purok</option>
-              <?php for ($i = 1; $i <= 5; $i++): ?>
-                <option value="<?= $i ?>">Purok <?= $i ?></option>
-              <?php endfor; ?>
-            </select>
+            <div class="form-field">
+              <label for="lastName">Last Name</label>
+              <input type="text" name="last_name" id="lastName" required autocomplete="off">
+            </div>
+            <div class="form-field">
+              <label for="firstName">First Name</label>
+              <input type="text" name="first_name" id="firstName" required autocomplete="off">
+            </div>
+            <div class="form-field">
+              <label for="middleName">Middle Name</label>
+              <input type="text" name="middle_name" id="middleName" autocomplete="off">
+            </div>
+            <div class="form-field">
+              <label for="sex">Sex</label>
+              <select name="sex" id="sex" required onchange="this.style.color = this.value ? '#333' : '#707070ff'">
+                <option value="">Select Sex</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="age">Age</label>
+              <input type="number" name="age" id="age" required autocomplete="off" min="0" max="150">
+            </div>
+            <div class="form-field">
+              <label for="civilstatus">Civil Status</label>
+              <select name="civilstatus" id="civilstatus" required onchange="this.style.color = this.value ? '#333' : '#707070ff'">
+                <option value="">Select Civil Status</option>
+                <option value="Single">Single</option>
+                <option value="Married">Married</option>
+                <option value="Widowed">Widowed</option>
+                <option value="Separated">Separated</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="occupation">Occupation</label>
+              <input type="text" name="occupation" id="occupation" required autocomplete="off">
+            </div>
+            <div class="form-field">
+              <label for="contactnum">Contact Number</label>
+              <input type="tel" name="contactnum" id="contactnum" required autocomplete="off" pattern="[0-9]{10,11}">
+            </div>
+            <div class="form-field">
+              <label for="purok">Purok</label>
+              <select name="purok" id="purok" required onchange="this.style.color = this.value ? '#333' : '#707070ff'">
+                <option value="">Select Purok</option>
+                <?php for ($i = 1; $i <= 5; $i++): ?>
+                  <option value="<?= $i ?>">Purok <?= $i ?></option>
+                <?php endfor; ?>
+              </select>
+            </div>
           </div>
 
           <div class="actions">

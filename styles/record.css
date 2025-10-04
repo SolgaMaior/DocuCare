@@ -1,7 +1,10 @@
 body {
+  height: 60.5rem;
+  width: auto;
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f7f7f7;
+  background: #ffffff;
+  background: linear-gradient(180deg,rgba(255, 255, 255, 1) 19%, rgba(159, 180, 237, 1) 100%);
 }
 
 /* Sidebar */
@@ -11,7 +14,7 @@ body {
   left: 0;
   width: 220px;
   height: 100%;
-  background: linear-gradient(to bottom, #5da9dd, #2e72a5);
+  background: #7C92CC;
   color: #fff;
   padding: 20px 0;
 }
@@ -191,8 +194,23 @@ td img {
   margin-bottom: 20px;
 }
 
-.form-grid input,
-.form-grid select {
+/* Form Field Container */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Form Labels */
+.form-field label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2e72a5;
+  margin-bottom: 2px;
+}
+
+.form-field input,
+.form-field select {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -208,7 +226,7 @@ td img {
 }
 
 /* Add custom dropdown arrow for select */
-.form-grid select {
+.form-field select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23333' d='M1.41 0L6 4.59L10.59 0L12 1.41l-6 6l-6-6z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
@@ -217,33 +235,33 @@ td img {
 }
 
 /* Gray color for placeholder option in select */
-.form-grid select option[value=""] {
+.form-field select option[value=""] {
   color: #999;
 }
 
 /* Black color for selected value */
-.form-grid select:not([value=""]) {
+.form-field select:not([value=""]) {
   color: #333;
 }
 
 /* Gray color when no option selected (uses invalid pseudo-class) */
-.form-grid select:invalid {
+.form-field select:invalid {
   color: #999;
 }
 
 /* Black color when valid option selected */
-.form-grid select:valid {
+.form-field select:valid {
   color: #333;
 }
 
-.form-grid input:focus,
-.form-grid select:focus {
+.form-field input:focus,
+.form-field select:focus {
   outline: none;
   border-color: #2e72a5;
   background-color: #fff;
 }
 
-.form-grid input::placeholder {
+.form-field input::placeholder {
   color: #999;
 }
 

@@ -1,4 +1,22 @@
 <script>
+  // Prevent back button after page reload
+  (function() {
+    // Clear browser history and replace current state
+    if (window.history && window.history.replaceState) {
+      // Replace current state with a new one
+      window.history.replaceState(null, null, window.location.href);
+      
+      // Add a new state to the history
+      window.history.pushState(null, null, window.location.href);
+      
+      // Listen for back button attempts
+      window.addEventListener('popstate', function(event) {
+        // Push the current state again to prevent going back
+        window.history.pushState(null, null, window.location.href);
+      });
+    }
+  })();
+
   const citizensData = <?= json_encode($citizens); ?>;
   const citizenPhotos = {};
 
@@ -13,7 +31,7 @@
     document.querySelectorAll('#form-section input[type="text"], #form-section input[type="number"], #form-section input[type="tel"]').forEach(i => i.value = '');
     document.querySelectorAll('#form-section select').forEach(s => {
       s.selectedIndex = 0;
-      s.style.color = '#999';
+      s.style.color = '#707070ff';
     });
     document.getElementById('profilePreview').src = 'resources/defaultprofile.png';
     document.getElementById('uploadInput').value = '';
@@ -64,18 +82,18 @@
 
     const sexSelect = document.getElementById('sex');
     sexSelect.value = citizen.sex;
-    sexSelect.style.color = sexSelect.value ? '#333' : '#999';
+    sexSelect.style.color = sexSelect.value ? '#333' : '#707070ff';
 
     const civilstatusSelect = document.getElementById('civilstatus');
     civilstatusSelect.value = citizen.civilstatus;
-    civilstatusSelect.style.color = civilstatusSelect.value ? '#333' : '#999';
+    civilstatusSelect.style.color = civilstatusSelect.value ? '#333' : '#707070ff';
 
     document.getElementById('occupation').value = citizen.occupation;
     document.getElementById('contactnum').value = citizen.contactnum;
 
     const purokSelect = document.getElementById('purok');
     purokSelect.value = citizen.purokID;
-    purokSelect.style.color = purokSelect.value ? '#333' : '#999';
+    purokSelect.style.color = purokSelect.value ? '#333' : '#707070ff';
 
     document.getElementById('formAction').value = 'add_citizen';
     document.getElementById('submitButton').textContent = 'Update';
