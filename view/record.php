@@ -6,7 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Citizen Records - DocuCare</title>
   <link rel="stylesheet" href="styles/record.css">
-  <link rel="stylesheet" href="resources/dropify/dist/css/dropify.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
 </head>
 
 <body>
@@ -14,10 +16,10 @@
   <div class="sidebar">
     <h2>Docu-care</h2>
     <ul class="menu">
-      <li>🏠 Dashboard</li>
-      <li class="active">📑 Citizen Records</li>
-      <li>📅 Appointments</li>
-      <li>📦 Inventory</li>
+      <li>Dashboard</li>
+      <li class="active">Citizen Records</li>
+      <li>Appointments</li>
+      <li>Inventory</li>
     </ul>
   </div>
 
@@ -66,7 +68,7 @@
             <?php foreach ($citizens as $citizen): ?>
               <tr>
                 <td>
-                  <img src="<?= get_profile_image_path($citizen['firstname'], $citizen['lastname']) ?: 'resources/defaultprofile.png' ?>"
+                  <img id="profileImage_<?= $citizen['citID'] ?>" src="<?= get_profile_image_path($citizen['firstname'], $citizen['lastname']) ?: 'resources/defaultprofile.png' ?>"
                     alt="Photo"
                     onerror="this.src='resources/defaultprofile.png'">
                 </td>
@@ -85,7 +87,7 @@
                       <?= $citizen['isArchived'] == 1 ? 'Unarchive' : 'Archive' ?>
                     </button>
                     <button type="button" class="btn btn-outline" onclick="showEditForm(<?= $citizen['citID']; ?>)">Edit</button>
-                    <button type="button" class="btn btn-outline" onclick="viewRecord(<?= $citizen['citID']; ?>)">View</button>
+                    <button type="button" class="btn btn-outline" onclick="showViewForm(<?= $citizen['citID']; ?>)">View</button>
                   </form>
 
                 </td>
@@ -100,6 +102,14 @@
       </table>
     </div>
 
+
+
+
+
+
+
+
+
     <!-- Add/Edit Form -->
     <div id="form-section" style="display:none;">
       <form method="POST" action="index.php" enctype="multipart/form-data">
@@ -110,11 +120,11 @@
           <!-- Profile Image Upload -->
           <div class="upload-section">
             <img id="profilePreview"
-              src="<?= get_profile_image_path($citizen['firstname'], $citizen['lastname']) ?: 'resources/defaultprofile.png' ?>"
+              src="resources/defaultprofile.png"
               alt="Profile"
               onerror="this.src='resources/defaultprofile.png'">
             <br>
-            <button class="btn btn-primary" type="button"
+            <button id="uploadProfileButton" class="btn btn-primary" type="button"
               onclick="document.getElementById('uploadInput').click()">Upload Photo</button>
             <input type="file" name="profileImage" id="uploadInput" accept="image/*"
               onchange="previewImage(event)" hidden>
@@ -123,18 +133,22 @@
 
           <h3>Personal Details</h3>
           <div class="form-grid">
+
             <div class="form-field">
               <label for="lastName">Last Name</label>
               <input type="text" name="last_name" id="lastName" required autocomplete="off">
             </div>
+
             <div class="form-field">
               <label for="firstName">First Name</label>
               <input type="text" name="first_name" id="firstName" required autocomplete="off">
             </div>
+
             <div class="form-field">
               <label for="middleName">Middle Name</label>
               <input type="text" name="middle_name" id="middleName" autocomplete="off">
             </div>
+
             <div class="form-field">
               <label for="sex">Sex</label>
               <select name="sex" id="sex" required onchange="this.style.color = this.value ? '#333' : '#707070ff'">
@@ -143,10 +157,12 @@
                 <option value="Female">Female</option>
               </select>
             </div>
+
             <div class="form-field">
               <label for="age">Age</label>
               <input type="number" name="age" id="age" required autocomplete="off" min="0" max="150">
             </div>
+
             <div class="form-field">
               <label for="civilstatus">Civil Status</label>
               <select name="civilstatus" id="civilstatus" required onchange="this.style.color = this.value ? '#333' : '#707070ff'">
@@ -157,14 +173,17 @@
                 <option value="Separated">Separated</option>
               </select>
             </div>
+
             <div class="form-field">
               <label for="occupation">Occupation</label>
               <input type="text" name="occupation" id="occupation" required autocomplete="off">
             </div>
+
             <div class="form-field">
               <label for="contactnum">Contact Number</label>
               <input type="tel" name="contactnum" id="contactnum" required autocomplete="off" pattern="[0-9]{10,11}">
             </div>
+
             <div class="form-field">
               <label for="purok">Purok</label>
               <select name="purok" id="purok" required onchange="this.style.color = this.value ? '#333' : '#707070ff'">
@@ -174,74 +193,67 @@
                 <?php endfor; ?>
               </select>
             </div>
-          </div>
 
-          <div id="addFile">
-            <h3>Medical Records</h3>
-            <div>
+          </div>
+        
+          <div id="medicalFilesPreview" class="viewmedicalfiles" style="display: none;">
+              <h4 id="associatedRecordsHeader">Associated Records</h4>
+              <div id="medicalFilesList"></div>
+          </div>
+ 
+            
+           
+
+
+          <div class="medical-files-section">
+            
+            <h4>Medical Records (Optional)</h4>
+            <div class="form-field">
               <label for="medicalCondition">Medical Condition</label>
-              <input type="text" name="medical_condition[]" id="medicalCondition" autocomplete="off">
+              <input type="text" name="medical_condition" id="medicalCondition" placeholder="Enter medical condition" autocomplete="off">
             </div>
-            <div>
-              <h2>Upload Medical Records</h2>
-              <input type="file" class="dropify" data-default-file="url_of_your_file" multiple />
-              <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-              <script src="resources/dropify/dist/js/dropify.min.js"></script>
-              <script>
-                $(document).ready(function() {
-                  // Basic
-                  $('.dropify').dropify();
 
-                  // Translated
-                  $('.dropify-fr').dropify({
-                    messages: {
-                      default: 'Glissez-déposez un fichier ici ou cliquez',
-                      replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-                      remove: 'Supprimer',
-                      error: 'Désolé, le fichier trop volumineux'
-                    }
-                  });
+              <div class="form-field">
+                <label for="medicalFiles">Upload Medical Records</label>
+                <input type="file" class="dropify" name="medical_files[]" id="medicalFiles" multiple data-allowed-file-extensions="pdf doc docx jpg jpeg png gif" data-max-file-size="5M">
+              </div>
 
-                  // Used events
-                  var drEvent = $('#input-file-events').dropify();
-
-                  drEvent.on('dropify.beforeClear', function(event, element) {
-                    return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
-                  });
-
-                  drEvent.on('dropify.afterClear', function(event, element) {
-                    alert('File deleted');
-                  });
-
-                  drEvent.on('dropify.errors', function(event, element) {
-                    console.log('Has Errors');
-                  });
-
-                  var drDestroy = $('#input-file-to-destroy').dropify();
-                  drDestroy = drDestroy.data('dropify')
-                  $('#toggleDropify').on('click', function(e) {
-                    e.preventDefault();
-                    if (drDestroy.isDropified()) {
-                      drDestroy.destroy();
-                    } else {
-                      drDestroy.init();
-                    }
-                  })
-                });
-              </script>
+            <div class="form-field">
+              <label for="medicalNotes">Additional Notes</label>
+              <textarea name="medical_notes" id="medicalNotes" placeholder="Enter any additional notes about the medical records" rows="3"></textarea>
             </div>
+            
           </div>
+        
 
-          <div class="actions">
+          <div class="actions" style="margin-top: 1rem;">
             <button type="button" class="btn btn-outline" onclick="showTable()">Cancel</button>
             <button type="submit" id="submitButton" class="btn btn-primary">Submit</button>
           </div>
         </div>
+        </div>
       </form>
     </div>
+
+
   </div>
 
   <?php require('model/scripts/record_script.php'); ?>
+
+  
+  <?php if (isset($_GET['medical_uploaded']) && $_GET['medical_uploaded'] == '1'): ?>
+    <div id="alertMessage" class="alert alert-success">
+      Medical files uploaded successfully! 
+      <?php if (isset($_GET['files_count'])): ?>
+        (<?= $_GET['files_count'] ?> file<?= $_GET['files_count'] > 1 ? 's' : '' ?> uploaded)
+      <?php endif; ?>
+      <script>
+        setTimeout(() => {
+          document.getElementById("alertMessage").style.opacity = '0';
+        }, 3000);
+      </script>
+    </div>
+  <?php endif; ?>
 
 </body>
 

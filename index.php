@@ -25,15 +25,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'add_citizen') {
         $citID = $_POST['citID'] ?? null;
-        $firstname = $_POST['first_name'];
-        $middlename = $_POST['middle_name'];
-        $lastname = $_POST['last_name'];
-        $purokID = $_POST['purok'];
-        $age = $_POST['age'];
-        $sex = $_POST['sex'];
-        $civilstatus = $_POST['civilstatus'];
-        $occupation = $_POST['occupation'];
-        $contactnum = $_POST['contactnum'];
+        $firstname = $_POST['first_name'] ?? '';
+        $middlename = $_POST['middle_name'] ?? '';
+        $lastname = $_POST['last_name'] ?? '';
+        $purokID = isset($_POST['purok']) && $_POST['purok'] !== '' ? (int)$_POST['purok'] : null;
+        $age = isset($_POST['age']) && $_POST['age'] !== '' ? (int)$_POST['age'] : null;
+        $sex = $_POST['sex'] ?? null;
+        $civilstatus = $_POST['civilstatus'] ?? null;
+        $occupation = $_POST['occupation'] ?? '';
+        $contactnum = $_POST['contactnum'] ?? '';
+
+        // Basic validation for required fields
+        $missingRequired = (
+            $firstname === '' ||
+            $lastname === '' ||
+            $purokID === null ||
+            $age === null ||
+            $sex === null || $sex === '' ||
+            $civilstatus === null || $civilstatus === '' ||
+            $occupation === '' ||
+            $contactnum === ''
+        );
+        if ($missingRequired) {
+            $redirectPurok = $_GET['purokID'] ?? 'all';
+            header("Location: index.php?purokID=" . urlencode($redirectPurok) . "&error=missing_required_fields");
+            exit;
+        }
 
         // Handle image upload
         $imagePath = null;
@@ -43,6 +60,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($result['success']) {
                 $imagePath = $result['path'];
+            }
+        }
+
+        // Handle medical files upload using the existing storeFile function
+        $medicalFiles = [];
+        if (isset($_FILES['medical_files']) && !empty($_FILES['medical_files']['name'][0])) {
+            $medicalCondition = $_POST['medical_condition'] ?? '';
+            $medicalNotes = $_POST['medical_notes'] ?? '';
+            
+            // Process each uploaded file
+            foreach ($_FILES['medical_files']['name'] as $key => $filename) {
+                if ($_FILES['medical_files']['error'][$key] === UPLOAD_ERR_OK) {
+                    // Create a single file array for the storeFile function
+                    $fileArray = [
+                        'name' => $_FILES['medical_files']['name'][$key],
+                        'type' => $_FILES['medical_files']['type'][$key],
+                        'tmp_name' => $_FILES['medical_files']['tmp_name'][$key],
+                        'error' => $_FILES['medical_files']['error'][$key],
+                        'size' => $_FILES['medical_files']['size'][$key]
+                    ];
+                    
+                    // Use the existing storeFile function with file index
+                    $result = storeFile($fileArray, $firstname, $lastname, $key);
+                    
+                    if ($result['success']) {
+                        $medicalFiles[] = [
+                            'path' => $result['path'],
+                            'filename' => $result['filename'],
+                            'original_name' => $filename,
+                            'condition' => $medicalCondition,
+                            'notes' => $medicalNotes
+                        ];
+                    }
+                }
             }
         }
 
@@ -56,7 +107,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Redirect with success message and preserve purokID filter
         $redirectPurok = $_GET['purokID'] ?? 'all';
-        header("Location: index.php?purokID=" . urlencode($redirectPurok) . "&success=1");
+        $successMessage = "success=1";
+        
+        // Add medical files upload success message if files were uploaded
+        if (!empty($medicalFiles)) {
+            $successMessage .= "&medical_uploaded=1&files_count=" . count($medicalFiles);
+        }
+        
+        header("Location: index.php?purokID=" . urlencode($redirectPurok) . "&" . $successMessage);
         exit;
     }
 
@@ -87,7 +145,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: index.php?purokID=archived&unarchived=1");
         exit;
     }
+
 }
+
+
 
 // Get data for display (only after POST handling)
 $purokID = $_GET['purokID'] ?? 'all';

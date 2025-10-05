@@ -1,10 +1,10 @@
 body {
-  height: 60.5rem;
+  min-height: 100vh;
   width: auto;
   margin: 0;
   font-family: Arial, sans-serif;
   background: #ffffff;
-  background: linear-gradient(180deg,rgba(255, 255, 255, 1) 19%, rgba(159, 180, 237, 1) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 19%, rgba(159, 180, 237, 1) 100%);
 }
 
 /* Sidebar */
@@ -22,6 +22,7 @@ body {
 .sidebar h2 {
   text-align: center;
   margin-bottom: 40px;
+  font-size: 2rem;
 }
 
 .menu {
@@ -194,12 +195,35 @@ td img {
   margin-bottom: 20px;
 }
 
+/* Medical Files Section - Ensure consistent width */
+.medical-files-section .dropify-wrapper {
+  width: 100% !important;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.medical-files-section .dropify-errors-container {
+  width: 100% !important;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.medical-files-section .dropify-message {
+  width: 100% !important;
+  font-size: medium;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 /* Form Field Container */
 .form-field {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
+
+
+
+
 
 /* Form Labels */
 .form-field label {
@@ -292,6 +316,7 @@ td img {
     transform: translateX(400px);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -299,7 +324,8 @@ td img {
 }
 
 .alert-success {
-  background-color: #28a745;
+  background-color: #7C92CC;
+  
 }
 
 .alert-error {
@@ -311,16 +337,16 @@ td img {
   .sidebar {
     width: 180px;
   }
-  
+
   .content {
     margin-left: 180px;
     padding: 15px 20px;
   }
-  
+
   .form-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .top-bar {
     flex-direction: column;
     gap: 10px;
@@ -328,7 +354,81 @@ td img {
   }
 }
 
-#addFile{
-  width: 40%;
-  align-content: left;
+/* Medical Files Section */
+.medical-files-section {
+  margin-top: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.viewmedicalfiles {
+  margin-top: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+h4 {
+  margin: 0 0 20px 0;
+  color: #2e72a5;
+  font-size: 16px;
+  font-weight: 600;
+  border-bottom: 2px solid #2e72a5;
+  padding-bottom: 8px;
+}
+
+.medical-files-section .form-field {
+  margin-bottom: 15px;
+}
+
+.medical-files-section .form-field:last-child {
+  margin-bottom: 0;
+}
+
+.medical-files-section textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.medical-files-section textarea:focus {
+  outline: none;
+  border-color: #2e72a5;
+}
+
+/* Dropify Custom Styling */
+.dropify-wrapper {
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.dropify-wrapper:hover {
+  border-color: #2e72a5;
+  background: #f0f7ff;
+}
+
+.dropify-wrapper .dropify-message {
+  color: #666;
+  font-size: 14px;
+}
+
+.dropify-wrapper .dropify-message .file-icon {
+  color: #2e72a5;
+}
+
+.medical-files-section {
+  margin-top: 20px;
+  padding: 15px;
 }
