@@ -24,16 +24,16 @@ if (!$action) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'add_citizen') {
-        $citID = $_POST['citID'] ?? null;
-        $firstname = $_POST['first_name'] ?? '';
-        $middlename = $_POST['middle_name'] ?? '';
-        $lastname = $_POST['last_name'] ?? '';
-        $purokID = isset($_POST['purok']) && $_POST['purok'] !== '' ? (int)$_POST['purok'] : null;
-        $age = isset($_POST['age']) && $_POST['age'] !== '' ? (int)$_POST['age'] : null;
-        $sex = $_POST['sex'] ?? null;
-        $civilstatus = $_POST['civilstatus'] ?? null;
-        $occupation = $_POST['occupation'] ?? '';
-        $contactnum = $_POST['contactnum'] ?? '';
+        $citID = filter_input(INPUT_POST, 'citID', FILTER_VALIDATE_INT);
+        $firstname = trim(filter_input(INPUT_POST, 'first_name', FILTER_SANITIZE_STRING)) ?? '';
+        $middlename = trim(filter_input(INPUT_POST, 'middle_name', FILTER_SANITIZE_STRING)) ?? '';
+        $lastname = trim(filter_input(INPUT_POST, 'last_name', FILTER_SANITIZE_STRING)) ?? '';
+        $purokID = filter_input(INPUT_POST, 'purok', FILTER_VALIDATE_INT);
+        $age = filter_input(INPUT_POST, 'age', FILTER_VALIDATE_INT);
+        $sex = filter_input(INPUT_POST, 'sex', FILTER_SANITIZE_STRING);
+        $civilstatus = filter_input(INPUT_POST, 'civilstatus', FILTER_SANITIZE_STRING);
+        $occupation = trim(filter_input(INPUT_POST, 'occupation', FILTER_SANITIZE_STRING)) ?? '';
+        $contactnum = trim(filter_input(INPUT_POST, 'contactnum', FILTER_SANITIZE_STRING)) ?? '';
 
         // Basic validation for required fields
         $missingRequired = (
@@ -66,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Handle medical files upload using the existing storeFile function
         $medicalFiles = [];
         if (isset($_FILES['medical_files']) && !empty($_FILES['medical_files']['name'][0])) {
-            $medicalCondition = $_POST['medical_condition'] ?? '';
-            $medicalNotes = $_POST['medical_notes'] ?? '';
+            $medicalCondition = trim(filter_input(INPUT_POST, 'medical_condition', FILTER_SANITIZE_STRING)) ?? '';
+            $medicalNotes = trim(filter_input(INPUT_POST, 'medical_notes', FILTER_SANITIZE_STRING)) ?? '';
             
             // Process each uploaded file
             foreach ($_FILES['medical_files']['name'] as $key => $filename) {
