@@ -31,17 +31,34 @@ body {
 }
 
 .menu li {
-  padding: 15px 25px;
-  cursor: pointer;
-  transition: background 0.2s;
+  list-style: none;
+  transition: background 0.3s, color 0.3s;
 }
 
-.menu li:hover,
-.menu .active {
-  background: #fff;
-  color: #2e72a5;
+/* Style links inside menu */
+.menu li a {
+  display: block;
+  padding: 15px 25px;
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.3s, color 0.3s, transform 0.2s;
   border-radius: 20px 0 0 20px;
 }
+
+/* Hover effect */
+.menu li a:hover {
+  background: #fff;
+  color: #2e72a5;
+  transform: translateX(5px);
+}
+
+/* Active page styling */
+.menu li.active a {
+  background: #fff;
+  color: #2e72a5;
+  font-weight: bold;
+}
+
 
 /* Main Content */
 .content {
