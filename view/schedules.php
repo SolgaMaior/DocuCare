@@ -27,8 +27,9 @@ $appointments = get_appointments();
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Schedules - DocuCare</title>
-<link rel="stylesheet" href="record.css">
-<link rel="stylesheet" href="appointments.css">
+<link rel="stylesheet" href="../styles/record.css">
+
+
 </head>
 <body>
 
@@ -45,8 +46,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <li class="<?= ($current_page == 'inventory.php') ? 'active' : '' ?>"><a href="inventory.php">Inventory</a></li>
   </ul>
 </div>
-
-
 
 
 

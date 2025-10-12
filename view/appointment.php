@@ -44,7 +44,8 @@ $appointments = get_appointments();
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Appointments - DocuCare</title>
-<link rel="stylesheet" href="record.css">
+<link rel="stylesheet" href="../styles/record.css">
+
 
 </head>
 <body>
@@ -196,3 +197,5 @@ function editAppointment(id) {
 
 </body>
 </html>
+
+
