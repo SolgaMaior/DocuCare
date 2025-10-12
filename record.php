@@ -1,7 +1,8 @@
 <?php
-require_once('model/databases/citizensdb.php');
-require_once('model/databases/db_con.php');
-require_once('model/file_handler.php');
+require('model/databases/citizensdb.php');
+require('model/databases/db_con.php');
+
+
 
 // Initialize variables
 $citizenID = filter_input(INPUT_POST, 'citizenID', FILTER_VALIDATE_INT);
@@ -20,7 +21,9 @@ if (!$action) {
     $action = 'list_citizens';
 }
 
-// Handle POST actions before any output
+
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'add_citizen') {
@@ -48,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
         if ($missingRequired) {
             $redirectPurok = $_GET['purokID'] ?? 'all';
-            header("Location: record_view.php?purokID=" . urlencode($redirectPurok) . "&error=missing_required_fields");
+            
             exit;
         }
 
@@ -114,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $successMessage .= "&medical_uploaded=1&files_count=" . count($medicalFiles);
         }
         
-        header("Location: record_view.php?purokID=" . urlencode($redirectPurok) . "&" . $successMessage);
+        
         exit;
     }
 
@@ -125,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         // Preserve current purok filter
         $redirectPurok = $_GET['purokID'] ?? 'all';
-        header("Location: record_view.php?purokID=" . urlencode($redirectPurok) . "&archived=1");
+        
         exit;
     }
 
@@ -134,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($citID) {
             restore_citizen($citID);
         }
-        header("Location: record_view.php?purokID=archived&unarchived=1");
+        
         exit;
     }
 
@@ -144,4 +147,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $purokID = $_GET['purokID'] ?? 'all';
 $citizens = ($purokID === 'archived') ? get_archived_citizens() : get_citizens_by_purok($purokID);
 
-include('view/record.php');
+include('view/record.view.php');

@@ -3,11 +3,34 @@ body {
   width: auto;
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #ffffff;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 19%, rgba(159, 180, 237, 1) 100%);
+  /* Optimized Gradient for smoother background */
+  background: linear-gradient(180deg, #ffffff 19%, #9FB4ED 100%);
 }
 
-/* Sidebar */
+/* Base Headings */
+h2, h4 {
+  color: #2e72a5;
+  margin: 0 0 20px 0;
+}
+
+
+
+h4 {
+  font-size: 16px;
+  font-weight: 600;
+  border-bottom: 2px solid #2e72a5;
+  padding-bottom: 8px;
+}
+
+/* Global Transitions for Interactive Elements */
+.btn, .menu li, .menu li a {
+  transition: all 0.2s ease-in-out;
+}
+
+/* =========================================================================
+   2. SIDEBAR NAVIGATION
+   ========================================================================= */
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -18,11 +41,23 @@ body {
   color: #fff;
   padding: 20px 0;
 }
+/* NEW - MORE SPECIFIC */
+.sidebar span:not(svg) {
+  color: white;
+}
+
+.menu li a:hover,
+.menu li.active a {
+  background: #d1d5e8; /* Darker gray-blue */
+  color: #1e3a8a; /* Darker blue text */
+}
+
 
 .sidebar h2 {
   text-align: center;
   margin-bottom: 40px;
   font-size: 2rem;
+  color: #fff; /* Ensure sidebar title is white */
 }
 
 .menu {
@@ -30,34 +65,47 @@ body {
   padding: 0;
 }
 
-.menu li {
-  padding: 15px 25px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
 
-.menu li:hover,
-.menu .active {
-  background: #fff;
-  color: #2e72a5;
-  border-radius: 20px 0 0 20px;
-}
+/* =========================================================================
+   3. MAIN CONTENT & HEADER
+   ========================================================================= */
 
-/* Main Content */
 .content {
   margin-left: 220px;
   padding: 20px 40px;
 }
 
-.header {
+.header, .top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.header {
   margin-bottom: 20px;
 }
 
-.header h2 {
-  color: #2e72a5;
+.top-bar {
+  margin-bottom: 15px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
+.search-box input, #filter {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  color: #333;
+}
+
+.search-box input {
+  padding-right: 30px; /* Space for a possible icon */
+  border-radius: 20px;
 }
 
 .logout {
@@ -66,62 +114,15 @@ body {
   font-size: 14px;
 }
 
-/* Top Bar */
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
+/* =========================================================================
+   4. BUTTONS & CARDS
+   ========================================================================= */
 
-.search-box {
-  position: relative;
-}
-
-.search-box input {
-  padding: 8px 30px 8px 10px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-}
-
-.controls {
-  display: flex;
-  gap: 10px;
-}
-
-/* Table */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-th,
-td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-th {
-  background: #f1f1f1;
-}
-
-td img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* Buttons */
 .btn {
   padding: 8px 16px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: opacity 0.2s;
 }
 
 .btn:hover {
@@ -133,24 +134,18 @@ td img {
   color: #fff;
 }
 
-#filter {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #fff;
-  font-size: 14px;
-  color: #333;
-}
-
-
-
 .btn-outline {
   background: #fff;
   border: 1px solid #2e72a5;
   color: #2e72a5;
 }
 
-/* Form Card */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
 .card {
   background: #fff;
   border-radius: 8px;
@@ -163,7 +158,119 @@ td img {
   margin-bottom: 15px;
 }
 
-/* Upload Section */
+/* =========================================================================
+   5. FORMS
+   ========================================================================= */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-field label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2e72a5;
+  margin-bottom: 2px;
+}
+
+/* Combined styling for all input/select/textarea elements */
+.form-field input,
+.form-field select,
+.medical-files-section textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 6px;
+  font-family: inherit; /* Use body font family */
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.medical-files-section textarea:focus {
+  outline: none;
+  border-color: #2e72a5;
+  background-color: #fff;
+}
+
+.form-field input::placeholder {
+  color: #999;
+}
+
+/* Select-Specific Styling */
+.form-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23333' d='M1.41 0L6 4.59L10.59 0L12 1.41l-6 6l-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  padding-right: 35px;
+}
+
+/* Select Color Handling */
+.form-field select option[value=""],
+.form-field select:invalid {
+  color: #999; /* Placeholder/initial state color */
+}
+
+.form-field select:valid {
+  color: #333; /* Selected value color */
+}
+
+/* Textarea specific styling */
+.medical-files-section textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* =========================================================================
+   6. TABLES
+   ========================================================================= */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+
+.hd  {
+  background: #7489c5;
+  color: #fff;
+}
+
+td img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* =========================================================================
+   7. FILE UPLOAD & SPECIAL SECTIONS
+   ========================================================================= */
+
 .upload-section {
   display: flex;
   align-items: flex-start;
@@ -187,116 +294,45 @@ td img {
   display: none;
 }
 
-/* Form Grid */
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-bottom: 20px;
+.medical-files-section, .viewmedicalfiles {
+  margin-top: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
 }
 
-/* Medical Files Section - Ensure consistent width */
-.medical-files-section .dropify-wrapper {
-  width: 100% !important;
+/* Dropify Overrides (Less !important where possible) */
+.dropify-wrapper {
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  transition: all 0.3s ease;
+  width: 100%; /* Default to full width of container */
   max-width: 100%;
   box-sizing: border-box;
 }
 
-.medical-files-section .dropify-errors-container {
-  width: 100% !important;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.medical-files-section .dropify-message {
-  width: 100% !important;
-  font-size: medium;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-/* Form Field Container */
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-
-
-
-
-/* Form Labels */
-.form-field label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #2e72a5;
-  margin-bottom: 2px;
-}
-
-.form-field input,
-.form-field select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  border-radius: 6px;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  color: #333;
-  box-sizing: border-box;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-/* Add custom dropdown arrow for select */
-.form-field select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23333' d='M1.41 0L6 4.59L10.59 0L12 1.41l-6 6l-6-6z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 12px;
-  padding-right: 35px;
-}
-
-/* Gray color for placeholder option in select */
-.form-field select option[value=""] {
-  color: #999;
-}
-
-/* Black color for selected value */
-.form-field select:not([value=""]) {
-  color: #333;
-}
-
-/* Gray color when no option selected (uses invalid pseudo-class) */
-.form-field select:invalid {
-  color: #999;
-}
-
-/* Black color when valid option selected */
-.form-field select:valid {
-  color: #333;
-}
-
-.form-field input:focus,
-.form-field select:focus {
-  outline: none;
+.dropify-wrapper:hover {
   border-color: #2e72a5;
-  background-color: #fff;
+  background: #f0f7ff;
 }
 
-.form-field input::placeholder {
-  color: #999;
+.dropify-wrapper .dropify-message {
+  color: #666;
+  font-size: 14px;
 }
 
-/* Form Actions */
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
+.dropify-wrapper .dropify-message .file-icon {
+  color: #2e72a5;
 }
 
-/* Alert Notification */
+
+
+/* =========================================================================
+   8. ALERT NOTIFICATION
+   ========================================================================= */
+
 .alert {
   position: fixed;
   top: 20px;
@@ -316,7 +352,6 @@ td img {
     transform: translateX(400px);
     opacity: 0;
   }
-
   to {
     transform: translateX(0);
     opacity: 1;
@@ -325,14 +360,16 @@ td img {
 
 .alert-success {
   background-color: #7C92CC;
-  
 }
 
 .alert-error {
   background-color: #dc3545;
 }
 
-/* Responsive Design */
+/* =========================================================================
+   9. RESPONSIVE DESIGN
+   ========================================================================= */
+
 @media (max-width: 768px) {
   .sidebar {
     width: 180px;
@@ -344,7 +381,7 @@ td img {
   }
 
   .form-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Stack columns on small screens */
   }
 
   .top-bar {
@@ -352,83 +389,4 @@ td img {
     gap: 10px;
     align-items: flex-start;
   }
-}
-
-/* Medical Files Section */
-.medical-files-section {
-  margin-top: 30px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
-}
-
-.viewmedicalfiles {
-  margin-top: 30px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
-}
-
-h4 {
-  margin: 0 0 20px 0;
-  color: #2e72a5;
-  font-size: 16px;
-  font-weight: 600;
-  border-bottom: 2px solid #2e72a5;
-  padding-bottom: 8px;
-}
-
-.medical-files-section .form-field {
-  margin-bottom: 15px;
-}
-
-.medical-files-section .form-field:last-child {
-  margin-bottom: 0;
-}
-
-.medical-files-section textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  color: #333;
-  box-sizing: border-box;
-  resize: vertical;
-  min-height: 80px;
-}
-
-.medical-files-section textarea:focus {
-  outline: none;
-  border-color: #2e72a5;
-}
-
-/* Dropify Custom Styling */
-.dropify-wrapper {
-  border: 2px dashed #ddd;
-  border-radius: 8px;
-  background: #fafafa;
-  transition: all 0.3s ease;
-}
-
-.dropify-wrapper:hover {
-  border-color: #2e72a5;
-  background: #f0f7ff;
-}
-
-.dropify-wrapper .dropify-message {
-  color: #666;
-  font-size: 14px;
-}
-
-.dropify-wrapper .dropify-message .file-icon {
-  color: #2e72a5;
-}
-
-.medical-files-section {
-  margin-top: 20px;
-  padding: 15px;
 }

@@ -12,16 +12,9 @@
 </head>
 
 <body>
-
-  <div class="sidebar">
-    <h2>Docu-care</h2>
-    <ul class="menu">
-      <li>Dashboard</li>
-      <li class="active">Citizen Records</li>
-      <li>Appointments</li>
-      <li>Inventory</li>
-    </ul>
-  </div>
+<?php
+require('view/partials/sidebar.php');
+?>
 
   <div class="content">
     <div class="header">
@@ -35,7 +28,7 @@
       </div>
 
       <div class="controls">
-        <form method="GET" action="record_view.php">
+        <form method="GET" action="record.php">
           <select id="filter" name="purokID" onchange="this.form.submit()">
             <option value="all" <?= $purokID === 'all' ? 'selected' : '' ?>>All Puroks</option>
             <?php for ($i = 1; $i <= 5; $i++): ?>
@@ -52,7 +45,7 @@
     <!-- Citizens Table -->
     <div id="records-section">
       <table>
-        <thead>
+        <thead class="hd">
           <tr>
             <th>Photo</th>
             <th>Last Name</th>
@@ -78,7 +71,7 @@
                 <td><?= htmlspecialchars($citizen['purokID']); ?></td>
                 <td style="display: flex; gap: 5px; border: none; align-content: center; margin-top: .6rem;">
                   <!-- Archive / Unarchive -->
-                  <form method="POST" action="record_view.php" style="display: inline;">
+                  <form method="POST" action="record.php" style="display: inline;">
                     <input type="hidden" name="action"
                       value="<?= $citizen['isArchived'] == 1 ? 'unarchive_citizen' : 'archive_citizen' ?>">
                     <input type="hidden" name="citID" value="<?= htmlspecialchars($citizen['citID']) ?>">
@@ -112,7 +105,7 @@
 
     <!-- Add/Edit Form -->
     <div id="form-section" style="display:none;">
-      <form method="POST" action="record_view.php" enctype="multipart/form-data">
+      <form method="POST" action="record.php" enctype="multipart/form-data">
         <input type="hidden" name="citID" id="citID">
         <input type="hidden" name="action" id="formAction" value="add_citizen">
 
@@ -228,7 +221,7 @@
 
           <div class="actions" style="margin-top: 1rem;">
             <button type="button" class="btn btn-outline" onclick="showTable()">Cancel</button>
-            <button type="submit" id="submitButton" class="btn btn-primary">Submit</button>
+            <button type="submit" id="submitButton" class="btn btn-outline">Submit</button>
           </div>
         </div>
         </div>
