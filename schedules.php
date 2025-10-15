@@ -5,7 +5,7 @@ require('model/databases/appointmentdb.php');
 
 $message = '';
 
-// Handle status update
+
 if (isset($_POST['action']) && isset($_POST['appointment_id'])) {
     $id = (int)$_POST['appointment_id'];
     $action = $_POST['action'];
@@ -19,7 +19,6 @@ if (isset($_POST['action']) && isset($_POST['appointment_id'])) {
     }
 }
 
-// Fetch all appointments ordered by schedule
 $appointments = get_appointments();
 ?>
 

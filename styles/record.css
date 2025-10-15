@@ -9,7 +9,7 @@ body {
 
 /* Base Headings */
 h2, h4 {
-  color: #2e72a5;
+  color: #7489c5;
   margin: 0 0 20px 0;
 }
 
@@ -18,7 +18,7 @@ h2, h4 {
 h4 {
   font-size: 16px;
   font-weight: 600;
-  border-bottom: 2px solid #2e72a5;
+  border-bottom: 2px solid #7489c5;
   padding-bottom: 8px;
 }
 
@@ -37,7 +37,7 @@ h4 {
   left: 0;
   width: 220px;
   height: 100%;
-  background: #7C92CC;
+  background: #7489c5;
   color: #fff;
   padding: 20px 0;
 }
@@ -49,7 +49,7 @@ h4 {
 .menu li a:hover,
 .menu li.active a {
   background: #d1d5e8; /* Darker gray-blue */
-  color: #1e3a8a; /* Darker blue text */
+  color: #7489c5; /* Darker blue text */
 }
 
 
@@ -81,6 +81,13 @@ h4 {
   align-items: center;
 }
 
+#Title {
+  font-size: 2.5rem;
+  color: white;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-weight: bold;
+}
+
 .header {
   margin-bottom: 20px;
 }
@@ -110,7 +117,7 @@ h4 {
 
 .logout {
   text-decoration: none;
-  color: #2e72a5;
+  color: #7489c5;
   font-size: 14px;
 }
 
@@ -130,14 +137,14 @@ h4 {
 }
 
 .btn-primary {
-  background: #2e72a5;
+  background: #7489c5;
   color: #fff;
 }
 
 .btn-outline {
   background: #fff;
-  border: 1px solid #2e72a5;
-  color: #2e72a5;
+  border: 1px solid #7489c5;
+  color: #7489c5;
 }
 
 .actions {
@@ -154,7 +161,7 @@ h4 {
 }
 
 .card h3 {
-  color: #2e72a5;
+  color: #7489c5;
   margin-bottom: 15px;
 }
 
@@ -178,7 +185,7 @@ h4 {
 .form-field label {
   font-size: 14px;
   font-weight: 500;
-  color: #2e72a5;
+  color: #7489c5;
   margin-bottom: 2px;
 }
 
@@ -201,7 +208,7 @@ h4 {
 .form-field select:focus,
 .medical-files-section textarea:focus {
   outline: none;
-  border-color: #2e72a5;
+  border-color: #7489c5;
   background-color: #fff;
 }
 
@@ -301,6 +308,50 @@ td img {
   border-radius: 8px;
   border: 1px solid #e9ecef;
 }
+.viewmedicalfiles {
+  margin-top: 1rem;
+}
+
+
+#medicalFilesList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.medical-file-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.file-thumbnail {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.pdf-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pdf-frame {
+  width: 100%;
+  height: 400px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+
 
 /* Dropify Overrides (Less !important where possible) */
 .dropify-wrapper {
@@ -314,7 +365,7 @@ td img {
 }
 
 .dropify-wrapper:hover {
-  border-color: #2e72a5;
+  border-color: #7489c5;
   background: #f0f7ff;
 }
 
@@ -324,7 +375,7 @@ td img {
 }
 
 .dropify-wrapper .dropify-message .file-icon {
-  color: #2e72a5;
+  color: #7489c5;
 }
 
 
@@ -359,7 +410,7 @@ td img {
 }
 
 .alert-success {
-  background-color: #7C92CC;
+  background-color: #7489c5;
 }
 
 .alert-error {

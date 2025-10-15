@@ -2,7 +2,7 @@
 require_once(__DIR__ . '/db_con.php');
 
 function add_appointment($lastname, $firstname, $middlename, $sex, $age, $purok, $schedule) {
-    global $db; // Changed from $pdo to $db
+    global $db; 
     $query = "INSERT INTO appointments (lastname, firstname, middlename, sex, age, purok, schedule, status)
               VALUES (:lastname, :firstname, :middlename, :sex, :age, :purok, :schedule, 'Pending')";
     $stmt = $db->prepare($query);
@@ -18,7 +18,7 @@ function add_appointment($lastname, $firstname, $middlename, $sex, $age, $purok,
 }
 
 function get_appointments() {
-    global $db; // Changed from $pdo to $db
+    global $db;
     $query = "SELECT * FROM appointments ORDER BY schedule";
     $stmt = $db->prepare($query);
     $stmt->execute();
@@ -28,7 +28,7 @@ function get_appointments() {
 }
 
 function update_appointment($id, $lastname, $firstname, $middlename, $sex, $age, $purok, $schedule) {
-    global $db; // Changed from $pdo to $db
+    global $db;
     $query = "UPDATE appointments
               SET lastname = :lastname, firstname = :firstname, middlename = :middlename,
                   sex = :sex, age = :age, purok = :purok, schedule = :schedule
@@ -47,7 +47,7 @@ function update_appointment($id, $lastname, $firstname, $middlename, $sex, $age,
 }
 
 function delete_appointment($id) {
-    global $db; // Changed from $pdo to $db
+    global $db;
     $query = "DELETE FROM appointments WHERE id = :id";
     $stmt = $db->prepare($query);
     $stmt->bindValue(':id', $id, PDO::PARAM_INT);
@@ -56,7 +56,7 @@ function delete_appointment($id) {
 }
 
 function update_appointment_status($id, $status) {
-    global $db; // Changed from $pdo to $db
+    global $db;
     $query = "UPDATE appointments SET status = :status WHERE id = :id";
     $stmt = $db->prepare($query);
     $stmt->bindValue(':status', $status);

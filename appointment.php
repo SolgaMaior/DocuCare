@@ -58,15 +58,15 @@ require('view/partials/sidebar.php');
 
 <div class="content">
     <div class="header">
-        
-        <a href="logout.php" class="logout">Logout</a>
+<!--         
+        <a href="logout.php" class="logout">Logout</a> -->
     </div>
 
     <?php if ($message): ?>
         <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
     <?php endif; ?>
 
-    <!-- Appointments Table -->
+   
     <div>
         
         <table>
@@ -106,7 +106,6 @@ require('view/partials/sidebar.php');
         </table>
     </div>
 
-    <!-- Add/Edit Form -->
     <div style="margin-top:2rem;">
         <div class="card">
             <h3>Appointment Details</h3>

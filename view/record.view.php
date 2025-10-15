@@ -18,8 +18,8 @@ require('view/partials/sidebar.php');
 
   <div class="content">
     <div class="header">
-      <h2 id="page-title">Citizen Records</h2>
-      <a href="logout.php" class="logout">Logout</a>
+      <!-- <h2 id="page-title">Citizen Records</h2>
+      <a href="logout.php" class="logout">Logout</a> -->
     </div>
 
     <div class="top-bar" id="top-controls">
@@ -42,7 +42,7 @@ require('view/partials/sidebar.php');
       </div>
     </div>
 
-    <!-- Citizens Table -->
+ 
     <div id="records-section">
       <table>
         <thead class="hd">
@@ -56,14 +56,15 @@ require('view/partials/sidebar.php');
           </tr>
         </thead>
 
-        <tbody id="citizenTableBody">
+        <tbody id="citizenTableBody"> 
           <?php if (!empty($citizens)): ?>
             <?php foreach ($citizens as $citizen): ?>
               <tr>
                 <td>
-                  <img id="profileImage_<?= $citizen['citID'] ?>" src="<?= get_profile_image_path($citizen['firstname'], $citizen['lastname']) ?: 'resources/defaultprofile.png' ?>"
-                    alt="Photo"
-                    onerror="this.src='resources/defaultprofile.png'">
+                  <img id="profileImage_"
+                  src="model/display_image.php?citID=<?= htmlspecialchars($citizen['citID']) ?>"
+                  alt="Profile"
+                  onerror="this.src='resources/defaultprofile.png'">
                 </td>
                 <td><?= htmlspecialchars($citizen['lastname']); ?></td>
                 <td><?= htmlspecialchars($citizen['firstname']); ?></td>
@@ -103,21 +104,20 @@ require('view/partials/sidebar.php');
 
 
 
-    <!-- Add/Edit Form -->
+    
     <div id="form-section" style="display:none;">
       <form method="POST" action="record.php" enctype="multipart/form-data">
         <input type="hidden" name="citID" id="citID">
         <input type="hidden" name="action" id="formAction" value="add_citizen">
 
         <div class="card">
-          <!-- Profile Image Upload -->
           <div class="upload-section">
             <img id="profilePreview"
               src="resources/defaultprofile.png"
               alt="Profile"
               onerror="this.src='resources/defaultprofile.png'">
             <br>
-            <button id="uploadProfileButton" class="btn btn-primary" type="button"
+            <button id="uploadProfileButton" class="btn btn-outline" type="button"
               onclick="document.getElementById('uploadInput').click()">Upload Photo</button>
             <input type="file" name="profileImage" id="uploadInput" accept="image/*"
               onchange="previewImage(event)" hidden>
@@ -189,7 +189,7 @@ require('view/partials/sidebar.php');
 
           </div>
         
-          <div id="medicalFilesPreview" class="viewmedicalfiles" style="display: none;">
+          <div id="medicalFilesPreview" class="viewmedicalfiles">
               <h4 id="associatedRecordsHeader">Associated Records</h4>
               <div id="medicalFilesList"></div>
           </div>
@@ -198,7 +198,7 @@ require('view/partials/sidebar.php');
            
 
 
-          <div class="medical-files-section">
+          <div class="medical-files-section" style="display: none;">
             
             <h4>Medical Records (Optional)</h4>
             <div class="form-field">

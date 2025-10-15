@@ -3,7 +3,7 @@
 
 
 <div class="sidebar">
-  <h2>Docu-care</h2>
+  <h2 id="Title">DocuCare</h2>
   <ul class="space-y-2 font-medium">
     <li >
       <a href="/DocuCare/dashboard" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-400 group">
