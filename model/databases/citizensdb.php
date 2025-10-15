@@ -70,7 +70,7 @@
                 $result[] = [
                     'filename' => $file['file_name'],
                     // We'll use a separate PHP script to serve the file later
-                    'path' => "model/download_file.php?id=" . $file['id'],
+                    'path' => "model/record_file_func/download_file.php?id=" . $file['id'],
                     'mime' => $file['mime_type']
                 ];
             }

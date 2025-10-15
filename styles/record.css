@@ -311,21 +311,36 @@ td img {
 .viewmedicalfiles {
   margin-top: 1rem;
 }
-
+#associatedRecordsHeader{
+  margin-bottom: 1rem;
+}
+.delete-file-button {
+  background: #bd616c;
+  align-self: center;
+  margin-left: auto ;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
 
 #medicalFilesList {
   display: flex;
   flex-direction: column;
 }
+.filename {
+  font-weight: bold;
+  align-self: center;
+}
 
 .medical-file-item {
   display: flex;
-  flex-direction: column;
+  justify-content: start;
   gap: 5px;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 10px;
-  margin-top: 15px;
   background-color: #f9f9f9;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

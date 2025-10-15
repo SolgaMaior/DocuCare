@@ -62,7 +62,7 @@ require('view/partials/sidebar.php');
               <tr>
                 <td>
                   <img id="profileImage_"
-                  src="model/display_image.php?citID=<?= htmlspecialchars($citizen['citID']) ?>"
+                  src="model/record_file_func/display_image.php?citID=<?= htmlspecialchars($citizen['citID']) ?>"
                   alt="Profile"
                   onerror="this.src='resources/defaultprofile.png'">
                 </td>

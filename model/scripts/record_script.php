@@ -21,7 +21,7 @@
   const citizenMedicalFiles = {};
 
   <?php foreach ($citizens as $citizen): ?>
-    citizenPhotos[<?= $citizen['citID'] ?>] = <?= json_encode("model/display_image.php?citID=" . $citizen['citID']) ?>;
+    citizenPhotos[<?= $citizen['citID'] ?>] = <?= json_encode("model/record_file_func/display_image.php?citID=" . $citizen['citID']) ?>;
     citizenMedicalFiles[<?= $citizen['citID'] ?>] = <?= json_encode(get_citizen_file_data($citizen['citID'])) ?>;
   <?php endforeach; ?>
 
@@ -166,6 +166,7 @@
         document.getElementById('submitButton').style.display = 'inline-block';
     }, 100);
 
+    showAssociatedRecords(citID);
 
   }
 
@@ -233,6 +234,12 @@
     document.getElementById("top-controls").style.display = "none";
     document.getElementById("form-section").style.display = "block";
 
+    showAssociatedRecords(citID);
+
+  }
+
+
+  function showAssociatedRecords(citID) {
     // Render associated medical files for this citizen
     const filesContainer = document.getElementById('medicalFilesList');
     const previewBlock = document.getElementById('medicalFilesPreview');
@@ -241,14 +248,24 @@
     if (filesContainer && previewBlock && header) {
       filesContainer.innerHTML = '';
       const files = citizenMedicalFiles[citID] || [];
+      
 
       if (files.length > 0) {
         files.forEach(file => {
           const span = document.createElement('span');
           span.className = 'medical-file-item';
+          const deleteButton = document.createElement('button');
+          deleteButton.className = 'delete-file-button';
+          deleteButton.textContent = 'Delete';
+          deleteButton.addEventListener('click', (e) => {
+            e.preventDefault();   
+            e.stopPropagation(); 
+            deleteCitizenFile(file.fileID, citID); 
+          });
 
           // Create link
           const a = document.createElement('a');
+          a.className = 'filename';
           a.href = file.path;
           a.target = '_blank';
           a.textContent = file.filename;
@@ -269,8 +286,9 @@
 
           // Add the link next to the thumbnail
           span.appendChild(a);
+          span.appendChild(deleteButton);
           filesContainer.appendChild(span);
-          filesContainer.appendChild(document.createElement('br'));
+          filesContainer.appendChild(document.createElement('br')); // space between items
         });
 
         header.style.display = 'block';
@@ -280,10 +298,7 @@
         previewBlock.style.display = 'none';
       }
     }
-
   }
-
-
 
 
   function showCitizenFiles(citID) {
@@ -304,8 +319,8 @@
 
         const fileType = file.mime || '';
 
+        // --- FILE DISPLAY ---
         if (fileType.startsWith('image/')) {
-          // --- Image Preview ---
           const img = document.createElement('img');
           img.src = file.path;
           img.alt = file.filename;
@@ -319,7 +334,6 @@
           fileWrapper.appendChild(label);
 
         } else if (fileType === 'application/pdf') {
-          // --- PDF Preview ---
           const pdfContainer = document.createElement('div');
           pdfContainer.className = 'pdf-preview';
 
@@ -338,7 +352,6 @@
           fileWrapper.appendChild(pdfContainer);
 
         } else {
-          // --- Other Files (DOCX, TXT, etc.) ---
           const link = document.createElement('a');
           link.href = file.path;
           link.target = '_blank';
@@ -356,6 +369,12 @@
       previewBlock.style.display = 'none';
     }
   }
+
+ 
+
+
+
+
 
 
 
@@ -466,22 +485,6 @@
           console.log('Dropify reset failed:', e);
       }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
