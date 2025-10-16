@@ -166,7 +166,8 @@
         document.getElementById('submitButton').style.display = 'inline-block';
     }, 100);
 
-    showAssociatedRecords(citID);
+    showAssociatedRecords(citID, true);
+    
 
   }
 
@@ -239,66 +240,70 @@
   }
 
 
-  function showAssociatedRecords(citID) {
-    // Render associated medical files for this citizen
+
+
+  function showAssociatedRecords(citID, isEditMode = false) {
     const filesContainer = document.getElementById('medicalFilesList');
     const previewBlock = document.getElementById('medicalFilesPreview');
     const header = document.getElementById('associatedRecordsHeader');
 
-    if (filesContainer && previewBlock && header) {
-      filesContainer.innerHTML = '';
-      const files = citizenMedicalFiles[citID] || [];
+    if (!filesContainer || !previewBlock || !header) return;
+
+    filesContainer.innerHTML = '';
+    const files = citizenMedicalFiles[citID] || [];
+
+    if (files.length > 0) {
+      files.forEach(file => {
+        const span = document.createElement('span');
+        span.className = 'medical-file-item';
+
+        // Thumbnail for image
+        if (file.mime.startsWith('image/')) {
+          const img = document.createElement('img');
+          img.src = file.path;
+          img.alt = file.filename;
+          img.style.width = '80px';
+          img.style.height = '80px';
+          img.style.objectFit = 'cover';
+          img.style.borderRadius = '8px';
+          img.style.marginRight = '10px';
+          img.style.boxShadow = '0 0 5px rgba(0,0,0,0.3)';
+          span.appendChild(img);
+        }
+
+        // File link
+        const a = document.createElement('a');
+        a.className = 'filename';
+        a.href = file.path;
+        a.target = '_blank';
+        a.textContent = file.filename;
+        span.appendChild(a);
+
       
-
-      if (files.length > 0) {
-        files.forEach(file => {
-          const span = document.createElement('span');
-          span.className = 'medical-file-item';
+        if (isEditMode) {
           const deleteButton = document.createElement('button');
-          deleteButton.className = 'delete-file-button';
           deleteButton.textContent = 'Delete';
+          deleteButton.className = 'delete-file-button';
           deleteButton.addEventListener('click', (e) => {
-            e.preventDefault();   
-            e.stopPropagation(); 
-            deleteCitizenFile(file.fileID, citID); 
+            e.preventDefault();
+            e.stopPropagation();
+            deleteCitizenFile(file.id, citID);
           });
-
-          // Create link
-          const a = document.createElement('a');
-          a.className = 'filename';
-          a.href = file.path;
-          a.target = '_blank';
-          a.textContent = file.filename;
-
-          // If the file is an image, add a thumbnail preview
-          if (file.mime.startsWith('image/')) {
-            const img = document.createElement('img');
-            img.src = file.path;
-            img.alt = file.filename;
-            img.style.width = '80px';
-            img.style.height = '80px';
-            img.style.objectFit = 'cover';
-            img.style.borderRadius = '8px';
-            img.style.marginRight = '10px';
-            img.style.boxShadow = '0 0 5px rgba(0,0,0,0.3)';
-            span.appendChild(img);
-          }
-
-          // Add the link next to the thumbnail
-          span.appendChild(a);
           span.appendChild(deleteButton);
-          filesContainer.appendChild(span);
-          filesContainer.appendChild(document.createElement('br')); // space between items
-        });
+        }
 
-        header.style.display = 'block';
-        previewBlock.style.display = 'block';
-      } else {
-        header.style.display = 'none';
-        previewBlock.style.display = 'none';
-      }
+        filesContainer.appendChild(span);
+        filesContainer.appendChild(document.createElement('br'));
+      });
+
+      header.style.display = 'block';
+      previewBlock.style.display = 'block';
+    } else {
+      header.style.display = 'none';
+      previewBlock.style.display = 'none';
     }
   }
+
 
 
   function showCitizenFiles(citID) {
@@ -368,6 +373,50 @@
       header.style.display = 'none';
       previewBlock.style.display = 'none';
     }
+  }
+
+  function deleteCitizenFile(fileID, citID) {
+      if (!confirm("Are you sure you want to delete this file?")) return;
+
+      console.log('Deleting file ID:', fileID);
+
+      fetch('model/record_file_func/delete_file.php', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ id: fileID })
+      })
+      .then(response => {
+          // Log the raw response
+          return response.text().then(text => {
+              console.log('Raw response:', text);
+              try {
+                  return JSON.parse(text);
+              } catch (e) {
+                  console.error('JSON parse error:', e);
+                  throw new Error('Server returned invalid JSON: ' + text.substring(0, 100));
+              }
+          });
+      })
+      .then(data => {
+          console.log('Parsed data:', data);
+          if (data.status === 'success') {
+              alert('File deleted successfully!');
+              
+              if (citizenMedicalFiles[citID]) {
+                  citizenMedicalFiles[citID] = citizenMedicalFiles[citID].filter(f => f.id != fileID);
+              }
+              
+              showAssociatedRecords(citID, true);
+          } else {
+              alert('Error: ' + data.message);
+          }
+      })
+      .catch(err => {
+          console.error('Delete error:', err);
+          alert('Failed to delete file: ' + err.message);
+      });
   }
 
  

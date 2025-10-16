@@ -55,28 +55,27 @@
 
     function get_citizen_file_data($citID)
     {
-            global $db;
-            
-            $query = "SELECT id, file_name, mime_type FROM record_files WHERE citID = :citID";
-            $stmt = $db->prepare($query);
-            $stmt->bindValue(':citID', $citID, PDO::PARAM_INT);
-            $stmt->execute();
-            $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $stmt->closeCursor();
-
-            // Transform DB rows into a clean JS-friendly format
-            $result = [];
-            foreach ($files as $file) {
-                $result[] = [
-                    'filename' => $file['file_name'],
-                    // We'll use a separate PHP script to serve the file later
-                    'path' => "model/record_file_func/download_file.php?id=" . $file['id'],
-                    'mime' => $file['mime_type']
-                ];
-            }
-
-            return $result;
+        global $db;
+    
+        $query = "SELECT id, file_name, mime_type FROM record_files WHERE citID = :citID";
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':citID', $citID, PDO::PARAM_INT);
+        $stmt->execute();
+        $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        
+        // Transform DB rows into a clean JS-friendly format
+        $result = [];
+        foreach ($files as $file) {
+            $result[] = [
+                'id' => $file['id'],  // ← ADD THIS LINE!
+                'filename' => $file['file_name'],
+                'path' => "model/record_file_func/download_file.php?id=" . $file['id'],
+                'mime' => $file['mime_type']
+            ];
         }
+        return $result;
+    }
 
 
         
