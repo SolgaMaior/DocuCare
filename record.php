@@ -147,4 +147,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $purokID = $_GET['purokID'] ?? 'all';
 $citizens = ($purokID === 'archived') ? get_archived_citizens() : get_citizens_by_purok($purokID);
 
-include('view/record.view.php');
+require_once('view/record.view.php');
