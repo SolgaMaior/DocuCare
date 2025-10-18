@@ -1,0 +1,365 @@
+/* Footer styling */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 220px; /* Align with sidebar */
+  right: 0;
+  background: white;
+  text-align: center;
+  padding: 10px;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+/* Diagnosis page */
+.diagnosis-page {
+  background: linear-gradient(180deg, #ffffff 19%, #9fb4ed 100%);
+  min-height: 100vh;
+  padding-bottom: 60px; /* Space for fixed footer */
+}
+
+.diagnosis-container {
+  margin-left: 220px;
+  padding: 20px 40px;
+  padding-bottom: 20px; /* Consistent bottom padding */
+}
+
+.diagnosis-header {
+  margin-bottom: 30px;
+}
+
+.diagnosis-title {
+  font-size: 2.5rem;
+  color: #7489c5;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.diagnosis-subtitle {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.back-link {
+  display: inline-block;
+  color: #7489c5;
+  text-decoration: none;
+  margin-bottom: 20px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.back-link:hover {
+  color: #5a6fa8;
+}
+
+/* Input Display Card */
+.input-display-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 25px;
+}
+
+.input-display-card h3 {
+  color: #7489c5;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  border-bottom: 2px solid #7489c5;
+  padding-bottom: 10px;
+}
+
+.input-item {
+  margin-bottom: 20px;
+}
+
+.input-item:last-child {
+  margin-bottom: 0;
+}
+
+.input-label {
+  font-weight: 600;
+  color: #7489c5;
+  margin-bottom: 8px;
+  display: block;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input-content {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  color: #333;
+  line-height: 1.6;
+  border-left: 4px solid #7489c5;
+}
+
+/* Alerts */
+.alert {
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: start;
+  gap: 12px;
+}
+
+.alert-error {
+  background: #fee2e2;
+  border: 1px solid #ef4444;
+  color: #7f1d1d;
+}
+
+.alert-success {
+  background: #d1fae5;
+  border: 1px solid #10b981;
+  color: #065f46;
+}
+
+.alert-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* Results Section */
+.results-section {
+  margin-top: 25px;
+}
+
+.results-header-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.results-header-card h3 {
+  color: #7489c5;
+  margin-bottom: 8px;
+  font-size: 1.3rem;
+}
+
+.results-header-card p {
+  color: #666;
+  margin: 0;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px; /* Add margin to prevent overlap with footer */
+}
+
+/* Diagnosis Cards */
+.diagnosis-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.diagnosis-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.diagnosis-card-header {
+  background: #7489c5;
+  padding: 20px;
+  color: white;
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.diagnosis-card-header h4 {
+  font-size: 1.3rem;
+  margin: 0;
+  color: white;
+  border: none;
+  padding: 0;
+}
+
+.diagnosis-card-body {
+  padding: 20px;
+  flex: 1; /* Take up remaining space */
+  display: flex;
+  flex-direction: column;
+}
+
+.diagnosis-description {
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Symptoms wrapper to maintain consistent height */
+.symptoms-sections-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.symptoms-section {
+  margin: 0; /* Remove margin, use gap from wrapper */
+}
+
+.symptoms-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.symptoms-title.matching {
+  color: #059669;
+}
+
+.symptoms-title.non-matching {
+  color: #dc2626;
+}
+
+.symptoms-list {
+  list-style: none;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.symptoms-list li {
+  color: #666;
+  margin-bottom: 6px;
+  position: relative;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.symptoms-list li:last-child {
+  margin-bottom: 0;
+}
+
+.symptoms-list li::before {
+  content: "•";
+  position: absolute;
+  left: -15px;
+  color: #999;
+}
+
+.diagnosis-card-footer {
+  background: #f8f9fa;
+  padding: 12px 20px;
+  color: #666;
+  font-size: 13px;
+  border-top: 1px solid #e9ecef;
+  flex-shrink: 0; /* Prevent footer from shrinking */
+  margin-top: auto; /* Push footer to bottom */
+}
+
+/* Metadata Card */
+.metadata-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px; /* Add bottom margin for footer space */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.metadata-card h4 {
+  color: #7489c5;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  border-bottom: 2px solid #7489c5;
+  padding-bottom: 8px;
+}
+
+.metadata-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  color: #666;
+  font-size: 14px;
+}
+
+.metadata-item strong {
+  color: #333;
+}
+
+/* No Results Card */
+.no-results-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 60px 40px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px; /* Space before footer */
+}
+
+.no-results-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.4;
+}
+
+.no-results-card h3 {
+  color: #7489c5;
+  margin-bottom: 10px;
+}
+
+.no-results-card p {
+  color: #666;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  footer {
+    left: 180px;
+  }
+
+  .diagnosis-container {
+    margin-left: 180px;
+    padding: 15px 20px;
+  }
+
+  .diagnosis-title {
+    font-size: 1.75rem;
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .diagnosis-page {
+    background: white;
+    padding-bottom: 0;
+  }
+
+  footer {
+    position: static;
+    left: 0;
+  }
+
+  .back-link {
+    display: none;
+  }
+
+  .diagnosis-card {
+    break-inside: avoid;
+  }
+
+  .diagnosis-container {
+    margin-left: 0;
+  }
+}

@@ -12,15 +12,16 @@ $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 // Default page
 if (!$page) {
-    $page = 'dashboard'; // or 'records' or whatever your default should be
+    $page = 'records'; // or 'records' or whatever your default should be
 }
 
 // Define allowed pages/controllers
 $allowedPages = [
-    'records' => 'controllers/records_controller.php',
-    'appointments' => 'controllers/appointments_controller.php',
-    'schedules' => 'controllers/schedules_controller.php',
-    'dashboard' => 'controllers/dashboard_controller.php', // if you have one
+    'records' => 'controllers/record.php',
+    'appointments' => 'controllers/appointment.php',
+    'schedules' => 'controllers/schedules.php',
+    'dashboard' => 'controllers/dashboard_controller.php',
+    'diagnosis' => 'controllers/diagnosis.php',
 ];
 
 // Route to the appropriate controller
