@@ -71,13 +71,13 @@
                     </p>
                 </div>
 
-                <!-- Privacy Notice -->
+                <!-- Privacy Notice
                 <?php if (isset($diagnosisResults['data']['anonymization']) && !$diagnosisResults['data']['anonymization']['hasPersonalInfo']): ?>
                     <div class="alert alert-success">
                         <span class="alert-icon">✓</span>
                         <span>No personal information detected in the input</span>
                     </div>
-                <?php endif; ?>
+                <?php endif; ?> -->
 
                 <!-- Results Grid -->
                 <div class="results-grid">

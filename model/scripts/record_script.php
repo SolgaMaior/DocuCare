@@ -160,6 +160,14 @@
   }
 
 
+
+
+
+
+
+  
+
+
   function showViewForm(citID) {
     const citizen = citizensData.find(c => c.citID == citID);
     if (!citizen) return alert('Citizen not found.');
@@ -228,6 +236,12 @@
 
     showAssociatedRecords(citID);
   }
+
+
+
+
+
+
 
   function showAssociatedRecords(citID, isEditMode = false) {
     const filesContainer = document.getElementById('medicalFilesList');

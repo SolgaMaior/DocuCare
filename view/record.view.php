@@ -28,7 +28,7 @@ require('view/partials/sidebar.php');
       </div>
 
       <div class="controls">
-        <form method="GET" action="record.php">
+        <form method="GET" action="index.php">
           <select id="filter" name="purokID" onchange="this.form.submit()">
             <option value="all" <?= $purokID === 'all' ? 'selected' : '' ?>>All Puroks</option>
             <?php for ($i = 1; $i <= 5; $i++): ?>
