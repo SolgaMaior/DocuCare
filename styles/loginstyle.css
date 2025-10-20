@@ -1,7 +1,7 @@
 /* General setup */
 body {
   margin: 0;
-  background-image: url('../images/Bg.svg');
+  background-image: url('../resources/images/Bg.svg');
   background-size: cover;
   display: flex;
   justify-content: center;

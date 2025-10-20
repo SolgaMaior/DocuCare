@@ -2,6 +2,8 @@
 require('model/databases/appointmentdb.php');
 require('model/databases/db_con.php');
 
+
+
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
