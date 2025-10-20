@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocuCare | Login</title>
+  <link rel="icon" type="image/svg" href="assets/images/Logo.svg">
+  <link rel="stylesheet" href="assets/css/loginstyle.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="main-container">
+    <!-- Blue panel with logo -->
+    <div class="left-panel">
+      <h1 class="title">DOCUCARE</h1>
+      <img src="assets/images/Logo.svg" alt="DocuCare Logo" class="logo-inside">
+    </div>
+
+    <!-- White box for login -->
+    <div class="login-box">
+      <h2>Welcome to DocuCare</h2>
+      <p class="subtitle">Sign in to continue</p>
+
+
+        <!-- Email input -->
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+
+        <!-- Password input -->
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+
+        <!-- Forgot password -->
+        <div class="forgot-password">
+          <a href="forgot_password.html"> Forgot password? <br><br></a>
+        </div>
+
+        <!-- Login button -->
+        <button type="submit" class="login-btn">Login</button>
+
+        <!-- Create account -->
+        <p class="create-account">
+          Don’t have an account? <a href="create_account.html">Create Account</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/js/loginscript.js"></script>
+</body>
+</html>
