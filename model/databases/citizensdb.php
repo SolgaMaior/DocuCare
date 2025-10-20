@@ -261,7 +261,6 @@
 
     
 
-
     function checkCitizenExists($firstname, $middlename, $lastname)
     {
         global $db;
@@ -281,3 +280,4 @@
         $statement->closeCursor();
         return $count > 0;
     }
+

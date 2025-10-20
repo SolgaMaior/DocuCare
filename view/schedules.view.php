@@ -1,26 +1,3 @@
-<?php
-require('model/databases/appointmentdb.php');
-
-
-
-$message = '';
-
-
-if (isset($_POST['action']) && isset($_POST['appointment_id'])) {
-    $id = (int)$_POST['appointment_id'];
-    $action = $_POST['action'];
-
-    if ($action === 'approve') {
-        update_appointment_status($id, 'Approved');
-        $message = "Appointment approved!";
-    } elseif ($action === 'deny') {
-        update_appointment_status($id, 'Denied');
-        $message = "Appointment denied!";
-    }
-}
-
-$appointments = get_appointments();
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,12 +11,8 @@ $appointments = get_appointments();
 
 <?php
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-?>
-<?php
 require('view/partials/sidebar.php');
 ?>
-
-
 
 <div class="content">
     <div class="header">
@@ -67,7 +40,7 @@ require('view/partials/sidebar.php');
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody >
+        <tbody>
             <?php if (!empty($appointments)): ?>
                 <?php foreach ($appointments as $app): ?>
                     <tr>
@@ -81,20 +54,26 @@ require('view/partials/sidebar.php');
                         <td><?= htmlspecialchars($app['status']) ?></td>
                         <td style="display:flex; gap:5px;">
                             <?php if ($app['status'] === 'Pending'): ?>
-                                <form method="POST" style="margin:0;">
+                                <form method="POST" action="index.php?page=schedules" style="margin:0;">
                                     <input type="hidden" name="appointment_id" value="<?= $app['id'] ?>">
                                     <button type="submit" name="action" value="approve" class="btn btn-outline">Approve</button>
                                 </form>
-                                <form method="POST" style="margin:0;">
+                                <form method="POST" action="index.php?page=schedules" style="margin:0;">
                                     <input type="hidden" name="appointment_id" value="<?= $app['id'] ?>">
                                     <button type="submit" name="action" value="deny" class="btn btn-outline">Deny</button>
                                 </form>
-                            <?php else: ?>
-                                <span style="color:<?= $app['status'] === 'Approved' ? 'green' : 'red' ?>">
-                                    <?= $app['status'] ?>
-                                </span>
+                                <form action="index.php?page=schedules" method="POST" style="margin: 0;">
+                                    <input type="hidden" name="appointment_id" value="<?= $app['id'] ?>">
+                                    <button type="submit" name="action" value="delete" class="btn btn-outline">Delete</button>
+                                </form>
+                                <?php else: ?>
+                                    <span style="color:<?= $app['status'] === 'Approved' ? 'green' : 'red' ?>">
+                                        <?= $app['status'] ?>
+                                    </span>
+                                    
                             <?php endif; ?>
                         </td>
+                        
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>

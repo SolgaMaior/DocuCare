@@ -140,6 +140,7 @@ h4 {
 
 .btn-primary {
   background: #7489c5;
+  border: 1px solid #fff;
   color: #fff;
 }
 
@@ -206,6 +207,8 @@ h4 {
   box-sizing: border-box;
 }
 
+
+
 .form-field input:focus,
 .form-field select:focus,
 .medical-files-section textarea:focus {
@@ -246,6 +249,25 @@ h4 {
   min-height: 80px;
 }
 
+.diagnosis-card:hover {
+              box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+          }
+
+          @media (max-width: 768px) {
+              .diagnosis-results-container > div[style*="grid-template-columns"] {
+                  grid-template-columns: 1fr !important;
+              }
+          }
+
+
+          @media (max-width: 768px) {
+              .medical-files-section > div[style*="display: flex"] {
+                  flex-direction: column;
+              }
+              
+            
+          }
+          
 /* =========================================================================
    6. TABLES
    ========================================================================= */

@@ -1,43 +1,3 @@
-<?php
-require('model/databases/appointmentdb.php');
-require('model/databases/db_con.php');
-
-$message = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $lastname   = trim(filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-    $firstname  = trim(filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-    $middlename = trim(filter_input(INPUT_POST, 'middlename', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-    $sex        = filter_input(INPUT_POST, 'sex', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $age        = filter_input(INPUT_POST, 'age', FILTER_VALIDATE_INT);
-    $purok      = filter_input(INPUT_POST, 'purok', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $schedule   = filter_input(INPUT_POST, 'schedule', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-
-    if ($lastname && $firstname && $sex && $age !== false && $purok && $schedule) {
-        if (!empty($_POST['appointmentID'])) {
-            $id = (int)$_POST['appointmentID'];
-            update_appointment($id, $lastname, $firstname, $middlename, $sex, $age, $purok, $schedule);
-            $message = "Appointment updated successfully!";
-        } else {
-            add_appointment($lastname, $firstname, $middlename, $sex, $age, $purok, $schedule);
-            $message = "Appointment set successfully!";
-        }
-    } else {
-        $message = "Please fill in all required fields.";
-    }
-}
-
-
-if (isset($_GET['delete_id'])) {
-    $delete_id = (int)$_GET['delete_id'];
-    delete_appointment($delete_id);
-    $message = "Appointment deleted successfully!";
-}
-
-
-$appointments = get_appointments();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,28 +10,22 @@ $appointments = get_appointments();
 
 <?php
 $current_page = basename($_SERVER['PHP_SELF']);
-?>
-<?php
 require('view/partials/sidebar.php');
 ?>
 
-
 <div class="content">
     <div class="header">
-<!--         
-        <a href="logout.php" class="logout">Logout</a> -->
+        <!-- <a href="logout.php" class="logout">Logout</a> -->
     </div>
 
     <?php if ($message): ?>
         <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
     <?php endif; ?>
 
-   
     <div>
-        
         <table>
             <thead class="hd">
-                <tr >
+                <tr>
                     <th>Last Name</th>
                     <th>First Name</th>
                     <th>Middle Name</th>
@@ -79,6 +33,7 @@ require('view/partials/sidebar.php');
                     <th>Age</th>
                     <th>Purok</th>
                     <th>Schedule</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -94,13 +49,22 @@ require('view/partials/sidebar.php');
                             <td><?= htmlspecialchars($app['purok']) ?></td>
                             <td><?= htmlspecialchars($app['schedule']) ?></td>
                             <td>
-                                <button style="padding-top: 5px; padding-bottom: 5px;" class="btn btn-outline" onclick="editAppointment(<?= $app['id'] ?>)">Edit</button>
-                                <a href="?delete_id=<?= $app['id'] ?>"  onclick="return confirm('Delete this appointment?');" class="btn btn-outline">Delete</a>
+                                <span style="color:<?= $app['status'] === 'Approved' ? 'green' : ($app['status'] === 'Denied' ? 'red' : '#333') ?>">
+                                    <?= htmlspecialchars($app['status']) ?>
+                                </span>
+                            </td>
+                            <td>
+                                <?php if ($app['status'] !== 'Approved'): ?>
+                                    <button style="padding-top: 5px; padding-bottom: 5px;" class="btn btn-outline" onclick="editAppointment(<?= $app['id'] ?>)">Edit</button>
+                                <?php else: ?>
+                                    <button style="padding-top: 5px; padding-bottom: 5px; opacity: 0.5; cursor: not-allowed;" class="btn btn-outline" disabled title="Cannot edit approved appointment">Edit</button>
+                                <?php endif; ?>
+                                <a href="index.php?page=appointments&delete_id=<?= $app['id'] ?>" onclick="return confirm('Delete this appointment?');" class="btn btn-outline">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <tr><td colspan="8" style="text-align:center;">No appointments found.</td></tr>
+                    <tr><td colspan="9" style="text-align:center;">No appointments found.</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
@@ -109,8 +73,9 @@ require('view/partials/sidebar.php');
     <div style="margin-top:2rem;">
         <div class="card">
             <h3>Appointment Details</h3>
-            <form method="POST" id="appointmentForm">
+            <form method="POST" action="index.php?page=appointments" id="appointmentForm">
                 <input type="hidden" name="appointmentID" id="appointmentID">
+                <input type="hidden" name="appointmentStatus" id="appointmentStatus">
                 <div class="form-grid">
                     <div class="form-field">
                         <label>Last Name</label>
@@ -160,7 +125,7 @@ require('view/partials/sidebar.php');
                     </div>
                 </div>
                 <div class="actions">
-                    <button class="btn btn-outline" type="reset">Cancel</button>
+                    <button class="btn btn-outline" type="reset" onclick="clearForm()">Cancel</button>
                     <button class="btn btn-outline" type="submit">Submit</button>
                 </div>
             </form>
@@ -174,7 +139,14 @@ const appointments = <?= json_encode($appointments) ?>;
 function editAppointment(id) {
     const app = appointments.find(a => a.id == id);
     if (app) {
+        // Check if appointment is approved
+        if (app.status === 'Approved') {
+            alert('Cannot edit an approved appointment. The schedule is locked.');
+            return;
+        }
+        
         document.getElementById('appointmentID').value = app.id;
+        document.getElementById('appointmentStatus').value = app.status;
         document.getElementById('lastname').value = app.lastname;
         document.getElementById('firstname').value = app.firstname;
         document.getElementById('middlename').value = app.middlename;
@@ -182,8 +154,29 @@ function editAppointment(id) {
         document.getElementById('age').value = app.age;
         document.getElementById('purok').value = app.purok;
         document.getElementById('schedule').value = app.schedule;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Disable schedule field if approved
+        const scheduleField = document.getElementById('schedule');
+        if (app.status === 'Approved') {
+            scheduleField.disabled = true;
+            scheduleField.style.backgroundColor = '#f0f0f0';
+            scheduleField.style.cursor = 'not-allowed';
+        } else {
+            scheduleField.disabled = false;
+            scheduleField.style.backgroundColor = '';
+            scheduleField.style.cursor = '';
+        }
+        
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
+}
+
+function clearForm() {
+    document.getElementById('appointmentID').value = '';
+    document.getElementById('appointmentStatus').value = '';
+    document.getElementById('schedule').disabled = false;
+    document.getElementById('schedule').style.backgroundColor = '';
+    document.getElementById('schedule').style.cursor = '';
 }
 </script>
 

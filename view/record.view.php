@@ -28,7 +28,7 @@ require('view/partials/sidebar.php');
       </div>
 
       <div class="controls">
-        <form method="GET" action="record.php">
+        <form method="GET" action="index.php">
           <select id="filter" name="purokID" onchange="this.form.submit()">
             <option value="all" <?= $purokID === 'all' ? 'selected' : '' ?>>All Puroks</option>
             <?php for ($i = 1; $i <= 5; $i++): ?>
@@ -72,7 +72,7 @@ require('view/partials/sidebar.php');
                 <td><?= htmlspecialchars($citizen['purokID']); ?></td>
                 <td style="display: flex; gap: 5px; border: none; align-content: center; margin-top: .6rem;">
                   <!-- Archive / Unarchive -->
-                  <form method="POST" action="record.php" style="display: inline;">
+                  <form method="POST" action="" style="display: inline;">
                     <input type="hidden" name="action"
                       value="<?= $citizen['isArchived'] == 1 ? 'unarchive_citizen' : 'archive_citizen' ?>">
                     <input type="hidden" name="citID" value="<?= htmlspecialchars($citizen['citID']) ?>">
@@ -106,7 +106,7 @@ require('view/partials/sidebar.php');
 
     
     <div id="form-section" style="display:none;">
-      <form method="POST" action="record.php" enctype="multipart/form-data">
+      <form method="POST" action="" enctype="multipart/form-data">
         <input type="hidden" name="citID" id="citID">
         <input type="hidden" name="action" id="formAction" value="add_citizen">
 
@@ -200,24 +200,84 @@ require('view/partials/sidebar.php');
 
           <div class="medical-files-section" style="display: none;">
             
-            <h4>Medical Records (Optional)</h4>
-            <div class="form-field">
-              <label for="medicalCondition">Medical Condition</label>
-              <input type="text" name="medical_condition" id="medicalCondition" placeholder="Enter medical condition" autocomplete="off">
-            </div>
+            <h4>Medical Records</h4>
 
               <div class="form-field">
                 <label for="medicalFiles">Upload Medical Records</label>
                 <input type="file" class="dropify" name="medical_files[]" id="medicalFiles" multiple data-allowed-file-extensions="pdf doc docx jpg jpeg png gif" data-max-file-size="5M">
               </div>
 
-            <div class="form-field">
-              <label for="medicalNotes">Additional Notes</label>
-              <textarea name="medical_notes" id="medicalNotes" placeholder="Enter any additional notes about the medical records" rows="3"></textarea>
-            </div>
-            
           </div>
-        
+
+          <!-- Your existing medical diagnosis form -->
+          <div class="medical-files-section" style="margin-top: 1rem;">
+              <h4>Medical Diagnosis</h4>
+              
+              <div class="form-field">
+                  <label for="medicalCondition">Symptoms</label>
+                  <input 
+                      type="text" 
+                      name="medical_condition" 
+                      id="medicalCondition" 
+                      placeholder="Enter symptoms (e.g., persistent headache, sensitivity to light, nausea)" 
+                      autocomplete="off"
+                  >
+              </div>
+              
+              <div class="form-field">
+                  <label for="medicalNotes">Additional Description</label>
+                  <textarea 
+                      name="medical_notes" 
+                      id="medicalNotes" 
+                      placeholder="Enter any additional description about the patient's condition (e.g., duration, severity, location)" 
+                      rows="3"
+                  ></textarea>
+              </div>
+              
+              <div style="display: flex; gap: 10px; margin-top: 10px;">
+                  <button 
+                      type="button" 
+                      id="diagButton"
+                      class="btn btn-outline" 
+                      onclick="generateDiagnosis(<?= isset($citizen['citID']) ? $citizen['citID'] : 'null' ?>)"
+                  >
+                    Generate Diagnosis
+                  </button>
+                  
+              </div>
+          </div>
+
+          <script>
+            function generateDiagnosis(citizenID, firstname, middlename, lastname) {
+              const symptoms = document.getElementById('medicalCondition').value.trim();
+              const notes = document.getElementById('medicalNotes').value.trim();
+              
+              if (!symptoms) {
+                  alert('Please enter symptoms before generating diagnosis.');
+                  document.getElementById('medicalCondition').focus();
+                  return;
+              }
+              
+              // Build URL with parameters
+              let url = 'index.php?page=diagnosis';
+              url += '&symptoms=' + encodeURIComponent(symptoms);
+              
+              if (notes) {
+                  url += '&additional_description=' + encodeURIComponent(notes);
+              }
+              
+              if (citizenID) {
+                  url += '&citID=' + citizenID;
+              }
+              
+              // Open in new window or same window
+              window.location.href = url;
+            }
+
+          </script>
+
+
+    </script>
 
           <div class="actions" style="margin-top: 1rem;">
             <button type="button" class="btn btn-outline" onclick="showTable()">Cancel</button>
