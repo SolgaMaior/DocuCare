@@ -10,3 +10,4 @@ try {
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
+#Comment test for gitignore
