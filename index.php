@@ -6,7 +6,7 @@ $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 // Default page
 if (!$page) {
-    $page = 'records';
+    $page = 'dashboard';
 }
 
 // Define allowed pages/controllers
@@ -14,7 +14,7 @@ $allowedPages = [
     'records' => 'controllers/record.php',
     'appointments' => 'controllers/appointment.php',
     'schedules' => 'controllers/schedules.php',
-    'dashboard' => 'controllers/dashboard_controller.php',
+    'dashboard' => 'controllers/dashboard.php',
     'diagnosis' => 'controllers/diagnosis.php',
     'login' => 'controllers/authcontroller/login.controller.php',
     'signup' => 'controllers/authcontroller/create_account.controller.php',

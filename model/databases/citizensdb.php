@@ -2,6 +2,7 @@
 
 
 
+
     //GET FUNCTIONS
     function get_citizens_by_id($citID)
     {
@@ -10,12 +11,15 @@
         if (!is_numeric($citID) || $citID <= 0) {
             return false;
         }
+
         
         $query = 'SELECT citID, firstname, middlename, lastname, age, sex, civilstatus, occupation, contactnum, purokID, isArchived
             FROM citizens
             WHERE citID = :citID';
         $statement = $db->prepare($query);
         $statement->bindValue(':citID', $citID, PDO::PARAM_INT);
+
+
         $statement->execute();
         $citizen = $statement->fetch();
         $statement->closeCursor();

@@ -19,7 +19,7 @@ function validateAuthToken($token, $db) {
         $userID = (string) trim($userID); // ✅ ensure consistent type
 
         // Get user from database
-        $query = "SELECT userID, email, isAdmin FROM users WHERE userID = :userID";
+        $query = "SELECT userID, email, citID, isAdmin FROM users WHERE userID = :userID";
         $stmt = $db->prepare($query);
         $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
         $stmt->execute();
@@ -65,5 +65,6 @@ if (!$user) {
 // Make user data available globally (similar to session)
 define('CURRENT_USER_ID', $user['userID']);
 define('CURRENT_USER_EMAIL', $user['email']);
-define('CURRENT_USER_IS_ADMIN', $user['is_admin'] ?? 0);
+define('CURRENT_CITIZEN_ID', $user['citID'] ?? null);
+define('CURRENT_USER_IS_ADMIN', $user['isAdmin'] ?? 0);
 ?>

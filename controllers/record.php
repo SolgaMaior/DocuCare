@@ -5,6 +5,9 @@ require('model/databases/diagnosisdb.php');
 require('model/databases/db_con.php');
 require('model/record_file_func/diagnosis_api.php');
 
+
+
+
 $citizenID = filter_input(INPUT_POST, 'citizenID', FILTER_VALIDATE_INT);
 $purokID = filter_input(INPUT_POST, 'purokID', FILTER_VALIDATE_INT);
 
@@ -172,4 +175,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $purokID = $_GET['purokID'] ?? 'all';
 $citizens = ($purokID === 'archived') ? get_archived_citizens() : get_citizens_by_purok($purokID);
 
-require_once('view/record.view.php');
+if(CURRENT_USER_IS_ADMIN){
+    require_once('view/record.view.php');
+}else{
+    require_once('view/user_record.view.php');
+}
