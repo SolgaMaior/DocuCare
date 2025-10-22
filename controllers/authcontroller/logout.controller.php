@@ -2,6 +2,12 @@
 // logout.controller.php - Log out and clear cookie
 require_once('config/config.php');
 
+
+
+
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 // Delete cookie
 setcookie(
     COOKIE_NAME,

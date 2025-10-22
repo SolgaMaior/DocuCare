@@ -177,6 +177,10 @@ $citizens = ($purokID === 'archived') ? get_archived_citizens() : get_citizens_b
 
 if(CURRENT_USER_IS_ADMIN){
     require_once('view/record.view.php');
-}else{
+}else{ 
+// Load both active and archived citizens
+    $activeCitizens = get_citizens_by_purok($purokID);
+    $archivedCitizens = get_archived_citizens();
+    $citizens = array_merge($activeCitizens, $archivedCitizens);
     require_once('view/user_record.view.php');
 }

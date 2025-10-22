@@ -29,6 +29,7 @@ require('view/partials/sidebar.php');
 
       <div class="controls">
         <form method="GET" action="index.php">
+          <input type="hidden" name="page" value="records">
           <select id="filter" name="purokID" onchange="this.form.submit()">
             <option value="all" <?= $purokID === 'all' ? 'selected' : '' ?>>All Puroks</option>
             <?php for ($i = 1; $i <= 5; $i++): ?>
@@ -37,7 +38,6 @@ require('view/partials/sidebar.php');
             <option value="archived" <?= $purokID === 'archived' ? 'selected' : '' ?>>Archived</option>
           </select>
         </form>
-
         <button class="btn btn-primary" onclick="showForm()">+ Add Record</button>
       </div>
     </div>

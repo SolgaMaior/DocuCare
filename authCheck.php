@@ -2,6 +2,10 @@
 // authCheck.php - Cookie-based authentication
 require_once('config/config.php');
 require_once('model/databases/db_con.php');
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 
 function validateAuthToken($token, $db) {
     if (empty($token)) {
@@ -16,7 +20,7 @@ function validateAuthToken($token, $db) {
         }
 
         list($userID, $hash) = $parts;
-        $userID = (string) trim($userID); // ✅ ensure consistent type
+        $userID = (string) trim($userID); //  ensure consistent type
 
         // Get user from database
         $query = "SELECT userID, email, citID, isAdmin FROM users WHERE userID = :userID";
@@ -31,7 +35,7 @@ function validateAuthToken($token, $db) {
         }
 
         // Verify the hash using secret key from config
-        $expectedHash = hash_hmac('sha256', (string)$userID, SECRET_KEY); // ✅ cast to string again
+        $expectedHash = hash_hmac('sha256', (string)$userID, SECRET_KEY); //  cast to string again
 
         if (!hash_equals($expectedHash, $hash)) {
             return false;

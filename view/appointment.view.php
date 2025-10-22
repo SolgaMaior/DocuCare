@@ -125,7 +125,7 @@ require('view/partials/sidebar.php');
                     </div>
                 </div>
                 <div class="actions">
-                    <button class="btn btn-outline" type="reset" onclick="clearForm()">Cancel</button>
+                    <button class="btn btn-outline" type="reset" onclick="clearForm()">Reset</button>
                     <button class="btn btn-outline" type="submit">Submit</button>
                 </div>
             </form>

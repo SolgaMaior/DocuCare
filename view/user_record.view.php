@@ -73,10 +73,6 @@ require('view/partials/sidebar.php');
                     <input type="hidden" name="action"
                       value="<?= $citizen['isArchived'] == 1 ? 'unarchive_citizen' : 'archive_citizen' ?>">
                     <input type="hidden" name="citID" value="<?= htmlspecialchars($citizen['citID']) ?>">
-                    <button type="submit" class="btn btn-outline"
-                      onclick="return confirm('<?= $citizen['isArchived'] == 1 ? 'Remove from archive?' : 'Archive this record?' ?>');">
-                      <?= $citizen['isArchived'] == 1 ? 'Unarchive' : 'Archive' ?>
-                    </button>
                     <button type="button" class="btn btn-outline" onclick="showEditForm(<?= $citizen['citID']; ?>)">Edit</button>
                     <button type="button" class="btn btn-outline" onclick="showViewForm(<?= $citizen['citID']; ?>)">View</button>
                   </form>
