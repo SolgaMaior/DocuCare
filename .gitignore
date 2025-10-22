@@ -1,0 +1,4 @@
+config/config.php
+--- a/file:///c%3A/xampp/htdocs/DocuCare/config/config.php
+model/databases/db_con.php
++++ a/file:///c%3A/xampp/htdocs/DocuCare/model/databases/db_con.php

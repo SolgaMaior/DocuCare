@@ -132,6 +132,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Add the diagnosis to the database
             add_diagnosis($targetCitizenID, $symptoms, $description);
+        }else{
+            update_diagnosis($targetCitizenID, $symptoms, $description);
         }
 
         $redirectPurok = $_GET['purokID'] ?? 'all';

@@ -68,8 +68,8 @@ require('view/partials/sidebar.php');
                 </td>
                 <td><?= htmlspecialchars($citizen['lastname']); ?></td>
                 <td><?= htmlspecialchars($citizen['firstname']); ?></td>
-                <td><?= htmlspecialchars($citizen['middlename']); ?></td>
-                <td><?= htmlspecialchars($citizen['purokID']); ?></td>
+                <td><?= htmlspecialchars($citizen['middlename'] ?? ''); ?></td>
+                <td><?= htmlspecialchars($citizen['purokID'] ?? ''); ?></td>
                 <td style="display: flex; gap: 5px; border: none; align-content: center; margin-top: .6rem;">
                   <!-- Archive / Unarchive -->
                   <form method="POST" action="" style="display: inline;">

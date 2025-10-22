@@ -1,0 +1,163 @@
+body {
+  margin: 0;
+  background-image: url('../resources/images/Bg.svg');
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Main container */
+.main-container {
+  position: relative;
+  width: 1000px;
+  height: 650px;
+  display: flex;
+  background: #e0f2ff;
+  border-radius: 20px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+/* LEFT PANEL */
+.left-panel {
+  flex: 0.7;
+  background: linear-gradient(120deg, #4fa7e6, #007acc);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  position: absolute;
+  left: -25px;
+  bottom: 40px;
+  font-size: 6em;
+  font-family: 'Cormorant SC', serif;
+  letter-spacing: 8px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: white;
+  font-weight: 800;
+  z-index: 2;
+}
+
+.logo-inside {
+  position: absolute;
+  top: 55%;
+  left: 80%;
+  width: 800px;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* CREATE ACCOUNT BOX */
+.create-box {
+  flex: 1;
+  background: white;
+  border-radius: 20px;
+  margin: auto 70px;
+  padding: 40px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Titles */
+.create-box h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
+  color: #111;
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 0.95em;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+/* Input groups */
+.input-group {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto 20px auto;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.input-group label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #222;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.input-group input:focus {
+  border-color: #4fa7e6;
+}
+
+/* Two-column layout for first and last name */
+.name-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.half {
+  flex: 1;
+}
+
+/* Button */
+.create-btn {
+  width: 100%;
+  max-width: 420px;
+  padding: 12px;
+  background: #4fa7e6;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.create-btn:hover {
+  background: #3a92cc;
+}
+
+/* Bottom text */
+.login-text {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 0.95em;
+  color: #666;
+}
+
+.login-text a {
+  color: #007acc;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-text a:hover {
+  text-decoration: underline;
+}

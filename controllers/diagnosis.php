@@ -5,6 +5,7 @@ require_once('model/record_file_func/diagnosis_api.php');
 require_once('model/databases/db_con.php');
 
 
+
 // Initialize variables
 $diagnosisResults = null;
 $symptoms = '';
