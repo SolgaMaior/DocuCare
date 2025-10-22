@@ -30,11 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($currentAppointment && $currentAppointment['status'] === 'Approved') {
                 $message = "Cannot edit an approved appointment!";
             } else {
-                update_appointment($id, $lastname, $firstname, $middlename, $sex, $age, $purok, $schedule);
+                update_appointment($id, $lastname, $firstname, $middlename, $sex, $age, $purok, $schedule, CURRENT_USER_ID);
                 $message = "Appointment updated successfully!";
             }
         } else {
-            add_appointment($lastname, $firstname, $middlename, $sex, $age, $purok, $schedule);
+            add_appointment($lastname, $firstname, $middlename, $sex, $age, $purok, $schedule, CURRENT_USER_ID);
             $message = "Appointment set successfully!";
         }
     } else {
@@ -48,6 +48,6 @@ if (isset($_GET['delete_id'])) {
     $message = "Appointment deleted successfully!";
 }
 
-$appointments = get_appointments();
+$appointments = get_appointments(CURRENT_USER_ID);
 require_once('view/appointment.view.php');
 ?>

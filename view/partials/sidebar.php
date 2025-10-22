@@ -30,6 +30,7 @@ require_once('authCheck.php'); // ensures CURRENT_USER_* are defined
     </li>
   
 
+    <?php if (!CURRENT_USER_IS_ADMIN): ?>
     <!-- Set Appointment (Visible to everyone) -->
     <li>
       <a href="/DocuCare/index.php?page=appointments" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-400 group">
@@ -40,7 +41,7 @@ require_once('authCheck.php'); // ensures CURRENT_USER_* are defined
         <span class="ms-3">Set Appointment</span>
       </a>
     </li>
-
+    <?php endif; ?>
     <!-- Admin Only -->
     <?php if (CURRENT_USER_IS_ADMIN): ?>
     <li>
