@@ -1,4 +1,11 @@
 config/config.php
---- a/file:///c%3A/xampp/htdocs/DocuCare/config/config.php
+model/record_file_func/diagnosis_api.php
 model/databases/db_con.php
-+++ a/file:///c%3A/xampp/htdocs/DocuCare/model/databases/db_con.php
+
+.env
+.DS_Store # macOS specific
+*.log
+*.zip
+
+/vendor/
+.idea
