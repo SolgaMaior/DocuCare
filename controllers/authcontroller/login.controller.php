@@ -1,23 +1,22 @@
 <?php
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-} 
-
+// login.controller.php - Cookie-based authentication
+require_once('config/config.php');
 require_once('model/databases/db_con.php');
 
 $error = '';
 
-// If already logged in, redirect to index
-if (isset($_SESSION['userID'])) {
+// If already logged in (has valid cookie), redirect to index
+if (isset($_COOKIE[COOKIE_NAME])) {
     header('Location: index.php');
     exit;
 }
 
+// Process login BEFORE any HTML output
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
     $password = $_POST['password'] ?? '';
-
+    $rememberMe = isset($_POST['remember_me']);
+    
     if ($email && $password) {
         try {
             $query = "SELECT * FROM users WHERE email = :email AND password IS NOT NULL";
@@ -26,14 +25,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             $stmt->closeCursor();
-
+            
             if ($user && password_verify($password, $user['password'])) {
-                // Set session variables
-                $_SESSION['userID'] = $user['userID'];
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['is_admin'] = $user['is_admin'] ?? 0;
+                // Create authentication token
+                $userID = (string) $user['userID'];  // ✅ Cast to string
+                $hash = hash_hmac('sha256', $userID, SECRET_KEY);
+                $authToken = $userID . ':' . $hash;
                 
-                // Redirect to index
+                // Set cookie expiration
+                $expiry = $rememberMe ? time() + (COOKIE_LIFETIME_DAYS * 24 * 60 * 60) : 0;
+                
+                // Set secure cookie
+                setcookie(
+                    COOKIE_NAME,
+                    $authToken,
+                    $expiry,
+                    COOKIE_PATH,
+                    COOKIE_SECURE,
+                    COOKIE_HTTPONLY
+                );
+                
+                // Redirect to dashboard
                 header('Location: index.php');
                 exit;
             } else {
@@ -41,11 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } catch (PDOException $e) {
             $error = 'Login failed. Please try again.';
+            error_log('Login error: ' . $e->getMessage());
         }
     } else {
         $error = 'Please fill in all fields';
     }
 }
 
+// NOW load the view (only once!)
 require('view/Auth/login.view.php');
 ?>
