@@ -5,15 +5,9 @@ require('model/databases/db_con.php');
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $lastname   = trim(filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-    $firstname  = trim(filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-    $middlename = trim(filter_input(INPUT_POST, 'middlename', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-    $sex        = filter_input(INPUT_POST, 'sex', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $age        = filter_input(INPUT_POST, 'age', FILTER_VALIDATE_INT);
-    $purok      = filter_input(INPUT_POST, 'purok', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $schedule   = filter_input(INPUT_POST, 'schedule', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    if ($lastname && $firstname && $sex && $age !== false && $purok && $schedule) {
+    if ($schedule) {
         if (!empty($_POST['appointmentID'])) {
             $id = (int)$_POST['appointmentID'];
             
@@ -30,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($currentAppointment && $currentAppointment['status'] === 'Approved') {
                 $message = "Cannot edit an approved appointment!";
             } else {
-                update_appointment($id, $lastname, $firstname, $middlename, $sex, $age, $purok, $schedule, CURRENT_USER_ID);
+                update_appointment($id, $schedule, CURRENT_USER_ID);
                 $message = "Appointment updated successfully!";
             }
         } else {
-            add_appointment($lastname, $firstname, $middlename, $sex, $age, $purok, $schedule, CURRENT_USER_ID);
+            add_appointment($schedule, CURRENT_USER_ID, CURRENT_CITIZEN_ID);
             $message = "Appointment set successfully!";
         }
     } else {

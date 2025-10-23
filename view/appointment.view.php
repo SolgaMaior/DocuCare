@@ -46,7 +46,7 @@ require('view/partials/sidebar.php');
                             <td><?= htmlspecialchars($app['middlename']) ?></td>
                             <td><?= htmlspecialchars($app['sex']) ?></td>
                             <td><?= htmlspecialchars($app['age']) ?></td>
-                            <td><?= htmlspecialchars($app['purok']) ?></td>
+                            <td><?= htmlspecialchars($app['purokID'] ?? '') ?></td>
                             <td><?= htmlspecialchars($app['schedule']) ?></td>
                             <td>
                                 <span style="color:<?= $app['status'] === 'Approved' ? 'green' : ($app['status'] === 'Denied' ? 'red' : '#333') ?>">
@@ -77,41 +77,7 @@ require('view/partials/sidebar.php');
                 <input type="hidden" name="appointmentID" id="appointmentID">
                 <input type="hidden" name="appointmentStatus" id="appointmentStatus">
                 <div class="form-grid">
-                    <div class="form-field">
-                        <label>Last Name</label>
-                        <input type="text" name="lastname" id="lastname" required autocomplete="off">
-                    </div>
-                    <div class="form-field">
-                        <label>First Name</label>
-                        <input type="text" name="firstname" id="firstname" required autocomplete="off">
-                    </div>
-                    <div class="form-field">
-                        <label>Middle Name</label>
-                        <input type="text" name="middlename" id="middlename" autocomplete="off">
-                    </div>
-                    <div class="form-field">
-                        <label>Sex</label>
-                        <select name="sex" id="sex" required onchange="this.style.color = this.value ? '#333' : '#707070ff'">
-                            <option value="">Select</option>
-                            <option>Male</option>
-                            <option>Female</option>
-                        </select>
-                    </div>
-                    <div class="form-field">
-                        <label>Age</label>
-                        <input type="number" name="age" id="age" min="0" max="120" required>
-                    </div>
-                    <div class="form-field">
-                        <label>Purok</label>
-                        <select name="purok" id="purok" required onchange="this.style.color = this.value ? '#333' : '#707070ff'">
-                            <option value="">Select</option>
-                            <option value="1">Purok 1</option>
-                            <option value="2">Purok 2</option>
-                            <option value="3">Purok 3</option>
-                            <option value="4">Purok 4</option>
-                            <option value="5">Purok 5</option>
-                        </select>
-                    </div>
+
                     <div class="form-field full-width">
                         <label>Schedule</label>
                         <select name="schedule" id="schedule" required onchange="this.style.color = this.value ? '#333' : '#707070ff'">
@@ -147,12 +113,6 @@ function editAppointment(id) {
         
         document.getElementById('appointmentID').value = app.id;
         document.getElementById('appointmentStatus').value = app.status;
-        document.getElementById('lastname').value = app.lastname;
-        document.getElementById('firstname').value = app.firstname;
-        document.getElementById('middlename').value = app.middlename;
-        document.getElementById('sex').value = app.sex;
-        document.getElementById('age').value = app.age;
-        document.getElementById('purok').value = app.purok;
         document.getElementById('schedule').value = app.schedule;
         
         // Disable schedule field if approved

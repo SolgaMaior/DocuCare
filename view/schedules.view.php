@@ -49,7 +49,7 @@ require('view/partials/sidebar.php');
                         <td><?= htmlspecialchars($app['middlename']) ?></td>
                         <td><?= htmlspecialchars($app['sex']) ?></td>
                         <td><?= htmlspecialchars($app['age']) ?></td>
-                        <td><?= htmlspecialchars($app['purok']) ?></td>
+                        <td><?= htmlspecialchars($app['purokID']) ?></td>
                         <td><?= htmlspecialchars($app['schedule']) ?></td>
                         <td><?= htmlspecialchars($app['status']) ?></td>
                         <td style="display:flex; gap:5px;">
