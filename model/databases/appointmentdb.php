@@ -71,4 +71,31 @@ function update_appointment_status($id, $status) {
     $stmt->execute();
     $stmt->closeCursor();
 }
+
+
+function get_appointment_date($id) {
+    global $db;
+    $query = "SELECT schedule FROM appointments WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->closeCursor();
+    return $result ? $result['schedule'] : null;
+}
+
+
+function get_user_email_by_appointment_id($id) {
+    global $db;
+    $query = "SELECT u.email
+              FROM appointments a
+              JOIN users u ON a.userID = u.userID
+              WHERE a.id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->closeCursor();
+    return $result ? $result['email'] : null;
+}
 ?>

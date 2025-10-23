@@ -43,9 +43,9 @@ require('view/partials/sidebar.php');
                         <tr>
                             <td><?= htmlspecialchars($app['lastname']) ?></td>
                             <td><?= htmlspecialchars($app['firstname']) ?></td>
-                            <td><?= htmlspecialchars($app['middlename']) ?></td>
-                            <td><?= htmlspecialchars($app['sex']) ?></td>
-                            <td><?= htmlspecialchars($app['age']) ?></td>
+                            <td><?= htmlspecialchars($app['middlename'] ?? '') ?></td>
+                            <td><?= htmlspecialchars($app['sex'] ?? '') ?></td>
+                            <td><?= htmlspecialchars($app['age'] ?? '') ?></td>
                             <td><?= htmlspecialchars($app['purokID'] ?? '') ?></td>
                             <td><?= htmlspecialchars($app['schedule']) ?></td>
                             <td>

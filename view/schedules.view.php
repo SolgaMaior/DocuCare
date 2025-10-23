@@ -46,12 +46,12 @@ require('view/partials/sidebar.php');
                     <tr>
                         <td><?= htmlspecialchars($app['lastname']) ?></td>
                         <td><?= htmlspecialchars($app['firstname']) ?></td>
-                        <td><?= htmlspecialchars($app['middlename']) ?></td>
-                        <td><?= htmlspecialchars($app['sex']) ?></td>
-                        <td><?= htmlspecialchars($app['age']) ?></td>
-                        <td><?= htmlspecialchars($app['purokID']) ?></td>
-                        <td><?= htmlspecialchars($app['schedule']) ?></td>
-                        <td><?= htmlspecialchars($app['status']) ?></td>
+                        <td><?= htmlspecialchars($app['middlename'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($app['sex'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($app['age'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($app['purokID'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($app['schedule'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($app['status'] ?? '') ?></td>
                         <td style="display:flex; gap:5px;">
                             <?php if ($app['status'] === 'Pending'): ?>
                                 <form method="POST" action="index.php?page=schedules" style="margin:0;">
