@@ -26,9 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             $stmt->closeCursor();
             
-            if ($user && password_verify($password, $user['password'])) {
+            if ($user && password_verify($password, $user['password']) && $user['isApproved']) {
                 // Create authentication token
-                $userID = (string) $user['userID'];  // ✅ Cast to string
+                $userID = (string) $user['userID'];  //  Cast to string
                 $hash = hash_hmac('sha256', $userID, SECRET_KEY);
                 $authToken = $userID . ':' . $hash;
                 
@@ -48,6 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Redirect to dashboard
                 header('Location: index.php');
                 exit;
+            } else if ($user && !password_verify($password, $user['password'])) {
+                $error = 'Invalid email or password';
+            }else if ($user && !$user['isApproved']) {
+                $error = 'Account not approved. Please contact support.';
             } else {
                 $error = 'Invalid email or password';
             }
