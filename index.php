@@ -20,6 +20,7 @@ $allowedPages = [
     'signup' => 'controllers/authcontroller/create_account.controller.php',
     'logout' => 'controllers/authcontroller/logout.controller.php',
     'forgot_password' => 'controllers/authcontroller/forgot_password.controller.php',
+    'approve_accounts' => 'controllers/approve_accounts.php',
 ];
 
 // Include auth check only for protected pages
