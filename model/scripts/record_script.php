@@ -13,15 +13,19 @@
   const citizenPhotos = {};
   const citizenMedicalFiles = {};
   const citizenDiagnoses = {};
+  const citizenIllnessRecords = {}; // ADDED
 
   <?php 
   require_once('model/databases/diagnosisdb.php');
+  require_once('model/databases/illnessdb.php'); // ADDED
   foreach ($citizens as $citizen): 
     $diagnoses = getdiagnoses($citizen['citID']);
+    $illnessRecords = get_citizen_illness_records($citizen['citID']); // ADDED
   ?>
     citizenPhotos[<?= $citizen['citID'] ?>] = <?= json_encode("model/record_file_func/display_image.php?citID=" . $citizen['citID']) ?>;
     citizenMedicalFiles[<?= $citizen['citID'] ?>] = <?= json_encode(get_citizen_file_data($citizen['citID'])) ?>;
     citizenDiagnoses[<?= $citizen['citID'] ?>] = <?= json_encode($diagnoses) ?>;
+    citizenIllnessRecords[<?= $citizen['citID'] ?>] = <?= json_encode($illnessRecords) ?>;
   <?php endforeach; ?>
 
   function initializeDropify() {
@@ -114,6 +118,7 @@
     document.getElementById('medicalFiles').value = '';
     document.getElementById('profilePreview').src = citizenPhotos[citID] || 'resources/defaultprofile.png';
 
+    
     document.getElementById('citID').value = citizen.citID;
     document.getElementById('firstName').value = citizen.firstname;
     document.getElementById('middleName').value = citizen.middlename || '';
@@ -123,6 +128,7 @@
     const sexSelect = document.getElementById('sex');
     sexSelect.value = citizen.sex;
     sexSelect.style.color = sexSelect.value ? '#333' : '#707070ff';
+
 
     const civilstatusSelect = document.getElementById('civilstatus');
     civilstatusSelect.value = citizen.civilstatus;
@@ -135,11 +141,26 @@
     purokSelect.value = citizen.purokID;
     purokSelect.style.color = purokSelect.value ? '#333' : '#707070ff';
 
+    const historyContainer = document.getElementById('illnessHistoryPreview');
+    historyContainer.style.display = 'none';
+
+    const illnessRecords = citizenIllnessRecords[citID] || [];
+    const latestIllness = illnessRecords.length > 0 ? illnessRecords[0] : null;
+    
+    if (latestIllness) {
+        document.getElementById('commonIllness').value = latestIllness.illness_id;
+        document.getElementById('commonIllness').style.color = '#333';
+    } else {
+        document.getElementById('commonIllness').value = '';
+        document.getElementById('commonIllness').style.color = '#707070ff';
+    }
+
     const medicalSection = document.querySelector('.viewmedicalfiles');
     if (medicalSection) {
         medicalSection.style.display = 'none';
     }
 
+    
     document.getElementById('formAction').value = 'add_citizen';
     document.getElementById('submitButton').textContent = 'Update';
     document.getElementById("records-section").style.display = "none";
@@ -148,15 +169,16 @@
     document.getElementById('medicalFilesPreview').style.display = 'none';
     document.getElementById("top-controls").style.display = "none";
     document.getElementById('diagButton').style.display = 'none';
-
+      
     setTimeout(() => {
-        initializeDropify();
-        const medicalSection = document.querySelector('.medical-files-section');
-        if (medicalSection) medicalSection.style.display = 'block';
-        document.getElementById('submitButton').style.display = 'inline-block';
+      initializeDropify();
+      const medicalSection = document.querySelector('.medical-files-section');
+      if (medicalSection) medicalSection.style.display = 'block';
+      document.getElementById('submitButton').style.display = 'inline-block';
     }, 100);
-
+      
     showAssociatedRecords(citID, true);
+     
   }
 
 
@@ -190,7 +212,7 @@
       document.getElementById('medicalCondition').readOnly = true;
       document.getElementById('medicalNotes').readOnly = true;
     }
-    
+    showIllnessHistory(citID);
     document.getElementById('profilePreview').src = citizenPhotos[citID] || 'resources/defaultprofile.png';
     document.getElementById('uploadProfileButton').style.display = 'none';
 
@@ -208,6 +230,18 @@
     sexSelect.value = citizen.sex;
     sexSelect.style.color = sexSelect.value ? '#333' : '#707070ff';
     sexSelect.disabled = true;
+
+    const illnessRecords = citizenIllnessRecords[citID] || [];
+    const latestIllness = illnessRecords.length > 0 ? illnessRecords[0] : null;
+    const commonIllnessSelect = document.getElementById('commonIllness');
+    commonIllnessSelect.disabled = true;
+    if (latestIllness) {
+        document.getElementById('commonIllness').value = latestIllness.illness_id;
+        document.getElementById('commonIllness').style.color = '#333';
+    } else {
+        document.getElementById('commonIllness').value = '';
+        document.getElementById('commonIllness').style.color = '#707070ff';
+    }
 
     const civilstatusSelect = document.getElementById('civilstatus');
     civilstatusSelect.value = citizen.civilstatus;
@@ -367,6 +401,37 @@
   }
 
   
+  function showIllnessHistory(citID) {
+    const historyContainer = document.getElementById('illnessHistoryList');
+    const previewBlock = document.getElementById('illnessHistoryPreview');
+    
+    if (!historyContainer || !previewBlock) return;
+    
+      historyContainer.innerHTML = '';
+      const records = citizenIllnessRecords[citID] || [];
+      
+      if (records.length > 0) {
+          records.forEach(record => {
+              const div = document.createElement('div');
+              div.style.padding = '10px';
+              div.style.marginBottom = '5px';
+              div.style.border = '1px solid #ddd';
+              div.style.borderRadius = '5px';
+              div.innerHTML = `
+                  <strong>${record.illness_name}</strong><br>
+                  Date: ${new Date(record.record_date).toLocaleDateString()}<br>
+              `;
+              historyContainer.appendChild(div);
+          });
+          previewBlock.style.display = 'block';
+    } else {
+        previewBlock.style.display = 'none';
+    }
+  }
+
+
+
+
   function showTable() {
     document.getElementById("records-section").style.display = "block";
     document.getElementById("form-section").style.display = "none";

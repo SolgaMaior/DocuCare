@@ -2,11 +2,9 @@
 
 require('model/databases/citizensdb.php');
 require('model/databases/diagnosisdb.php');
+require('model/databases/illnessdb.php'); // ADD THIS LINE
 require('model/databases/db_con.php');
 require('model/record_file_func/diagnosis_api.php');
-
-
-
 
 $citizenID = filter_input(INPUT_POST, 'citizenID', FILTER_VALIDATE_INT);
 $purokID = filter_input(INPUT_POST, 'purokID', FILTER_VALIDATE_INT);
@@ -125,6 +123,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+        // ADD THIS SECTION - Handle common illness selection
+        $common_illness_id = filter_input(INPUT_POST, 'common_illness', FILTER_VALIDATE_INT);
+    
+        // DEBUG: Check what's being received
+
+        if ($common_illness_id) {
+            if ($citID) {
+                // Updating existing citizen - update illness record
+                update_illness_record($targetCitizenID, $common_illness_id);
+            } else {
+                // Adding new citizen - create new illness record
+                add_illness_record($targetCitizenID, $purokID, $common_illness_id);
+            }
+        }
+        // END OF ILLNESS SECTION
+
         // Handle diagnosis/symptoms storage
         $symptoms = trim(filter_input(INPUT_POST, 'medical_condition') ?? '');
         $description = trim(filter_input(INPUT_POST, 'medical_notes') ?? '');
@@ -135,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Add the diagnosis to the database
             add_diagnosis($targetCitizenID, $symptoms, $description);
-        }else{
+        } else {
             update_diagnosis($targetCitizenID, $symptoms, $description);
         }
 
@@ -146,6 +160,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         if (!empty($symptoms)) {
             $successMessage .= "&diagnosis_saved=1";
+        }
+        // ADD THIS - Include illness saved message
+        if ($common_illness_id) {
+            $successMessage .= "&illness_saved=1";
         }
 
         header("Location: index.php?page=records&$successMessage");
@@ -175,10 +193,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $purokID = $_GET['purokID'] ?? 'all';
 $citizens = ($purokID === 'archived') ? get_archived_citizens() : get_citizens_by_purok($purokID);
 
+// ADD THIS - Load illnesses for the dropdown
+$illnesses = get_all_illnesses();
+
 if(CURRENT_USER_IS_ADMIN){
     require_once('view/record.view.php');
 }else{ 
-// Load both active and archived citizens
+    // Load both active and archived citizens
     $activeCitizens = get_citizens_by_purok($purokID);
     $archivedCitizens = get_archived_citizens();
     $citizens = array_merge($activeCitizens, $archivedCitizens);

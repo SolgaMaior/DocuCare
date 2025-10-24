@@ -12,6 +12,35 @@ function add_appointment($schedule, $userID, $citID) {
     $stmt->execute();
     $stmt->closeCursor();
 }
+function get_all_appointments($userID = null) {
+    global $db;
+
+   $query = "SELECT a.id, a.citID, a.schedule, a.status, 
+              c.lastname, c.firstname, c.middlename, c.purokID, c.sex, c.age
+              FROM appointments a
+              JOIN citizens c ON a.citID = c.citID
+              WHERE a.status = 'Pending'";
+              
+    if ($userID !== null) {
+        $query .= " AND a.userID = :userID";
+    }
+
+    $query .= " ORDER BY a.schedule ASC";
+
+    $stmt = $db->prepare($query);
+
+    if ($userID !== null) {
+        $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
+    }
+
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->closeCursor();
+
+    return $results;
+
+}
+
 
 function get_appointments($userID = null) {
     global $db;

@@ -54,7 +54,7 @@ require('view/partials/sidebar.php');
                                 </span>
                             </td>
                             <td>
-                                <?php if ($app['status'] !== 'Approved'): ?>
+                                <?php if ($app['status'] !== 'Approved' && $app['status'] !== 'Denied'): ?>
                                     <button style="padding-top: 5px; padding-bottom: 5px;" class="btn btn-outline" onclick="editAppointment(<?= $app['id'] ?>)">Edit</button>
                                 <?php else: ?>
                                     <button style="padding-top: 5px; padding-bottom: 5px; opacity: 0.5; cursor: not-allowed;" class="btn btn-outline" disabled title="Cannot edit approved appointment">Edit</button>

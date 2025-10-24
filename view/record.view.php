@@ -1,3 +1,5 @@
+/* view/record.view.php */
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,7 +40,7 @@ require('view/partials/sidebar.php');
             <option value="archived" <?= $purokID === 'archived' ? 'selected' : '' ?>>Archived</option>
           </select>
         </form>
-        <button class="btn btn-primary" onclick="showForm()">+ Add Record</button>
+        <button class="btn btn-primary" style="height: 42px;" onclick="showForm()">+ Add Record</button>
       </div>
     </div>
 
@@ -56,10 +58,10 @@ require('view/partials/sidebar.php');
           </tr>
         </thead>
 
-        <tbody id="citizenTableBody"> 
+        <tbody id="citizenTableBody" > 
           <?php if (!empty($citizens)): ?>
             <?php foreach ($citizens as $citizen): ?>
-              <tr>
+              <tr >
                 <td>
                   <img id="profileImage_"
                   src="model/record_file_func/display_image.php?citID=<?= htmlspecialchars($citizen['citID']) ?>"
@@ -70,7 +72,7 @@ require('view/partials/sidebar.php');
                 <td><?= htmlspecialchars($citizen['firstname']); ?></td>
                 <td><?= htmlspecialchars($citizen['middlename'] ?? ''); ?></td>
                 <td><?= htmlspecialchars($citizen['purokID'] ?? ''); ?></td>
-                <td style="display: flex; gap: 5px; border: none; align-content: center; margin-top: .6rem;">
+                <td>
                   <!-- Archive / Unarchive -->
                   <form method="POST" action="" style="display: inline;">
                     <input type="hidden" name="action"
@@ -95,12 +97,6 @@ require('view/partials/sidebar.php');
         </tbody>
       </table>
     </div>
-
-
-
-
-
-
 
 
 
@@ -189,14 +185,15 @@ require('view/partials/sidebar.php');
 
           </div>
         
+          
+          
+
           <div id="medicalFilesPreview" class="viewmedicalfiles">
               <h4 id="associatedRecordsHeader">Associated Records</h4>
               <div id="medicalFilesList"></div>
           </div>
  
-            
-           
-
+          
 
           <div class="medical-files-section" style="display: none;">
             
@@ -209,12 +206,32 @@ require('view/partials/sidebar.php');
 
           </div>
 
+
           <!-- Your existing medical diagnosis form -->
           <div class="medical-files-section" style="margin-top: 1rem;">
               <h4>Medical Diagnosis</h4>
+
+              <div id="illnessHistoryPreview" style="display: none; margin-top: 1rem;">
+                  <h2>Illness History</h2>
+                  <div id="illnessHistoryList"></div>
+              </div>
               
+              <div id="common_illness_select" class="form-field" style="margin-top: 1rem;">
+                  <label for="common_illness_label">Common Illness</label>
+                  <select name="common_illness" id="commonIllness" onchange="this.style.color = this.value ? '#333' : '#707070ff'" style="width: 40%;">
+                      <option value="">Select Common Illness</option>
+                      <?php foreach ($illnesses as $illness): ?>
+                          <option value="<?= htmlspecialchars($illness['illness_id']) ?>">
+                              <?= htmlspecialchars($illness['illness_name']) ?>
+                          </option>
+                      <?php endforeach; ?>
+                  </select>
+              </div>
+
+              <h4 style="margin-top: 1rem;">Illness Based on Symptoms</h4>
+
               <div class="form-field">
-                  <label for="medicalCondition">Symptoms</label>
+                  <label for="medicalCondition" >Symptoms</label>
                   <input 
                       type="text" 
                       name="medical_condition" 
@@ -277,13 +294,11 @@ require('view/partials/sidebar.php');
           </script>
 
 
-    </script>
 
           <div class="actions" style="margin-top: 1rem;">
             <button type="button" class="btn btn-outline" onclick="showTable()">Cancel</button>
             <button type="submit" id="submitButton" class="btn btn-outline">Submit</button>
           </div>
-        </div>
         </div>
       </form>
     </div>

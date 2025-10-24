@@ -9,6 +9,7 @@
 <body>
     <?php
     require('partials/sidebar.php');
+    require('map.view.php');
     ?>
 </body>
 </html>

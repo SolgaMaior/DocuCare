@@ -17,7 +17,6 @@ require('view/partials/sidebar.php');
 <div class="content">
     <div class="header">
         <h2>Schedules</h2>
-        <a href="logout.php" class="logout">Logout</a>
     </div>
 
     <?php if ($message): ?>
@@ -61,10 +60,6 @@ require('view/partials/sidebar.php');
                                 <form method="POST" action="index.php?page=schedules" style="margin:0;">
                                     <input type="hidden" name="appointment_id" value="<?= $app['id'] ?>">
                                     <button type="submit" name="action" value="deny" class="btn btn-outline">Deny</button>
-                                </form>
-                                <form action="index.php?page=schedules" method="POST" style="margin: 0;">
-                                    <input type="hidden" name="appointment_id" value="<?= $app['id'] ?>">
-                                    <button type="submit" name="action" value="delete" class="btn btn-outline">Delete</button>
                                 </form>
                                 <?php else: ?>
                                     <span style="color:<?= $app['status'] === 'Approved' ? 'green' : 'red' ?>">
