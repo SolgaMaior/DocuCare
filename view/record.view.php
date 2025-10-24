@@ -11,6 +11,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
+
+  <style>
+    th, td  {
+      text-align: center;
+    }
+  
+  </style>
 </head>
 
 <body>
@@ -62,7 +69,7 @@ require('view/partials/sidebar.php');
           <?php if (!empty($citizens)): ?>
             <?php foreach ($citizens as $citizen): ?>
               <tr >
-                <td>
+                <td style="display: flex; justify-content: center; align-items: center;">
                   <img id="profileImage_"
                   src="model/record_file_func/display_image.php?citID=<?= htmlspecialchars($citizen['citID']) ?>"
                   alt="Profile"
