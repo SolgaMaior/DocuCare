@@ -47,8 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $userStmt->execute();
 
                         // Step 5: Redirect after success
-                        $success = 'Account created successfully! You can now log in.';
-                        header('Refresh: 2; URL=index.php?page=login');
+                        $success = 'Account created successfully! Your account is pending approval. You will be able to log in once approved by an administrator.';
+                        header('Refresh: 3; URL=index.php?page=login');
                         exit;
                     }
 
