@@ -128,14 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
         // DEBUG: Check what's being received
 
-        if ($common_illness_id) {
-            if ($citID) {
-                // Updating existing citizen - update illness record
-                update_illness_record($targetCitizenID, $common_illness_id);
-            } else {
-                // Adding new citizen - create new illness record
-                add_illness_record($targetCitizenID, $purokID, $common_illness_id);
-            }
+        if ($common_illness_id) {  // Adding new citizen - create new illness record
+            add_illness_record($targetCitizenID, $purokID, $common_illness_id);
+            
         }
         // END OF ILLNESS SECTION
 

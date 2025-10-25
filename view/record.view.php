@@ -1,4 +1,3 @@
-/* view/record.view.php */
 
 <!DOCTYPE html>
 <html lang="en">

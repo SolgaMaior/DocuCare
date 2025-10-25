@@ -16,7 +16,6 @@ require_once('model/databases/map_data.php');
   </style>
 </head>
 <body>
-  <h2>Illness Clusters & Densities by Purok</h2>
   <div id="map">
 
   <script>
