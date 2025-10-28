@@ -3,9 +3,21 @@ require_once('authCheck.php'); // ensures CURRENT_USER_* are defined
 ?>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  #Title {
+    font-family: 'Cormorant SC', serif;
+  }
+  </style>
 
 <div class="sidebar">
-  <h2 id="Title">DocuCare</h2>
+
+  <div class="relative flex items-center justify-center mb-8">
+    <img src="resources/images/Logo.svg" alt="DocuCare Logo" class="sidelogo"/>
+    <h2 id="Title" class="relative text-3xl font-bold text-white "><br><br> DocuCare</h2>
+  </div>
+
   <ul class="space-y-2 font-medium">
 
     <!-- Dashboard (Visible to everyone) -->

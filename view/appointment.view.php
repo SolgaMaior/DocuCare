@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Appointments - DocuCare</title>
 <link rel="stylesheet" href="styles/record.css">
+ <link rel="icon" type="image/svg" href="resources/images/Logo.svg">
 </head>
 <body>
 

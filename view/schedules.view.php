@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Schedules - DocuCare</title>
 <link rel="stylesheet" href="styles/record.css">
+<link rel="icon" type="image/svg" href="resources/images/Logo.svg">
 </head>
 <body>
 
@@ -15,9 +16,8 @@ require('view/partials/sidebar.php');
 ?>
 
 <div class="content">
-    <div class="header">
-        <h2>Schedules</h2>
-    </div>
+    <div class="header"></div>
+    
 
     <?php if ($message): ?>
         <div class="alert alert-success" style="margin-bottom:1rem;">

@@ -6,8 +6,8 @@
 }
 
 .approval-header {
-  background: linear-gradient(135deg, #7489c5, #9fb4ed);
-  color: white;
+  background: #41a8e8;
+  color: #ffffff;
   padding: 20px 30px;
   text-align: center;
 }
@@ -30,8 +30,8 @@
 }
 
 .accounts-table th {
-  background: #f8f9fa;
-  color: #495057;
+  background: #41a8e8;
+  color: #ffffff;
   font-weight: 600;
   padding: 16px 20px;
   text-align: left;

@@ -12,6 +12,7 @@ require_once('model/databases/map_data.php');
   <link rel="stylesheet" href="styles/map.css">
 </head>
 <body>
+
   <div id="map">
 
   <script>

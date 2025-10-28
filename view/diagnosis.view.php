@@ -6,6 +6,7 @@
     <title>Medical Diagnosis Results</title>
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/diagnosis.css">
+    <link rel="icon" type="image/svg" href="resources/images/Logo.svg">
 </head>
 <body class="diagnosis-page">
 
