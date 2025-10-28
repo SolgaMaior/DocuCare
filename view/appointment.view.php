@@ -20,7 +20,10 @@ require('view/partials/sidebar.php');
     </div>
 
     <?php if ($message): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
+    <?php  
+       include('view/partials/alert-bar.php');
+       addalert($message);
+    ?>
     <?php endif; ?>
 
     <div>

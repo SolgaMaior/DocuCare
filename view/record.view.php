@@ -25,6 +25,17 @@
 require('view/partials/sidebar.php');
 ?>
 
+  <?php if ($message): ?>
+  <?php  
+     include('view/partials/alert-bar.php');
+     addalert($message);
+  ?>
+  <?php endif; ?>
+
+
+
+
+
   <div class="content">
     <div class="header">
       <!-- <h2 id="page-title">Citizen Records</h2>
