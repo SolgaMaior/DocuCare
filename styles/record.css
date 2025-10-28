@@ -6,9 +6,13 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   /* Optimized Gradient for smoother background */
-  background: linear-gradient(180deg, #ffffff 19%, #9FB4ED 100%);
+  /*ackground: linear-gradient(180deg, #ffffff 19%, #2499b3 100%);
+  */
+  background-image: url('../resources/images/View.svg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 }
-
 /* Base Headings */
 h2, h4 {
   color: #7489c5;
@@ -45,7 +49,7 @@ th, td  {
   left: 0;
   width: 220px;
   height: 100%;
-  background: #7489c5;
+  background:linear-gradient(180deg, #1987be 55%, #ffffff 100%);
   color: #fff;
   padding: 20px 0;
 }
@@ -61,17 +65,31 @@ th, td  {
 }
 
 
+
 .sidebar h2 {
-  text-align: center;
-  margin-bottom: 40px;
-  font-size: 2rem;
+  text-align: left;
+  margin-left: 20px;
+  margin-bottom: 15px;
+  font-size: 4rem;
   color: #fff; /* Ensure sidebar title is white */
+
+}
+.sidelogo {
+  position: absolute;
+  width: 1000px; /* or any size */
+  height: auto;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-80%);
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 .menu {
   list-style: none;
   padding: 0;
 }
+
 
 
 /* =========================================================================
@@ -125,7 +143,7 @@ th, td  {
 
 .logout {
   text-decoration: none;
-  color: #7489c5;
+  color:linear-gradient(180deg, #1987be 55%, #ffffff 100%);
   font-size: 14px;
 }
 
@@ -146,15 +164,15 @@ th, td  {
 
 .btn-primary {
   height: 10px;
-  background: #7489c5;
+  background: #41a8e8;
   border: 1px solid #fff;
   color: #fff;
 }
 
 .btn-outline {
   background: #fff;
-  border: 1px solid #7489c5;
-  color: #7489c5;
+  border: 1px solid #41a8e8;
+  color: #41a8e8;
 }
 
 .actions {
@@ -171,7 +189,7 @@ th, td  {
 }
 
 .card h3 {
-  color: #7489c5;
+  color: #41a8e8;
   margin-bottom: 15px;
 }
 
@@ -196,7 +214,7 @@ th, td  {
   font-size: 14px;
   font-weight: 500;
   margin-top: 1rem;
-  color: #7489c5;
+  color: #41a8e8;
   margin-bottom: 2px;
 }
 
@@ -295,7 +313,7 @@ th, td {
 
 
 .hd  {
-  background: #7489c5;
+  background: #41a8e8;
   color: #fff;
 }
 
@@ -306,6 +324,7 @@ td img {
   border-radius: 50%;
   object-fit: cover;
 }
+
 
 /* =========================================================================
    7. FILE UPLOAD & SPECIAL SECTIONS
@@ -413,7 +432,7 @@ td img {
 }
 
 .dropify-wrapper:hover {
-  border-color: #7489c5;
+  border-color: #41a8e8;
   background: #f0f7ff;
 }
 
@@ -423,7 +442,7 @@ td img {
 }
 
 .dropify-wrapper .dropify-message .file-icon {
-  color: #7489c5;
+  color: #41a8e8;
 }
 
 
@@ -488,4 +507,44 @@ td img {
     gap: 10px;
     align-items: flex-start;
   }
+}
+
+/* =========================================================================
+   10. Dashboard Layout
+   ========================================================================= */
+/* Make sidebar and content appear side by side */
+.dashboard-layout {
+  display: flex;
+  height: 100vh;       /* full viewport height */
+  width: 100vw;        /* full viewport width */
+  overflow: hidden;
+}
+
+/* Sidebar settings */
+.sidebar {
+  width: 250px;        /* adjust as needed */
+  background-color: #1e293b;  /* dark background */
+  color: white;
+  flex-shrink: 0;      /* prevent sidebar from shrinking */
+  height: 100vh;
+  position: fixed;     /* keep sidebar fixed */
+  left: 0;
+  top: 0;
+}
+
+/* Main content area (map) */
+.dashboard-content {
+  flex-grow: 1;
+  margin-left: 250px;  /* same as sidebar width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fafafa;
+}
+
+/* Map adjustments */
+#map {
+  width: 90%;
+  height: 90vh;
+  border-radius: 8px;
 }

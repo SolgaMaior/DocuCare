@@ -16,6 +16,7 @@ require_once('model/databases/map_data.php');
   </style>
 </head>
 <body>
+
   <div id="map">
 
   <script>
