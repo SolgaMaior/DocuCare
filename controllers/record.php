@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $middlename = trim(filter_input(INPUT_POST, 'middle_name')) ?? '';
         $lastname = trim(filter_input(INPUT_POST, 'last_name')) ?? '';
         $purokID = filter_input(INPUT_POST, 'purok', FILTER_VALIDATE_INT);
-        $age = filter_input(INPUT_POST, 'age', FILTER_VALIDATE_INT);
+        $birth_date = filter_input(INPUT_POST, 'birth_date') ?? '';
         $sex = filter_input(INPUT_POST, 'sex') ?? '';
         $civilstatus = filter_input(INPUT_POST, 'civilstatus') ?? '';
         $occupation = trim(filter_input(INPUT_POST, 'occupation')) ?? '';
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $firstname === '' ||
             $lastname === '' ||
             $purokID === null ||
-            $age === null ||
+            $birth_date === '' ||
             $sex === '' ||
             $civilstatus === '' ||
             $occupation === '' ||
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $middlename,
                 $lastname,
                 $purokID,
-                $age,
+                $birth_date,
                 $sex,
                 $civilstatus,
                 $occupation,
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $middlename,
                 $lastname,
                 $purokID,
-                $age,
+                $birth_date,
                 $sex,
                 $civilstatus,
                 $occupation,

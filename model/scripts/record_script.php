@@ -13,20 +13,53 @@
   const citizenPhotos = {};
   const citizenMedicalFiles = {};
   const citizenDiagnoses = {};
-  const citizenIllnessRecords = {}; // ADDED
+  const citizenIllnessRecords = {};
 
   <?php 
   require_once('model/databases/diagnosisdb.php');
-  require_once('model/databases/illnessdb.php'); // ADDED
+  require_once('model/databases/illnessdb.php');
   foreach ($citizens as $citizen): 
     $diagnoses = getdiagnoses($citizen['citID']);
-    $illnessRecords = get_citizen_illness_records($citizen['citID']); // ADDED
+    $illnessRecords = get_citizen_illness_records($citizen['citID']);
   ?>
     citizenPhotos[<?= $citizen['citID'] ?>] = <?= json_encode("model/record_file_func/display_image.php?citID=" . $citizen['citID']) ?>;
     citizenMedicalFiles[<?= $citizen['citID'] ?>] = <?= json_encode(get_citizen_file_data($citizen['citID'])) ?>;
     citizenDiagnoses[<?= $citizen['citID'] ?>] = <?= json_encode($diagnoses) ?>;
     citizenIllnessRecords[<?= $citizen['citID'] ?>] = <?= json_encode($illnessRecords) ?>;
   <?php endforeach; ?>
+
+  // Set max date for birth date input to today
+  document.addEventListener('DOMContentLoaded', function() {
+    const birthDateInput = document.getElementById('birthDate');
+    if (birthDateInput) {
+      const today = new Date().toISOString().split('T')[0];
+      birthDateInput.setAttribute('max', today);
+    }
+  });
+
+  // Calculate age from birth date
+  function calculateAge(birthDate) {
+    if (!birthDate) return '';
+    const birth = new Date(birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
+  }
+
+  // Update age display when birth date changes
+  const birthDateInput = document.getElementById('birthDate');
+  const ageDisplay = document.getElementById('ageDisplay');
+  
+  if (birthDateInput && ageDisplay) {
+    birthDateInput.addEventListener('change', function() {
+      const age = calculateAge(this.value);
+      ageDisplay.value = age ? age + ' years old' : '';
+    });
+  }
 
   function initializeDropify() {
     if (typeof $ !== 'undefined' && $.fn.dropify) {
@@ -50,26 +83,19 @@
     }
   }
 
-
-
-
-
-
-
-
-
   function showForm() {
     resetForm();
     document.getElementById('formAction').value = 'add_citizen';
     document.getElementById('submitButton').textContent = 'Submit';
     document.getElementById('citID').value = '';
-    document.querySelectorAll('#form-section input[type="text"], #form-section input[type="number"], #form-section input[type="tel"]').forEach(i => i.value = '');
+    document.querySelectorAll('#form-section input[type="text"], #form-section input[type="number"], #form-section input[type="tel"], #form-section input[type="date"]').forEach(i => i.value = '');
     document.querySelectorAll('#form-section select').forEach(s => {
       s.selectedIndex = 0;
       s.style.color = '#707070ff';
     });
     document.getElementById('profilePreview').src = 'resources/defaultprofile.png';
     document.getElementById('uploadInput').value = '';
+    document.getElementById('ageDisplay').value = '';
     
     document.getElementById('medicalCondition').value = '';
     document.getElementById('medicalNotes').value = '';
@@ -93,21 +119,17 @@
     }, 100);
   }
 
-
   function showEditForm(citID) {
     resetForm();
     const citizen = citizensData.find(c => c.citID == citID);
     if (!citizen) return alert('Citizen not found.');
     
-    // Load diagnosis data from the diagnosis table
     const diagnoses = citizenDiagnoses[citID] || [];
     const latestDiagnosis = diagnoses.length > 0 ? diagnoses[diagnoses.length - 1] : null;
     
     if (latestDiagnosis) {
       document.getElementById('medicalCondition').value = latestDiagnosis.symptoms || '';
       document.getElementById('medicalNotes').value = latestDiagnosis.description || '';
-      
-      // Make fields editable in edit mode
       document.getElementById('medicalCondition').readOnly = false;
       document.getElementById('medicalNotes').readOnly = false;
     } else {
@@ -117,18 +139,22 @@
     
     document.getElementById('medicalFiles').value = '';
     document.getElementById('profilePreview').src = citizenPhotos[citID] || 'resources/defaultprofile.png';
-
     
     document.getElementById('citID').value = citizen.citID;
     document.getElementById('firstName').value = citizen.firstname;
     document.getElementById('middleName').value = citizen.middlename || '';
     document.getElementById('lastName').value = citizen.lastname;
-    document.getElementById('age').value = citizen.age;
+    
+    // Set birth date and calculate age
+    if (citizen.birth_date) {
+      document.getElementById('birthDate').value = citizen.birth_date;
+      const age = calculateAge(citizen.birth_date);
+      document.getElementById('ageDisplay').value = age ? age + ' years old' : '';
+    }
 
     const sexSelect = document.getElementById('sex');
     sexSelect.value = citizen.sex;
     sexSelect.style.color = sexSelect.value ? '#333' : '#707070ff';
-
 
     const civilstatusSelect = document.getElementById('civilstatus');
     civilstatusSelect.value = citizen.civilstatus;
@@ -159,7 +185,6 @@
     if (medicalSection) {
         medicalSection.style.display = 'none';
     }
-
     
     document.getElementById('formAction').value = 'add_citizen';
     document.getElementById('submitButton').textContent = 'Update';
@@ -178,32 +203,19 @@
     }, 100);
       
     showAssociatedRecords(citID, true);
-     
   }
-
-
-
-
-
-
-
-  
-
 
   function showViewForm(citID) {
     const citizen = citizensData.find(c => c.citID == citID);
     if (!citizen) return alert('Citizen not found.');
     resetForm();
     
-    // Load and display diagnosis data (read-only)
     const diagnoses = citizenDiagnoses[citID] || [];
     const latestDiagnosis = diagnoses.length > 0 ? diagnoses[diagnoses.length - 1] : null;
     
     if (latestDiagnosis) {
       document.getElementById('medicalCondition').value = latestDiagnosis.symptoms || '';
       document.getElementById('medicalNotes').value = latestDiagnosis.description || '';
-      
-      // Make fields read-only in view mode
       document.getElementById('medicalCondition').readOnly = true;
       document.getElementById('medicalNotes').readOnly = true;
     } else {
@@ -212,6 +224,7 @@
       document.getElementById('medicalCondition').readOnly = true;
       document.getElementById('medicalNotes').readOnly = true;
     }
+    
     showIllnessHistory(citID);
     document.getElementById('profilePreview').src = citizenPhotos[citID] || 'resources/defaultprofile.png';
     document.getElementById('uploadProfileButton').style.display = 'none';
@@ -223,8 +236,14 @@
     document.getElementById('middleName').readOnly = true;
     document.getElementById('lastName').value = citizen.lastname;
     document.getElementById('lastName').readOnly = true;
-    document.getElementById('age').value = citizen.age;
-    document.getElementById('age').readOnly = true;
+    
+    // Display birth date and age (read-only)
+    if (citizen.birth_date) {
+      document.getElementById('birthDate').value = citizen.birth_date;
+      document.getElementById('birthDate').readOnly = true;
+      const age = calculateAge(citizen.birth_date);
+      document.getElementById('ageDisplay').value = age ? age + ' years old' : '';
+    }
 
     const sexSelect = document.getElementById('sex');
     sexSelect.value = citizen.sex;
@@ -270,12 +289,6 @@
 
     showAssociatedRecords(citID);
   }
-
-
-
-
-
-
 
   function showAssociatedRecords(citID, isEditMode = false) {
     const filesContainer = document.getElementById('medicalFilesList');
@@ -400,37 +413,33 @@
     }
   }
 
-  
   function showIllnessHistory(citID) {
     const historyContainer = document.getElementById('illnessHistoryList');
     const previewBlock = document.getElementById('illnessHistoryPreview');
     
     if (!historyContainer || !previewBlock) return;
     
-      historyContainer.innerHTML = '';
-      const records = citizenIllnessRecords[citID] || [];
-      
-      if (records.length > 0) {
-          records.forEach(record => {
-              const div = document.createElement('div');
-              div.style.padding = '10px';
-              div.style.marginBottom = '5px';
-              div.style.border = '1px solid #ddd';
-              div.style.borderRadius = '5px';
-              div.innerHTML = `
-                  <strong>${record.illness_name}</strong><br>
-                  Date: ${new Date(record.record_date).toLocaleDateString()}<br>
-              `;
-              historyContainer.appendChild(div);
-          });
-          previewBlock.style.display = 'block';
+    historyContainer.innerHTML = '';
+    const records = citizenIllnessRecords[citID] || [];
+    
+    if (records.length > 0) {
+      records.forEach(record => {
+        const div = document.createElement('div');
+        div.style.padding = '10px';
+        div.style.marginBottom = '5px';
+        div.style.border = '1px solid #ddd';
+        div.style.borderRadius = '5px';
+        div.innerHTML = `
+          <strong>${record.illness_name}</strong><br>
+          Date: ${new Date(record.record_date).toLocaleDateString()}<br>
+        `;
+        historyContainer.appendChild(div);
+      });
+      previewBlock.style.display = 'block';
     } else {
-        previewBlock.style.display = 'none';
+      previewBlock.style.display = 'none';
     }
   }
-
-
-
 
   function showTable() {
     document.getElementById("records-section").style.display = "block";
@@ -447,164 +456,144 @@
     reader.readAsDataURL(event.target.files[0]);
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
   function deleteCitizenFile(fileID, citID) {
-      if (!confirm("Are you sure you want to delete this file?")) return;
+    if (!confirm("Are you sure you want to delete this file?")) return;
 
-      fetch('model/record_file_func/delete_file.php', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ id: fileID })
-      })
-      .then(response => {
-          return response.text().then(text => {
-              try {
-                  return JSON.parse(text);
-              } catch (e) {
-                  throw new Error('Server returned invalid JSON: ' + text.substring(0, 100));
-              }
-          });
-      })
-      .then(data => {
-          if (data.status === 'success') {
-              alert('File deleted successfully!');
-              
-              if (citizenMedicalFiles[citID]) {
-                  citizenMedicalFiles[citID] = citizenMedicalFiles[citID].filter(f => f.id != fileID);
-              }
-              
-              showAssociatedRecords(citID, true);
-          } else {
-              alert('Error: ' + data.message);
-          }
-      })
-      .catch(err => {
-          alert('Failed to delete file: ' + err.message);
+    fetch('model/record_file_func/delete_file.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id: fileID })
+    })
+    .then(response => {
+      return response.text().then(text => {
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          throw new Error('Server returned invalid JSON: ' + text.substring(0, 100));
+        }
       });
+    })
+    .then(data => {
+      if (data.status === 'success') {
+        alert('File deleted successfully!');
+        
+        if (citizenMedicalFiles[citID]) {
+          citizenMedicalFiles[citID] = citizenMedicalFiles[citID].filter(f => f.id != fileID);
+        }
+        
+        showAssociatedRecords(citID, true);
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(err => {
+      alert('Failed to delete file: ' + err.message);
+    });
   }
 
-
-
-
-
-
-
   function resetForm() {
-      const form = document.querySelector('#form-section form');
-      if (form) form.reset();
-      
-      const citIDField = document.getElementById('citID');
-      const formActionField = document.getElementById('formAction');
-      if (citIDField) citIDField.value = '';
-      if (formActionField) formActionField.value = 'add_citizen';
-      
-      const profilePreview = document.getElementById('profilePreview');
-      const uploadButton = document.getElementById('uploadProfileButton');
-      if (profilePreview) profilePreview.src = 'resources/defaultprofile.png';
-      if (uploadButton) uploadButton.style.display = 'block';
-      
-      const firstName = document.getElementById('firstName');
-      const middleName = document.getElementById('middleName');
-      const lastName = document.getElementById('lastName');
-      const age = document.getElementById('age');
-      const occupation = document.getElementById('occupation');
-      const contactnum = document.getElementById('contactnum');
-      const medicalCondition = document.getElementById('medicalCondition');
-      const medicalNotes = document.getElementById('medicalNotes');
-      
-      if (firstName) firstName.readOnly = false;
-      if (middleName) middleName.readOnly = false;
-      if (lastName) lastName.readOnly = false;
-      if (age) age.readOnly = false;
-      if (occupation) occupation.readOnly = false;
-      if (contactnum) contactnum.readOnly = false;
-      if (medicalCondition) medicalCondition.readOnly = false;
-      if (medicalNotes) medicalNotes.readOnly = false;
-      
-      const sexSelect = document.getElementById('sex');
-      if (sexSelect) {
-          sexSelect.disabled = false;
-          sexSelect.value = '';
-          sexSelect.style.color = '#707070ff';
+    const form = document.querySelector('#form-section form');
+    if (form) form.reset();
+    
+    const citIDField = document.getElementById('citID');
+    const formActionField = document.getElementById('formAction');
+    if (citIDField) citIDField.value = '';
+    if (formActionField) formActionField.value = 'add_citizen';
+    
+    const profilePreview = document.getElementById('profilePreview');
+    const uploadButton = document.getElementById('uploadProfileButton');
+    if (profilePreview) profilePreview.src = 'resources/defaultprofile.png';
+    if (uploadButton) uploadButton.style.display = 'block';
+    
+    const firstName = document.getElementById('firstName');
+    const middleName = document.getElementById('middleName');
+    const lastName = document.getElementById('lastName');
+    const birthDate = document.getElementById('birthDate');
+    const ageDisplay = document.getElementById('ageDisplay');
+    const occupation = document.getElementById('occupation');
+    const contactnum = document.getElementById('contactnum');
+    const medicalCondition = document.getElementById('medicalCondition');
+    const medicalNotes = document.getElementById('medicalNotes');
+    
+    if (firstName) firstName.readOnly = false;
+    if (middleName) middleName.readOnly = false;
+    if (lastName) lastName.readOnly = false;
+    if (birthDate) birthDate.readOnly = false;
+    if (ageDisplay) ageDisplay.value = '';
+    if (occupation) occupation.readOnly = false;
+    if (contactnum) contactnum.readOnly = false;
+    if (medicalCondition) medicalCondition.readOnly = false;
+    if (medicalNotes) medicalNotes.readOnly = false;
+    
+    const sexSelect = document.getElementById('sex');
+    if (sexSelect) {
+      sexSelect.disabled = false;
+      sexSelect.value = '';
+      sexSelect.style.color = '#707070ff';
+    }
+    
+    const civilstatusSelect = document.getElementById('civilstatus');
+    if (civilstatusSelect) {
+      civilstatusSelect.disabled = false;
+      civilstatusSelect.value = '';
+      civilstatusSelect.style.color = '#707070ff';
+    }
+    
+    const purokSelect = document.getElementById('purok');
+    if (purokSelect) {
+      purokSelect.disabled = false;
+      purokSelect.value = '';
+      purokSelect.style.color = '#707070ff';
+    }
+
+    const commonIllnessSelect = document.getElementById('commonIllness');
+    if (commonIllnessSelect) {
+      commonIllnessSelect.disabled = false;
+      commonIllnessSelect.value = '';
+      commonIllnessSelect.style.color = '#707070ff';
+    }
+    
+    const medicalSection = document.querySelector('.medical-files-section');
+    if (medicalSection) {
+      medicalSection.style.display = 'block';
+    }
+    
+    const previewBlock = document.getElementById('medicalFilesPreview');
+    const header = document.getElementById('associatedRecordsHeader');
+    const illnessHistoryPreview = document.getElementById('illnessHistoryPreview');
+    if (previewBlock) previewBlock.style.display = 'none';
+    if (header) header.style.display = 'none';
+    if (illnessHistoryPreview) illnessHistoryPreview.style.display = 'none';
+    
+    const submitButton = document.getElementById('submitButton');
+    const diagButton = document.getElementById('diagButton');
+    if (submitButton) submitButton.style.display = 'block';
+    if (diagButton) diagButton.style.display = 'inline-block';
+    
+    try {
+      const dropifyElement = $('#medicalFiles').data('dropify');
+      if (dropifyElement) {
+        dropifyElement.resetPreview();
+        dropifyElement.clearElement();
       }
-      
-      const civilstatusSelect = document.getElementById('civilstatus');
-      if (civilstatusSelect) {
-          civilstatusSelect.disabled = false;
-          civilstatusSelect.value = '';
-          civilstatusSelect.style.color = '#707070ff';
-      }
-      
-      const purokSelect = document.getElementById('purok');
-      if (purokSelect) {
-          purokSelect.disabled = false;
-          purokSelect.value = '';
-          purokSelect.style.color = '#707070ff';
-      }
-      
-      const medicalSection = document.querySelector('.medical-files-section');
-      if (medicalSection) {
-          medicalSection.style.display = 'block';
-      }
-      
-      const previewBlock = document.getElementById('medicalFilesPreview');
-      const header = document.getElementById('associatedRecordsHeader');
-      if (previewBlock) previewBlock.style.display = 'none';
-      if (header) header.style.display = 'none';
-      
-      const submitButton = document.getElementById('submitButton');
-      const diagButton = document.getElementById('diagButton');
-      if (submitButton) submitButton.style.display = 'block';
-      if (diagButton) diagButton.style.display = 'inline-block';
-      
-      try {
-          const dropifyElement = $('#medicalFiles').data('dropify');
-          if (dropifyElement) {
-              dropifyElement.resetPreview();
-              dropifyElement.clearElement();
-          }
-      } catch (e) {
-          console.log('Dropify reset failed:', e);
-      }
+    } catch (e) {
+      console.log('Dropify reset failed:', e);
+    }
   }
 
   function removeNumbers(input) {
-      input.value = input.value.replace(/[0-9]/g, '');
+    input.value = input.value.replace(/[0-9]/g, '');
   }
 
   ['firstName', 'lastName', 'middleName', 'occupation'].forEach(id => {
-      const element = document.getElementById(id);
-      if (element) {
-          element.addEventListener('input', function() {
-              removeNumbers(this);
-          });
-      }
-  });
-
-  function removeLetters(input) {
-      input.value = input.value.replace(/[a-zA-Z]/g, '');
-  }
-
-  ['age'].forEach(id => {
-      const element = document.getElementById(id);
-      if (element) {
-          element.addEventListener('input', function() {
-              removeLetters(this);
-          });
-      }
+    const element = document.getElementById(id);
+    if (element) {
+      element.addEventListener('input', function() {
+        removeNumbers(this);
+      });
+    }
   });
 
   function filterTable() {

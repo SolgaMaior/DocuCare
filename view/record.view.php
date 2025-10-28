@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,7 +15,6 @@
     th, td  {
       text-align: center;
     }
-  
   </style>
 </head>
 
@@ -24,16 +22,6 @@
 <?php
 require('view/partials/sidebar.php');
 ?>
-
-  <?php if ($message): ?>
-  <?php  
-     include('view/partials/alert-bar.php');
-     addalert($message);
-  ?>
-  <?php endif; ?>
-
-
-
 
 
   <div class="content">
@@ -116,8 +104,6 @@ require('view/partials/sidebar.php');
       </table>
     </div>
 
-
-
     
     <div id="form-section" style="display:none;">
       <form method="POST" action="" enctype="multipart/form-data">
@@ -166,8 +152,13 @@ require('view/partials/sidebar.php');
             </div>
 
             <div class="form-field">
-              <label for="age">Age</label>
-              <input type="number" name="age" id="age" required autocomplete="off" min="0" max="150">
+              <label for="birthDate">Birth Date</label>
+              <input type="date" name="birth_date" id="birthDate" required autocomplete="off" max="">
+            </div>
+
+            <div class="form-field">
+              <label for="ageDisplay">Age</label>
+              <input type="text" id="ageDisplay" readonly style="background-color: #f5f5f5; cursor: not-allowed;">
             </div>
 
             <div class="form-field">
@@ -203,27 +194,18 @@ require('view/partials/sidebar.php');
 
           </div>
         
-          
-          
-
           <div id="medicalFilesPreview" class="viewmedicalfiles">
               <h4 id="associatedRecordsHeader">Associated Records</h4>
               <div id="medicalFilesList"></div>
           </div>
  
-          
-
           <div class="medical-files-section" style="display: none;">
-            
             <h4>Medical Records</h4>
-
               <div class="form-field">
                 <label for="medicalFiles">Upload Medical Records</label>
                 <input type="file" class="dropify" name="medical_files[]" id="medicalFiles" multiple data-allowed-file-extensions="pdf doc docx jpg jpeg png gif" data-max-file-size="5M">
               </div>
-
           </div>
-
 
           <!-- Your existing medical diagnosis form -->
           <div class="medical-files-section" style="margin-top: 1rem;">
@@ -278,7 +260,6 @@ require('view/partials/sidebar.php');
                   >
                     Generate Diagnosis
                   </button>
-                  
               </div>
           </div>
 
@@ -293,7 +274,6 @@ require('view/partials/sidebar.php');
                   return;
               }
               
-              // Build URL with parameters
               let url = 'index.php?page=diagnosis';
               url += '&symptoms=' + encodeURIComponent(symptoms);
               
@@ -305,13 +285,9 @@ require('view/partials/sidebar.php');
                   url += '&citID=' + citizenID;
               }
               
-              // Open in new window or same window
               window.location.href = url;
             }
-
           </script>
-
-
 
           <div class="actions" style="margin-top: 1rem;">
             <button type="button" class="btn btn-outline" onclick="showTable()">Cancel</button>
@@ -321,12 +297,10 @@ require('view/partials/sidebar.php');
       </form>
     </div>
 
-
   </div>
 
   <?php require('model/scripts/record_script.php'); ?>
 
-  
   <?php if (isset($_GET['medical_uploaded']) && $_GET['medical_uploaded'] == '1'): ?>
     <div id="alertMessage" class="alert alert-success">
       Medical files uploaded successfully! 
