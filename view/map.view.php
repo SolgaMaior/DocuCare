@@ -9,11 +9,7 @@ require_once('model/databases/map_data.php');
   <title>Purok Illness Clusters</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <style>
-    #map { height: 650px; width: 1000px; margin-top: 15px;}
-    body { font-family: Arial, sans-serif; text-align: center; background: #fafafa; display: flex; justify-content: center; align-items: center; flex-direction: column; }
-    h2 { color: #333; margin-top: 20px; }
-  </style>
+  <link rel="stylesheet" href="styles/map.css">
 </head>
 <body>
   <div id="map">

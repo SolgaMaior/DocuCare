@@ -1,5 +1,4 @@
 <?php
-// login.controller.php - Cookie-based authentication
 require_once('config/config.php');
 require_once('model/databases/db_con.php');
 
@@ -11,7 +10,6 @@ if (isset($_COOKIE[COOKIE_NAME])) {
     exit;
 }
 
-// Process login BEFORE any HTML output
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
     $password = $_POST['password'] ?? '';
@@ -32,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $hash = hash_hmac('sha256', $userID, SECRET_KEY);
                 $authToken = $userID . ':' . $hash;
                 
-                // Set cookie expiration
+                // Set cookie expiration (not implemented yet)
                 $expiry = $rememberMe ? time() + (COOKIE_LIFETIME_DAYS * 24 * 60 * 60) : 0;
                 
                 // Set secure cookie
