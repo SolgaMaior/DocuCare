@@ -3,7 +3,7 @@
 
 require_once 'authCheck.php'; // this should define CURRENT_CITIZEN_ID
 
-// Get the logged-in citizen’s data
+// Get the logged-in citizen's data
 $citID = CURRENT_CITIZEN_ID ?? null;
 
 $citizen = [];
@@ -15,7 +15,6 @@ if ($citID) {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -97,14 +96,6 @@ require('view/partials/sidebar.php');
       </table>
     </div>
 
-
-
-
-
-
-
-
-
     
     <div id="form-section" style="display:none;">
       <form method="POST" action="" enctype="multipart/form-data">
@@ -153,8 +144,13 @@ require('view/partials/sidebar.php');
             </div>
 
             <div class="form-field">
-              <label for="age">Age</label>
-              <input type="number" name="age" id="age" required autocomplete="off" min="0" max="150">
+              <label for="birthDate">Birth Date</label>
+              <input type="date" name="birth_date" id="birthDate" required autocomplete="off" max="">
+            </div>
+
+            <div class="form-field">
+              <label for="ageDisplay">Age</label>
+              <input type="text" id="ageDisplay" readonly style="background-color: #f5f5f5; cursor: not-allowed;">
             </div>
 
             <div class="form-field">
@@ -194,10 +190,6 @@ require('view/partials/sidebar.php');
               <h4 id="associatedRecordsHeader">Associated Records</h4>
               <div id="medicalFilesList"></div>
           </div>
- 
-            
-           
-
 
           <div class="medical-files-section" style="display: none;">
             
@@ -267,7 +259,42 @@ require('view/partials/sidebar.php');
               </div>
           </div>
 
+
+          <?php require('model/scripts/record_script.php'); ?>
           <script>
+            // Set max date for birth date input to today
+            document.addEventListener('DOMContentLoaded', function() {
+              const birthDateInput = document.getElementById('birthDate');
+              if (birthDateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                birthDateInput.setAttribute('max', today);
+              }
+            });
+
+            // Calculate age from birth date
+            function calculateAge(birthDate) {
+              if (!birthDate) return '';
+              const birth = new Date(birthDate);
+              const today = new Date();
+              let age = today.getFullYear() - birth.getFullYear();
+              const monthDiff = today.getMonth() - birth.getMonth();
+              if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+              }
+              return age;
+            }
+
+            // Update age display when birth date changes
+            const birthDateInput = document.getElementById('birthDate');
+            const ageDisplay = document.getElementById('ageDisplay');
+            
+            if (birthDateInput && ageDisplay) {
+              birthDateInput.addEventListener('change', function() {
+                const age = calculateAge(this.value);
+                ageDisplay.value = age ? age + ' years old' : '';
+              });
+            }
+
             function generateDiagnosis(citizenID, firstname, middlename, lastname) {
               const symptoms = document.getElementById('medicalCondition').value.trim();
               const notes = document.getElementById('medicalNotes').value.trim();
@@ -293,25 +320,19 @@ require('view/partials/sidebar.php');
               // Open in new window or same window
               window.location.href = url;
             }
-
           </script>
-
-
-    </script>
 
           <div class="actions" style="margin-top: 1rem;">
             <button type="button" class="btn btn-outline" onclick="showTable()">Cancel</button>
             <button type="submit" id="submitButton" class="btn btn-outline">Submit</button>
           </div>
         </div>
-        </div>
       </form>
     </div>
 
-
   </div>
 
-  <?php require('model/scripts/record_script.php'); ?>
+  
 
   
   <?php if (isset($_GET['medical_uploaded']) && $_GET['medical_uploaded'] == '1'): ?>
