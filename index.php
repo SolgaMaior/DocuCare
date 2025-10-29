@@ -1,5 +1,5 @@
 <?php
-
+// index.php - Main Entry Point
 
 // Get the page parameter from URL
 $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -21,13 +21,15 @@ $allowedPages = [
     'logout' => 'controllers/authcontroller/logout.controller.php',
     'forgot_password' => 'controllers/authcontroller/forgot_password.controller.php',
     'approve_accounts' => 'controllers/approve_accounts.php',
+    'inventory' => 'controllers/inventory.php',
+    'inventory_update' => 'controllers/inventory_update.php',
 ];
 
 // Include auth check only for protected pages
-if ($page !== 'login' && $page !== 'signup' && $page !== 'forgot_password') {
+$publicPages = ['login', 'signup', 'forgot_password'];
+if (!in_array($page, $publicPages)) {
     require('authCheck.php');
 }
-
 
 // Route to the appropriate controller
 if (array_key_exists($page, $allowedPages) && file_exists($allowedPages[$page])) {
