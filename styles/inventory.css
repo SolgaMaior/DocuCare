@@ -33,7 +33,7 @@
   padding: 12px 14px;
   font-weight: 600;
   color: #003c66;
-  background: #007acc;
+  background: #4fa7e6;
   white-space: nowrap;
   text-align: center;
   color: #ffffff;
@@ -360,7 +360,7 @@
 
 /* Add Item button styling */
 .add-btn {
-  background: linear-gradient(120deg, #4fa7e6, #007acc);
+  background: #4fa7e6;
   color: #fff;
   border: none;
   padding: 8px 12px;
@@ -381,7 +381,7 @@
 
 /* Primary/outline buttons used in the stats area */
 .btn.btn-primary {
-  background: linear-gradient(120deg, #007acc, #4fa7e6);
+  background: #4fa7e6;
   color: #fff;
   border: none;
   padding: 8px 12px;

@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Inventory - DocuCare</title>
+  <link rel="icon" type="image/svg" href="resources/images/Logo.svg">
   <link rel="stylesheet" href="styles/inventory.css">
   <link rel="stylesheet" href="styles/record.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
