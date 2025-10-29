@@ -70,7 +70,7 @@
                   ?>
                   <tr>
                     <td class="col-name"><?= htmlspecialchars($item['name']) ?></td>
-                    <td class="col-stock" style="text-align:right;"><?= htmlspecialchars($item['stock']) ?></td>
+                    <td class="col-stock" style="text-align:center;"><?= htmlspecialchars($item['stock']) ?></td>
                     <td class="col-status" style="text-align:center;">
                       <span class="status-pill <?= $statusClass ?>"><?= $statusText ?></span>
                     </td>

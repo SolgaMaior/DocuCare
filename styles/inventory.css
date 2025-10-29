@@ -16,6 +16,7 @@
   border: 1px solid #b0d4ff;
   border-radius: 8px;
   box-sizing: border-box;
+ 
 }
 
 /* Table Base */
@@ -64,6 +65,17 @@
 .inventory-table tbody tr:hover {
   background-color: #f0f8ff;
 }
+/* Add-row (button-like row) */
+.inventory-table tbody tr.add-row td {
+  background: #eef7ff;
+  color: #007acc;
+  font-weight: 700;
+  text-align: center;
+  padding: 12px;
+}
+.inventory-table tbody tr.add-row:hover td {
+  background: #e0f2ff;
+}
 
 /* Column Widths */
 .inventory-table th.col-name,
@@ -72,17 +84,42 @@
   text-align: left;
 }
 
-.inventory-table th.col-stock,
-.inventory-table td.col-stock {
-  width: 120px;
-  text-align: center;
-}
 
 .inventory-table th.col-actions,
 .inventory-table td.col-actions {
-  width: 110px;
+    width: 200px;           /* ✅ make enough space for 3 buttons */
   text-align: center;
-  padding: 10px 5px !important;
+  padding-right: 25px;    /* ✅ add space from the right edge */
+  padding-left: 10px;
+  box-sizing: border-box;
+  overflow: hidden;      /* ✅ prevent overflow issues */
+}
+
+.col-actions > div {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  padding-right: 10px; /* ✅ prevents buttons from hitting the edge */
+  flex-wrap: wrap;     /* optional: prevents overflow on smaller screens */
+}
+
+/* Category column */
+.inventory-table th.col-category,
+.inventory-table td.col-category {
+  width: 140px;
+  text-align: center;
+  padding-left: 20px;
+}
+
+
+/* Stocks column */
+.inventory-table th.col-stock,
+.inventory-table td.col-stock {
+  width: 140px;
+  text-align: right;
+  padding-right: 25px;
+  box-sizing: border-box;
 }
 
 /* Stock value emphasis */
@@ -92,6 +129,39 @@
   color: #007acc;
 }
 
+/* Container inside stock column */
+.col-stock > div {
+  display: flex;
+  justify-content: flex-end; /* ✅ align everything inside to the right */
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+/* Stock value text */
+.stock-value {
+  display: inline-block;
+  text-align: right;       /* ✅ ensures text aligns properly */
+  min-width: 40px;
+  font-weight: 600;
+  color: #007acc;
+  padding-right: 4px;
+}
+
+/* Editable input alignment */
+.stock-input {
+  display: none;
+  width: 70px;
+  text-align: right;       /* ✅ aligns input text to the right */
+  border: 1px solid #cfdff7;
+  border-radius: 6px;
+  padding: 6px;
+}
+
+/* when active (inline style in JS) */
+.stock-input[style*="inline"] {
+  display: inline-block;
+}
 /* ===========================================
    STATUS PILL COLORS
    =========================================== */
@@ -137,6 +207,49 @@
 
 .col-actions .btn.small:hover {
   background-color: #3a92cc;
+}
+
+/* Delete button styling */
+.btn.btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 34px;
+  padding: 0;
+  border-radius: 8px;
+  background-color: #ef3144;
+  color: white;
+  border: none;
+  font-weight: 700;
+  font-size: 1.4em;
+  cursor: pointer;
+  transition: background-color 0.12s ease, transform 0.08s ease;
+  line-height: 1;
+}
+
+.btn.btn-delete:hover {
+  background-color: #c82333;
+}
+
+.btn-delete i {
+  pointer-events: none;
+  font-size: 16px;
+}
+
+.btn.btn-delete:active {
+  transform: translateY(1px);
+}
+
+.col-actions > div {
+  display: flex;
+  flex-direction: row;    /* ✅ ensure one row layout */
+  justify-content: center;
+  align-items: center;
+  gap: 10px;   
+  width: 100%;            /* ✅ space between +, -, x */
+  padding-right: 6px;     /* space from table edge */
+  flex-wrap: nowrap;      /* ✅ prevents buttons from going into new line */
 }
 
 /* ===========================================
