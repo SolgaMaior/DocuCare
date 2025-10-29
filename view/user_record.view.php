@@ -10,7 +10,6 @@ $citizen = [];
 if ($citID) {
     $data = get_citizens_by_id($citID);
     if ($data) {
-        // convert to array of one item, so your foreach still works
         $citizen[] = $data;
     }
 }
@@ -24,6 +23,7 @@ if ($citID) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Citizen Records - DocuCare</title>
   <link rel="stylesheet" href="styles/record.css">
+  <link rel="icon" type="image/svg" href="resources/images/Logo.svg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
@@ -271,29 +271,6 @@ require('view/partials/sidebar.php');
               }
             });
 
-            // Calculate age from birth date
-            function calculateAge(birthDate) {
-              if (!birthDate) return '';
-              const birth = new Date(birthDate);
-              const today = new Date();
-              let age = today.getFullYear() - birth.getFullYear();
-              const monthDiff = today.getMonth() - birth.getMonth();
-              if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-                age--;
-              }
-              return age;
-            }
-
-            // Update age display when birth date changes
-            const birthDateInput = document.getElementById('birthDate');
-            const ageDisplay = document.getElementById('ageDisplay');
-            
-            if (birthDateInput && ageDisplay) {
-              birthDateInput.addEventListener('change', function() {
-                const age = calculateAge(this.value);
-                ageDisplay.value = age ? age + ' years old' : '';
-              });
-            }
 
             function generateDiagnosis(citizenID, firstname, middlename, lastname) {
               const symptoms = document.getElementById('medicalCondition').value.trim();
