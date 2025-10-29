@@ -23,20 +23,25 @@ function get_inventory($category = 'all', $search = '') {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function add_inventory_item($name, $category, $stock) {
-    global $db;
-
-    $stmt = $db->prepare("INSERT INTO inventory (name, category, stock) VALUES (?, ?, ?)");
-    $stmt->execute([$name, $category, $stock]);
-    return $db->lastInsertId();
-}
-
 function update_multiple_stocks($stocks) {
     global $db;
-    $stmt = $db->prepare("UPDATE inventory SET stock = ? WHERE id = ?");
+    $stmt = $db->prepare("UPDATE inventory SET stock = :stock WHERE id = :id");
     foreach ($stocks as $id => $stock) {
-        $stmt->execute([(int)$stock, (int)$id]);
+        $stmt->execute([
+            ':id' => (int)$id,
+            ':stock' => (int)$stock
+        ]);
     }
+}
+
+function add_inventory_item($name, $category, $stock) {
+    global $db;
+    $stmt = $db->prepare("INSERT INTO inventory (name, category, stock) VALUES (:name, :category, :stock)");
+    $stmt->execute([
+        ':name' => $name,
+        ':category' => $category,
+        ':stock' => $stock
+    ]);
 }
 
 

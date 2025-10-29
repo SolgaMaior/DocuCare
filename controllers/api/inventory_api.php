@@ -3,8 +3,8 @@
 header('Content-Type: application/json');
 session_start();
 
-require_once __DIR__ . '/../../model/database.php';
-require_once __DIR__ . '/../../model/Inventorydb.php';
+require_once('../../model/databases/db_con.php');  // Your PDO connection (defines $db)
+require_once('../../model/databases/inventorydb.php');
 
 $action = $_POST['action'] ?? '';
 

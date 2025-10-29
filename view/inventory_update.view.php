@@ -1,4 +1,3 @@
-<?php require_once __DIR__ . '/../controllers/inventory_update.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,7 +86,7 @@
         <div class="stats-card">
           <h4>Update Inventory</h4>
           <div class="stats-actions">
-            <button type="submit" form="updateInventoryForm" class="btn btn-primary" style="height: 2.5rem;">Update Stocks</button>
+            <button type="button" class="btn btn-primary" id="updateStocksBtn" style="height: 2.5rem;">Update Stocks</button>
             <button type="button" class="btn btn-outline" onclick="window.location.href='index.php?page=inventory'">Cancel</button>
           </div>
         </div>
@@ -161,9 +160,9 @@ const InventoryApp = {
   }
 };
 
-// Submit inventory update via AJAX
-document.querySelector('.btn.btn-primary').addEventListener('click', async (e) => {
-  e.preventDefault();
+document.querySelector('#updateInventoryForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); // stop normal form reload
+
   const rows = document.querySelectorAll('tr[data-id]');
   const stocks = {};
   rows.forEach(r => {
@@ -178,38 +177,69 @@ document.querySelector('.btn.btn-primary').addEventListener('click', async (e) =
     formData.append(`stocks[${id}]`, val);
   }
 
-  const res = await fetch('controllers/api/inventory_api.php', {
-    method: 'POST',
-    body: formData
-  });
+  try {
+    const res = await fetch('controllers/api/inventory_api.php', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    showToast(data.message || data.error, data.success ? 'success' : 'error');
+    if (data.success) window.location.href = 'index.php?page=inventory';
+  } catch (err) {
+    showToast('Connection failed. Please try again.', 'error');
+  }
+
 
   const data = await res.json();
-  alert(data.message || data.error);
-  if (data.success) location.reload();
+  showToast(data.message || data.error, data.success ? 'success' : 'error');
+  if (data.success) window.location.href = 'index.php?page=inventory';
+
 });
 
-// Add new item via AJAX
 document.querySelector('#addModal form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const form = e.target;
   const formData = new FormData(form);
   formData.append('action', 'add_item');
 
-  const res = await fetch('controllers/api/inventory_api.php', {
-    method: 'POST',
-    body: formData
-  });
+  try {
+    const res = await fetch('controllers/api/inventory_api.php', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    showToast(data.message || data.error, data.success ? 'success' : 'error');
+    if (data.success) window.location.href = 'index.php?page=inventory';
+
+  } catch (err) {
+    showToast('Connection failed. Please try again.', 'error');
+  }
+
 
   const data = await res.json();
-  alert(data.message || data.error);
-  if (data.success) location.reload();
+  showToast(data.message || data.error, data.success ? 'success' : 'error');
+  if (data.success) window.location.href = 'index.php?page=inventory';
 });
+
+document.querySelector('#updateStocksBtn')?.addEventListener('click', () => {
+  document.querySelector('#updateInventoryForm').dispatchEvent(new Event('submit'));
+});
+
+function showToast(message, type = 'success') {
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.className = `toast ${type}`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
 
 // Modal handling
 function openModal() { document.getElementById('addModal').style.display = 'block'; }
 function closeModal() { document.getElementById('addModal').style.display = 'none'; }
 window.onclick = e => { if (e.target.id === 'addModal') closeModal(); };
 </script>
+
 
 </body>
 </html>
