@@ -30,6 +30,7 @@
         <input type="text" name="search" placeholder="Search item..." value="<?= htmlspecialchars($searchQuery) ?>">
         <button type="submit">Search</button>
       </form>
+      <button class="add-btn" onclick="openModal()">+ Add Item</button>
     </div>
 
   <?php if (isset($_SESSION['message'])): ?>
