@@ -31,6 +31,19 @@ try {
             echo json_encode(['success' => true, 'message' => 'Item added successfully!']);
             break;
 
+        case 'delete_item':
+            $id = (int)($_POST['id'] ?? 0);
+            if ($id <= 0) {
+                throw new Exception("Invalid item ID");
+            }
+            $deleted = delete_inventory_item($id);
+            if ($deleted) {
+                echo json_encode(['success' => true, 'message' => 'Item deleted successfully!']);
+            } else {
+                throw new Exception("Item not found or already deleted");
+            }
+            break;
+
         default:
             throw new Exception("Unknown action");
     }

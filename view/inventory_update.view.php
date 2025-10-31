@@ -7,6 +7,7 @@
   <link rel="icon" type="image/svg" href="resources/images/Logo.svg">
   <link rel="stylesheet" href="styles/inventory.css">
   <link rel="stylesheet" href="styles/record.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -49,8 +50,9 @@
             <thead>
               <tr>
                 <th class="col-name">Name</th>
-                <th class="col-stock" style="width: 120px; text-align: right; padding-left: 30px;">Stock</th>
-                <th class="col-actions" style="width: 110px; text-align: center; padding-right: 30px;">Adjust</th>
+                <th class="col-category">Category</th>
+                <th class="col-stock">Stock</th>
+                <th class="col-actions">Adjust</th>
               </tr>
             </thead>
             <tbody>
@@ -58,7 +60,10 @@
                 <?php foreach($inventory as $item): ?>
                 <tr data-id="<?= $item['id'] ?>">
                   <td class="col-name"><?= htmlspecialchars($item['name']) ?></td>
-                  <td class="col-stock" style="vertical-align: middle;">
+                  <td class="col-category" style="text-align:center;">
+                    <?= ucfirst(htmlspecialchars($item['category'])) ?>
+                  </td>
+                  <td class="col-stock" style="vertical-align: middle; text-align: right;">
                     <div style="text-align: right; padding-right: 10px;"> 
                         <span class="stock-value" onclick="InventoryApp.enableEdit(this)"><?= $item['stock'] ?></span>
                         <input type="number" class="stock-input" min="0" value="<?= $item['stock'] ?>" 
@@ -68,15 +73,29 @@
                     </div>
                   </td>
                   <td class="col-actions" style="vertical-align: middle;">
-                    <div style="display: inline-flex; margin: 0 auto; width: fit-content;">
+                    <div style="display: inline-flex; margin: 0 auto; width: fit-content; gap: 4px;">
                       <button type="button" class="btn small" onclick="InventoryApp.decrement(this)">–</button>
                       <button type="button" class="btn small" onclick="InventoryApp.increment(this)">+</button>
+                      
+                      <button type="button" class="btn btn-delete" onclick="InventoryApp.deleteItem(this)" title="Delete item"> <i class="fa-solid fa-trash"></i></button>
+
                     </div>
                   </td>
                 </tr>
                 <?php endforeach; ?>
+                <!-- Add new stock row -->
+                <tr class="add-row" onclick="openModal()">
+                  <td colspan="4" style="text-align:center; cursor:pointer; font-weight:700; color:#007acc;">
+                    + Add New Stock
+                  </td>
+                </tr>
               <?php else: ?>
-                <tr><td colspan="3" style="text-align:center;">No items found.</td></tr>
+                <tr><td colspan="4" style="text-align:center;">No items found.</td></tr>
+                <tr class="add-row" onclick="openModal()">
+                  <td colspan="4" style="text-align:center; cursor:pointer; font-weight:700; color:#007acc;">
+                    + Add New Stock
+                  </td>
+                </tr>
               <?php endif; ?>
             </tbody>
           </table>
@@ -109,8 +128,11 @@
         <option value="medicine">Medicine</option>
         <option value="equipment">Equipment</option>
       </select>
-      <input type="number" name="stock" placeholder="Initial Stock" min="0" required>
-      <button type="submit" style="background:#2e72a5; color:white;">Add Item</button>
+      <input type="number" name="new_item_stock" placeholder="Initial Stock" min="0" required>
+      <div style="display:flex; gap:10px; justify-content:center; margin-top:8px;">
+        <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button type="submit" style="background:#2e72a5; color:white;">Add Stocks</button>
+      </div>
     </form>
   </div>
 </div>
