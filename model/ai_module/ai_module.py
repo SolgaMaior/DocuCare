@@ -5,9 +5,7 @@ from sklearn.preprocessing import StandardScaler
 
 app = Flask(__name__)
 
-@app.route("/")
-def home():
-    return "Flask AI module is running! Use POST /cluster"
+
 
 PUROK_COORDS = {
     "Purok 1": (14.900031, 120.523160),

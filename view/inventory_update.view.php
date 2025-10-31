@@ -103,17 +103,18 @@
     <span class="close" onclick="closeModal()">&times;</span>
     <h3>Add New Item</h3>
     <form method="POST">
-      <input type="text" name="new_item_name" placeholder="Item Name" required>
-      <select name="new_item_category" required>
+      <input type="text" name="name" placeholder="Item Name" required>
+      <select name="category" required>
         <option value="">Select Category</option>
         <option value="medicine">Medicine</option>
         <option value="equipment">Equipment</option>
       </select>
-      <input type="number" name="new_item_stock" placeholder="Initial Stock" min="0" required>
+      <input type="number" name="stock" placeholder="Initial Stock" min="0" required>
       <button type="submit" style="background:#2e72a5; color:white;">Add Item</button>
     </form>
   </div>
 </div>
+
 
 <script src="model/scripts/inventory_script.js"></script>
 

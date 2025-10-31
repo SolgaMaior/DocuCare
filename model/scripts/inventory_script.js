@@ -75,9 +75,6 @@ document
       showToast("Connection failed. Please try again.", "error");
     }
 
-    const data = await res.json();
-    showToast(data.message || data.error, data.success ? "success" : "error");
-    if (data.success) window.location.href = "index.php?page=inventory";
   });
 
 document
@@ -100,9 +97,7 @@ document
       showToast("Connection failed. Please try again.", "error");
     }
 
-    const data = await res.json();
-    showToast(data.message || data.error, data.success ? "success" : "error");
-    if (data.success) window.location.href = "index.php?page=inventory";
+
   });
 
 document.querySelector("#updateStocksBtn")?.addEventListener("click", () => {
@@ -110,6 +105,7 @@ document.querySelector("#updateStocksBtn")?.addEventListener("click", () => {
     .querySelector("#updateInventoryForm")
     .dispatchEvent(new Event("submit"));
 });
+
 
 function showToast(message, type = "success") {
   const toast = document.createElement("div");
