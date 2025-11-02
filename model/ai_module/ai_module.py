@@ -38,7 +38,7 @@ def cluster_data():
     features_scaled = scaler.fit_transform(features)
 
     # Run DBSCAN
-    dbscan = DBSCAN(eps=2.5, min_samples=1)
+    dbscan = DBSCAN(eps=3.5, min_samples=1)
     df["cluster"] = dbscan.fit_predict(features_scaled)
 
     result = df[["purok", "cluster"]].to_dict(orient="records")
