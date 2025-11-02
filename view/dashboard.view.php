@@ -18,109 +18,119 @@
 
 
 <body>
- <?php require('partials/sidebar.php'); ?>
+  <?php require('partials/sidebar.php'); ?>
 
- <div id="maincontainer">
-  <div class="container-fluid">
-    <h4 class="page-title">Dashboard</h4>
-    <div class="row">
-      <div class="col-md-3">
-        <div class="card card-stats card-warning">
-          <div class="card-body ">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <i class="la la-users"></i>
+  <div id="maincontainer">
+    <div class="container-fluid">
+      <h4 class="page-title">Dashboard</h4>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card card-stats card-warning">
+            <div class="card-body ">
+              <div class="row">
+                <div class="col-5">
+                  <div class="icon-big text-center">
+                    <i class="la la-users"></i>
+                  </div>
+                </div>
+                <div class="col-7 d-flex align-items-center">
+                  <div class="numbers">
+                    <p class="card-category">Current Users</p>
+                    <h4 class="card-title"><?= htmlspecialchars($dashboard_stats['total_users']); ?></h4>
+                  </div>
                 </div>
               </div>
-              <div class="col-7 d-flex align-items-center">
-                <div class="numbers">
-                  <p class="card-category">Current Users</p>
-                  <h4 class="card-title"><?= htmlspecialchars($dashboard_stats['total_users']); ?></h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-stats card-success">
+            <div class="card-body ">
+              <div class="row">
+                <div class="col-5">
+                  <div class="icon-big text-center">
+                    <i class="la la-bar-chart"></i>
+                  </div>
+                </div>
+                <div class="col-7 d-flex align-items-center">
+                  <div class="numbers">
+                    <p class="card-category">Illness Count this Month</p>
+                    <h4 class="card-title"><?= htmlspecialchars($dashboard_stats['total_illness_records']); ?></h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-stats card-danger">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-5">
+                  <div class="icon-big text-center">
+                    <i class="la la-newspaper-o"></i>
+                  </div>
+                </div>
+                <div class="col-7 d-flex align-items-center">
+                  <div class="numbers">
+                    <p class="card-category">Documented Patients</p>
+                    <h4 class="card-title"><?= htmlspecialchars($dashboard_stats['total_citizens']); ?></h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 ">
+          <div class="card card-stats card-primary">
+            <div class="card-body ">
+              <div class="row">
+                <div class="col-5">
+                  <div class="icon-big text-center">
+                    <i class="la la-check-circle"></i>
+                  </div>
+                </div>
+                <div class="col-7 d-flex align-items-center">
+                  <div class="numbers">
+                    <p class="card-category">Pending Accounts </p>
+                    <h4 class="card-title"><?= htmlspecialchars($dashboard_stats['total_pending_accounts']); ?></h4>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="card card-stats card-success">
-          <div class="card-body ">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <i class="la la-bar-chart"></i>
-                </div>
-              </div>
-              <div class="col-7 d-flex align-items-center">
-                <div class="numbers">
-                  <p class="card-category">Illness Count this Month</p>
-                  <h4 class="card-title"><?= htmlspecialchars($dashboard_stats['total_illness_records']); ?></h4>
+      <div class="row">
+        <div class="col-md-9">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Map of the Barangay</h4>
+              <p class="card-category">
+              See the current status in your area</p>
+            </div>
+            <div class="card-body">
+              <div class="mapcontainer">
+                <div class="map">
+                  <?php require('partials/map.view.php'); ?>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card card-stats card-danger">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <i class="la la-newspaper-o"></i>
-                </div>
-              </div>
-              <div class="col-7 d-flex align-items-center">
-                <div class="numbers">
-                  <p class="card-category">Documented Patients</p>
-                  <h4 class="card-title"><?= htmlspecialchars($dashboard_stats['total_citizens']); ?></h4>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 ">
-        <div class="card card-stats card-primary">
-          <div class="card-body ">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <i class="la la-check-circle"></i>
-                </div>
-              </div>
-              <div class="col-7 d-flex align-items-center">
-                <div class="numbers">
-                  <p class="card-category">Pending Accounts </p>
-                  <h4 class="card-title"><?= htmlspecialchars($dashboard_stats['total_pending_accounts']); ?></h4>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-9">
-        <div class="card" style="width: 98rem; ">
-          <div class="card-header">
-            <h4 class="card-title">Map of the Barangay</h4>
-            <p class="card-category">
-            See the current status in your area</p>
-          </div>
-          <div class="card-body">
-            <div class="mapcontainer">
-              <div class="map">
-                <?php require('partials/map.view.php'); ?>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="col-md-3">
+					<div class="card">
+						<div class="card-header">
+							<h4 class="card-title">Citizen Distribution</h4>
+						</div>
+						<div class="card-body">
+							<?php require('partials/piechart.php'); ?>
+						</div>
+					</div>
+				</div>
       </div>
     </div>
   </div>
- </div>
 
 </body>
 </html>

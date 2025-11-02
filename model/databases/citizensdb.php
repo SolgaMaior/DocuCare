@@ -19,6 +19,21 @@ function get_dashboard_stats()
     return $stats;
 }
 
+function get_pie_data(){
+    global $db;
+
+    $query = "SELECT p.purokName, COUNT(c.citID) AS citizen_count
+            FROM purok p
+            LEFT JOIN citizens c ON p.purokID = c.purokID AND c.isArchived = 0
+            GROUP BY p.purokID, p.purokName";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $statement->closeCursor();
+
+    return $data;
+}
+
 //GET FUNCTIONS
 function get_citizens_by_id($citID)
 {
