@@ -1,5 +1,24 @@
 <?php
 
+
+function get_dashboard_stats()
+{
+    global $db;
+
+    $query = "SELECT 
+        (SELECT COUNT(*) FROM citizens) AS total_citizens,
+        (SELECT COUNT(*) FROM illness_records) AS total_illness_records,
+        (SELECT COUNT(*) FROM users) AS total_users,
+        (SELECT COUNT(*) FROM users WHERE isApproved = 0) AS total_pending_accounts
+    ";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $stats = $statement->fetch(PDO::FETCH_ASSOC);
+    $statement->closeCursor();
+
+    return $stats;
+}
+
 //GET FUNCTIONS
 function get_citizens_by_id($citID)
 {

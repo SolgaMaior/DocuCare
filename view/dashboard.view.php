@@ -36,7 +36,7 @@
               <div class="col-7 d-flex align-items-center">
                 <div class="numbers">
                   <p class="card-category">Current Users</p>
-                  <h4 class="card-title">1,294</h4>
+                  <h4 class="card-title"><?= htmlspecialchars($dashboard_stats['total_users']); ?></h4>
                 </div>
               </div>
             </div>
@@ -55,7 +55,7 @@
               <div class="col-7 d-flex align-items-center">
                 <div class="numbers">
                   <p class="card-category">Illness Count this Month</p>
-                  <h4 class="card-title">345</h4>
+                  <h4 class="card-title"><?= htmlspecialchars($dashboard_stats['total_illness_records']); ?></h4>
                 </div>
               </div>
             </div>
@@ -74,7 +74,7 @@
               <div class="col-7 d-flex align-items-center">
                 <div class="numbers">
                   <p class="card-category">Documented Patients</p>
-                  <h4 class="card-title">1303</h4>
+                  <h4 class="card-title"><?= htmlspecialchars($dashboard_stats['total_citizens']); ?></h4>
                 </div>
               </div>
             </div>
@@ -93,7 +93,7 @@
               <div class="col-7 d-flex align-items-center">
                 <div class="numbers">
                   <p class="card-category">Pending Accounts </p>
-                  <h4 class="card-title">576</h4>
+                  <h4 class="card-title"><?= htmlspecialchars($dashboard_stats['total_pending_accounts']); ?></h4>
                 </div>
               </div>
             </div>
