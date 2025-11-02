@@ -1,5 +1,5 @@
 <!-- Map Container -->
-<div id="map" style="height: 60vh; width: 100%; border-radius: 10px; border: 3px solid #4fa7e6; margin-left: 20px;"></div>
+<div id="map" style="height: 60vh; width: 100%; border-radius: 10px; border: 3px solid #4fa7e6;"></div>
 
 <!-- Async Map Script -->
 <script defer>

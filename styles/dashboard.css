@@ -1,6 +1,32 @@
-.content{
+#maincontainer{
+    margin-left: 17rem;
+    margin-top: 2rem;
+    width: 100rem;
+}
+
+#uppercard{
+    width: 90rem;
+    height: 12rem;
+    border-radius: 15px;
+    margin-left: 24rem;
+    margin-top: 3rem;
+    background: linear-gradient(120deg, #4fa7e6, #007acc);
+
     display: flex;
     justify-content: center;
-    margin-top: 20px;
-    
+}
+.uppercardcon{
+    width: 29rem;
+    height: 10rem;
+    background-color: #c8e8ff;
+    border: 2px solid rgb(67, 129, 158);
+    margin-top: .9rem;
+}
+
+.uppercardcon h2, p{
+    margin-left: 1rem;
+}
+
+.uppercardpar{
+    font-size: 40px;
 }
