@@ -93,7 +93,8 @@
             </div>
           </div>
         </div>
-        
+
+        <?php if (CURRENT_USER_IS_ADMIN): ?>
         <div class="col-md-3">
           <div class="card card-stats card-primary">
             <div class="card-body">
@@ -103,6 +104,7 @@
                     <i class="la la-check-circle"></i>
                   </div>
                 </div>
+                
                 <div class="col-7 d-flex align-items-center">
                   <div class="numbers">
                     <p class="card-category">Pending Accounts</p>
@@ -115,6 +117,7 @@
             </div>
           </div>
         </div>
+        <?php endif; ?>
       </div>
 
       <!-- Map and Chart Row -->
@@ -175,8 +178,13 @@
           document.getElementById('total-users').textContent = data.stats.total_users || '0';
           document.getElementById('total-illness').textContent = data.stats.total_illness_records || '0';
           document.getElementById('total-citizens').textContent = data.stats.total_citizens || '0';
-          document.getElementById('total-pending').textContent = data.stats.total_pending_accounts || '0';
+          
+          const pendingElem = document.getElementById('total-pending');
+          if (pendingElem) {
+            pendingElem.textContent = data.stats.total_pending_accounts || '0';
+          }
         }
+
         
         // Initialize pie chart
         if (data.pie && data.pie.length > 0) {

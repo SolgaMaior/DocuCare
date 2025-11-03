@@ -1,5 +1,11 @@
 <?php
 require_once('model/databases/db_con.php');
+require_once('model/mailer.php');
+
+if (!CURRENT_USER_IS_ADMIN) {
+    header('HTTP/1.1 403 Forbidden');
+    exit('Access denied');
+}
 
 $message = '';
 $messageType = '';
@@ -18,13 +24,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute();
                 $message = "Account approved successfully!";
                 $messageType = 'success';
+                send_account_approval_status($email, 'approved');
+
             } elseif ($action === 'deny') {
-                $query = "UPDATE users SET isApproved = 0 WHERE userID = :user_id";
+                $query = "DELETE FROM users WHERE userID = :user_id";
                 $stmt = $db->prepare($query);
                 $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
                 $stmt->execute();
                 $message = "Account denied successfully!";
                 $messageType = 'success';
+                send_account_approval_status($email, 'denied');
             }
         } catch (PDOException $e) {
             $message = "Error processing request. Please try again.";

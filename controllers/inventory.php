@@ -1,5 +1,10 @@
 <?php
 // controllers/inventoryController.php
+if (!CURRENT_USER_IS_ADMIN) {
+    header('HTTP/1.1 403 Forbidden');
+    exit('Access denied');
+}
+
 session_start();
 require_once('model/databases/db_con.php');  // Your PDO connection (defines $db)
 require_once('model/databases/inventorydb.php');
