@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 import pandas as pd
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
-
 app = Flask(__name__)
 
 
@@ -18,6 +17,7 @@ PUROK_COORDS = {
 @app.route("/cluster", methods=["POST"])
 def cluster_data():
     data = request.get_json()
+    print(data)
     df = pd.DataFrame(data)
 
     # Rename for consistency
@@ -38,10 +38,11 @@ def cluster_data():
     features_scaled = scaler.fit_transform(features)
 
     # Run DBSCAN
-    dbscan = DBSCAN(eps=2.5, min_samples=2)
+    dbscan = DBSCAN(eps=3.5, min_samples=2)
     df["cluster"] = dbscan.fit_predict(features_scaled)
 
     result = df[["purok", "cluster"]].to_dict(orient="records")
+
     return jsonify(result)
 
 if __name__ == "__main__":

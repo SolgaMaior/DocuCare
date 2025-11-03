@@ -27,16 +27,19 @@ function get_map_data_cached() {
 function get_fresh_cluster_data($db) {
     // Fetch illness data
     $sql = "SELECT
-        p.purokName,
-        COUNT(CASE WHEN i.illness_name = 'Dengue' THEN 1 END) AS dengue,
-        COUNT(CASE WHEN i.illness_name = 'Measles' THEN 1 END) AS measles,
-        COUNT(CASE WHEN i.illness_name = 'Flu' THEN 1 END) AS flu,
-        COUNT(CASE WHEN i.illness_name = 'Allergies' THEN 1 END) AS allergies,
-        COUNT(CASE WHEN i.illness_name = 'Diarrhea' THEN 1 END) AS diarrhea
+    p.purokName,
+    COUNT(CASE WHEN i.illness_name = 'Dengue' THEN 1 END) AS dengue,
+    COUNT(CASE WHEN i.illness_name = 'Measles' THEN 1 END) AS measles,
+    COUNT(CASE WHEN i.illness_name = 'Flu' THEN 1 END) AS flu,
+    COUNT(CASE WHEN i.illness_name = 'Allergies' THEN 1 END) AS allergies,
+    COUNT(CASE WHEN i.illness_name = 'Diarrhea' THEN 1 END) AS diarrhea
     FROM illness_records r
     JOIN purok p ON p.purokID = r.purokID
     JOIN illnesses i ON i.illness_id = r.illness_id
+    -- WHERE MONTH(r.record_date) = MONTH(CURDATE()) to be uncommented for monthly clustering
+    -- AND YEAR(r.record_date) = YEAR(CURDATE())
     GROUP BY p.purokName";
+
     
     $stmt = $db->prepare($sql);
     $stmt->execute();

@@ -276,12 +276,24 @@
       const total = Number(item.dengue || 0) + Number(item.measles || 0) + 
                     Number(item.flu || 0) + Number(item.allergies || 0) + 
                     Number(item.diarrhea || 0);
-      const color = clusterColors[(item.cluster || 0) % clusterColors.length];
+      // Handle cluster display and coloring
+      let clusterLabel;
+      let color;
+
+      if (item.cluster === -1) {
+        clusterLabel = "No cluster";
+        color = "#ffffff"; // white for outliers
+      } else {
+        const clusterIndex = (item.cluster ?? 0) + 1; // start numbering at 1
+        clusterLabel = clusterIndex;
+        color = clusterColors[item.cluster % clusterColors.length];
+      }
+
       const radius = Math.min(10 + total * 2, 40);
-      
+
       const popupContent = `
         <b>${item.purokName}</b><br>
-        Cluster: <b>${item.cluster || 0}</b><br><br>
+        Cluster: <b>${clusterLabel}</b><br><br>
         <table border="1" style="border-collapse: collapse; font-size: 13px;">
           <tr><td>Dengue</td><td>${item.dengue || 0}</td></tr>
           <tr><td>Measles</td><td>${item.measles || 0}</td></tr>
