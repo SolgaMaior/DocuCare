@@ -6,6 +6,8 @@ model/databases/db_con.php
 .DS_Store # macOS specific
 *.log
 *.zip
+node_modules/
+*.json
 
 /vendor/
 .idea
