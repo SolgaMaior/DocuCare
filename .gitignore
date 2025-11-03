@@ -1,6 +1,7 @@
 config/config.php
 model/record_file_func/diagnosis_api.php
 model/databases/db_con.php
+cache/map_data_cache.php
 
 .env
 .DS_Store # macOS specific
