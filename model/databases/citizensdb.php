@@ -56,34 +56,59 @@ function get_citizens_by_id($citID)
     return $citizen;
 }
 
-function get_citizens_by_purok($purokID)
+// In citizensdb.php
+function get_citizens_by_purok($purokID, $page = 1, $perPage = 20)
 {
     global $db;
+    $offset = ($page - 1) * $perPage;
 
     if ($purokID === 'all') {
-        $query = "SELECT citID, firstname, middlename, lastname, birth_date, sex, civilstatus, occupation, contactnum, purokID, isArchived,
-                TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) as age
-                FROM citizens WHERE isArchived = 0
-                ORDER BY lastname";
+        $query = "SELECT citID, firstname, middlename, lastname, birth_date, sex, 
+                  civilstatus, occupation, contactnum, purokID, isArchived,
+                  TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) as age
+                  FROM citizens WHERE isArchived = 0
+                  ORDER BY lastname
+                  LIMIT :limit OFFSET :offset";
         $statement = $db->prepare($query);
     } else {
-        // Validate purokID if it's not 'all'
-        if (!is_numeric($purokID) || $purokID <= 0) {
-            return [];
-        }
-
-        $query = "SELECT citID, firstname, middlename, lastname, birth_date, sex, civilstatus, occupation, contactnum, purokID, isArchived,
-                TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) as age
-                FROM citizens
-                WHERE purokID = :purokID AND isArchived = 0";
+        $query = "SELECT citID, firstname, middlename, lastname, birth_date, sex,
+                  civilstatus, occupation, contactnum, purokID, isArchived,
+                  TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) as age
+                  FROM citizens
+                  WHERE purokID = :purokID AND isArchived = 0
+                  ORDER BY lastname
+                  LIMIT :limit OFFSET :offset";
         $statement = $db->prepare($query);
         $statement->bindValue(':purokID', $purokID, PDO::PARAM_INT);
     }
-
+    
+    $statement->bindValue(':limit', $perPage, PDO::PARAM_INT);
+    $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
     $statement->execute();
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     $statement->closeCursor();
     return $result;
+}
+
+// Add function to get total count
+function get_citizens_count($purokID)
+{
+    global $db;
+    
+    if ($purokID === 'all') {
+        $query = "SELECT COUNT(*) FROM citizens WHERE isArchived = 0";
+        $statement = $db->prepare($query);
+    } else {
+        $query = "SELECT COUNT(*) FROM citizens 
+                  WHERE purokID = :purokID AND isArchived = 0";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':purokID', $purokID, PDO::PARAM_INT);
+    }
+    
+    $statement->execute();
+    $count = $statement->fetchColumn();
+    $statement->closeCursor();
+    return $count;
 }
 
 function get_citizen_file_data($citID)

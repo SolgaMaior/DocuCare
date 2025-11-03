@@ -191,6 +191,15 @@ $citizens = ($purokID === 'archived') ? get_archived_citizens() : get_citizens_b
 // ADD THIS - Load illnesses for the dropdown
 $illnesses = get_all_illnesses();
 
+// Get pagination parameters
+$page = filter_input(INPUT_GET, 'paging', FILTER_VALIDATE_INT) ?: 1;
+$perPage = 15; // Records per page
+
+// Get paginated citizens
+$citizens = get_citizens_by_purok($purokID, $page, $perPage);
+$totalCitizens = get_citizens_count($purokID);
+$totalPages = ceil($totalCitizens / $perPage);
+
 if(CURRENT_USER_IS_ADMIN){
     require_once('view/record.view.php');
 }else{ 
