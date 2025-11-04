@@ -163,5 +163,43 @@
       });
     });
   </script>
+
+  <?php if (!empty($lowStockItems) && $showLowStockPopup): ?>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const lowStockList = <?php echo json_encode($lowStockItems); ?>;
+  const popup = document.createElement("div");
+  popup.style.position = "fixed";
+  popup.style.top = "20px";
+  popup.style.right = "20px";
+  popup.style.background = "#f44336";
+  popup.style.color = "#fff";
+  popup.style.padding = "15px";
+  popup.style.borderRadius = "10px";
+  popup.style.boxShadow = "0 4px 8px rgba(0,0,0,0.3)";
+  popup.style.zIndex = "9999";
+  popup.style.maxWidth = "350px";
+  popup.style.fontFamily = "Arial, sans-serif";
+  popup.style.lineHeight = "1.5";
+  popup.innerHTML = `
+    <strong>⚠ Low Stock Alert!</strong><br>
+    The following items are running low:<br>
+    <ul style="margin: 10px 0 0 15px; padding: 0;">
+      ${lowStockList.map(item => `<li>${item}</li>`).join('')}
+    </ul>
+  `;
+
+  document.body.appendChild(popup);
+
+  // Auto-hide after 8 seconds
+  setTimeout(() => {
+    popup.style.transition = "opacity 0.5s";
+    popup.style.opacity = "0";
+    setTimeout(() => popup.remove(), 500);
+  }, 8000);
+});
+</script>
+<?php endif; ?>
+
 </body>
 </html>
