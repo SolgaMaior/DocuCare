@@ -1,40 +1,38 @@
 <?php
 // controllers/inventory_update.php
-if (!CURRENT_USER_IS_ADMIN) {
-    header('HTTP/1.1 403 Forbidden');
-    exit('Access denied');
-}
-
-require_once('model/databases/db_con.php');
+require_once('model/databases/db_con.php');  // Your PDO connection (defines $db)
 require_once('model/databases/inventorydb.php');
+
 session_start();
 
 // --- Filters ---
 $categoryFilter = $_GET['category'] ?? 'all';
 $searchQuery = trim($_GET['search'] ?? '');
-$page = filter_input(INPUT_GET, 'paging', FILTER_VALIDATE_INT) ?: 1;
-$perPage = 7;
 
-// --- Handle POST Actions ---
+// --- Fetch filtered inventory ---
+$inventory = get_inventory($categoryFilter, $searchQuery);
+
+// --- Handle Add Item ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Add new item
-    if (isset($_POST['name'], $_POST['category'], $_POST['new_item_stock'])) {
-        $name = trim($_POST['name']);
-        $category = trim($_POST['category']);
+    if (isset($_POST['new_item_name'], $_POST['new_item_category'], $_POST['new_item_stock'])) {
+        $name = trim($_POST['new_item_name']);
+        $category = trim($_POST['new_item_category']);
         $stock = (int)$_POST['new_item_stock'];
-        
+
         try {
-            add_inventory_item($name, $category, $stock);
+            $id = add_inventory_item($name, $category, $stock);
             $_SESSION['message'] = "Item '$name' added successfully!";
             $_SESSION['message_type'] = "success";
         } catch (PDOException $e) {
             $_SESSION['message'] = "Error adding item: " . htmlspecialchars($e->getMessage());
             $_SESSION['message_type'] = "error";
         }
-        header("Location: index.php?page=inventory_update&category=$categoryFilter&search=$searchQuery&paging=$page");
+
+        header("Location: index.php?page=inventory");
         exit;
     }
-    
+
     // Update multiple stock values
     if (isset($_POST['stocks']) && is_array($_POST['stocks'])) {
         try {
@@ -45,12 +43,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['message'] = "Failed to update inventory: " . htmlspecialchars($e->getMessage());
             $_SESSION['message_type'] = "error";
         }
-        header("Location: index.php?page=inventory_update&category=$categoryFilter&search=$searchQuery&paging=$page");
+
+        header("Location: index.php?page=inventory");
         exit;
     }
 }
 
 // --- Fetch filtered inventory with pagination ---
+
+$page = filter_input(INPUT_GET, 'paging', FILTER_VALIDATE_INT) ?: 1;
+$perPage = 7;
 try {
     $inventory = get_inventory($categoryFilter, $searchQuery, $page, $perPage);
     $totalItems = get_inventory_count($categoryFilter, $searchQuery);
