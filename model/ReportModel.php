@@ -83,8 +83,7 @@ function get_appointment_statistics($startDate = null, $endDate = null) {
                 COUNT(*) as total_appointments,
                 SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) as pending,
                 SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END) as approved,
-                SUM(CASE WHEN status = 'Completed' THEN 1 ELSE 0 END) as completed,
-                SUM(CASE WHEN status = 'Cancelled' THEN 1 ELSE 0 END) as cancelled
+                SUM(CASE WHEN status = 'Denied' THEN 1 ELSE 0 END) as denied
               FROM appointments
               WHERE 1=1";
 

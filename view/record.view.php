@@ -26,8 +26,6 @@ require('view/partials/sidebar.php');
 
   <div class="content">
     <div class="header">
-      <!-- <h2 id="page-title">Citizen Records</h2>
-      <a href="logout.php" class="logout">Logout</a> -->
     </div>
 
     <div class="top-bar" id="top-controls">

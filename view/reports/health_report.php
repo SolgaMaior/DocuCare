@@ -106,12 +106,8 @@
         <span class="stat-value"><?= number_format($appointmentStats['approved'] ?? 0) ?></span>
       </div>
       <div class="stat-item">
-        <span class="stat-label">Completed:</span>
-        <span class="stat-value"><?= number_format($appointmentStats['completed'] ?? 0) ?></span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">Cancelled:</span>
-        <span class="stat-value"><?= number_format($appointmentStats['cancelled'] ?? 0) ?></span>
+        <span class="stat-label">Denied:</span>
+        <span class="stat-value"><?= number_format($appointmentStats['denied'] ?? 0) ?></span>
       </div>
     </div>
   </div>
@@ -195,13 +191,12 @@ const appointmentCtx = document.getElementById('appointmentChart');
 new Chart(appointmentCtx, {
   type: 'pie',
   data: {
-    labels: ['Pending', 'Approved', 'Completed', 'Cancelled'],
+    labels: ['Pending', 'Approved', 'Denied'],
     datasets: [{
       data: [
         <?= $appointmentStats['pending'] ?? 0 ?>,
         <?= $appointmentStats['approved'] ?? 0 ?>,
-        <?= $appointmentStats['completed'] ?? 0 ?>,
-        <?= $appointmentStats['cancelled'] ?? 0 ?>
+        <?= $appointmentStats['denied'] ?? 0 ?>
       ],
       backgroundColor: ['#f39c12', '#3498db', '#27ae60', '#e74c3c']
     }]

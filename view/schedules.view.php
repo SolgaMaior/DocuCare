@@ -80,13 +80,7 @@ require('view/partials/sidebar.php');
     </table>
 </div>
 <?php if ($totalPages > 1): ?>
-  <div class="pagination" style="
-      margin-top: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-  ">
+  <div>
       <?php if ($page > 1): ?>
           <a href="?page=schedules&paging=<?= $page - 1 ?>" 
             class="btn btn-outline pagination-btn">← Previous</a>

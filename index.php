@@ -21,8 +21,8 @@ $allowedPages = [
     'logout' => 'controllers/authcontroller/logout.controller.php',
     'forgot_password' => 'controllers/authcontroller/forgot_password.controller.php',
     'approve_accounts' => 'controllers/approve_accounts.php',
-    'inventory' => 'controllers/inventory.controller.php',
-    'inventory_update' => 'controllers/inventory_update.controller.php',
+    'inventory' => 'controllers/inventory.php',
+    'inventory_update' => 'controllers/inventory_update.php',
     'reports' => 'controllers/reports.controller.php',
 ];
 
