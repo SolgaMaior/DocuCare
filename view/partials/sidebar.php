@@ -78,7 +78,7 @@ require_once('authCheck.php'); // ensures CURRENT_USER_* are defined
       </a>
     </li>
     
-     <li>
+    <li>
       <a href="/DocuCare/index.php?page=approve_accounts"
         class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-400 group"
       >
@@ -86,6 +86,16 @@ require_once('authCheck.php'); // ensures CURRENT_USER_* are defined
           <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
         </svg>
         <span class="ms-3">Approve Accounts</span>
+      </a>
+    </li>
+    <li>
+      <a href="/DocuCare/index.php?page=reports"
+        class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-400 group"
+      >
+        <svg class="w-5 h-5 ml-2" fill="white" viewBox="0 0 18 20">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+        </svg>
+        <span class="ms-3">Reports</span>
       </a>
     </li>
    <?php endif; ?>
