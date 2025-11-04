@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title><?= $pageTitle ?? 'Reports' ?> - DocuCare</title>
+  <link rel="icon" type="image/svg" href="resources/images/Logo.svg">
   <link rel="stylesheet" href="styles/inventory.css">
   <link rel="stylesheet" href="styles/record.css">
   <link rel="stylesheet" href="styles/reports.css">

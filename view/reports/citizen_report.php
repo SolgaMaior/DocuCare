@@ -74,7 +74,7 @@
       <?php endif; ?>
     </tbody>
   </table>
-  <p class="table-note">Showing up to 100 records. For complete list, export to CSV.</p>
+  <!-- <p class="table-note">Showing up to 100 records. For complete list, export to CSV.</p> -->
 </div>
 
 <!-- Summary by Purok -->
