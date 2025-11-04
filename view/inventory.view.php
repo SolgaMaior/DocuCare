@@ -89,13 +89,7 @@
             </tbody>
           </table>
           <?php if ($totalPages > 1): ?>
-            <div class="pagination" style="
-                margin-top: 1rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 1rem;
-            ">
+            <div class="pagination" >
                 <?php if ($page > 1): ?>
                     <a href="?page=inventory&category=<?= urlencode($categoryFilter) ?>&search=<?= urlencode($searchQuery) ?>&paging=<?= $page - 1 ?>" 
                       class="btn btn-outline pagination-btn">← Previous</a>
@@ -104,8 +98,7 @@
                 <?php endif; ?>
 
                 <span class="page-info">
-                    Page <?= $page ?> of <?= $totalPages ?> 
-                    (<?= $totalItems ?> items)
+                    Page <?= $page ?> of <?= $totalPages ?>
                 </span>
 
                 <?php if ($page < $totalPages): ?>

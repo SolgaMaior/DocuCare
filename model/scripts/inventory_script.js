@@ -5,6 +5,7 @@ const InventoryApp = {
     const row = btn.closest("tr");
     const span = row.querySelector(".stock-value");
     const hidden = row.querySelector('input[type="hidden"]');
+    if (!span || !hidden) return;
     let val = parseInt(span.textContent) || 0;
     span.textContent = ++val;
     hidden.value = val;
@@ -13,6 +14,7 @@ const InventoryApp = {
     const row = btn.closest("tr");
     const span = row.querySelector(".stock-value");
     const hidden = row.querySelector('input[type="hidden"]');
+    if (!span || !hidden) return;
     let val = parseInt(span.textContent) || 0;
     if (val > 0) val--;
     span.textContent = val;
@@ -20,6 +22,7 @@ const InventoryApp = {
   },
   enableEdit(span) {
     const input = span.nextElementSibling;
+    if (!input) return;
     span.style.display = "none";
     input.style.display = "inline-block";
     input.focus();
@@ -28,6 +31,7 @@ const InventoryApp = {
   saveEdit(input) {
     const span = input.previousElementSibling;
     const hidden = input.parentElement.querySelector('input[type="hidden"]');
+    if (!span || !hidden) return;
     let newVal = parseInt(input.value);
     if (isNaN(newVal) || newVal < 0) newVal = 0;
     span.textContent = newVal;
@@ -39,6 +43,7 @@ const InventoryApp = {
     if (e.key === "Enter") input.blur();
     if (e.key === "Escape") {
       const span = input.previousElementSibling;
+      if (!span) return;
       input.value = span.textContent;
       input.style.display = "none";
       span.style.display = "inline";
@@ -68,7 +73,7 @@ const InventoryApp = {
       const formData = new FormData();
       formData.append("action", "delete_item");
       formData.append("id", itemId);
-      
+
       const res = await fetch("controllers/api/inventory_api.php", {
         method: "POST",
         body: formData,
@@ -121,12 +126,19 @@ if (updateForm) {
     // 2) Then send stock updates for existing items
     const rows = document.querySelectorAll("tr[data-id]");
     const stocks = {};
+    
     rows.forEach((r) => {
       const id = r.dataset.id;
+      // Skip if no ID or if it's a new item
       if (!id || String(id).startsWith("new-")) return;
-      const hiddenInput = r.querySelector('input[type="hidden"]');
-      if (hiddenInput) {
+      
+      // Find the hidden input more reliably
+      const hiddenInput = r.querySelector('.col-stock input[type="hidden"]');
+      
+      if (hiddenInput && hiddenInput.value !== null && hiddenInput.value !== undefined) {
         stocks[id] = hiddenInput.value;
+      } else {
+        console.warn(`No hidden input found for row with id: ${id}`);
       }
     });
 
@@ -138,6 +150,8 @@ if (updateForm) {
       }, 1000);
       return;
     }
+
+    console.log("Stocks to update:", stocks); // Debug log
 
     // Send stocks as JSON string
     const formData = new FormData();
