@@ -57,7 +57,7 @@ function get_citizens_by_id($citID)
 }
 
 // In citizensdb.php
-function get_citizens_by_purok($purokID, $page = 1, $perPage = 20)
+function get_citizens_by_purok($purokID, $page = 1, $perPage = 15)
 {
     global $db;
     $offset = ($page - 1) * $perPage;
@@ -116,12 +116,12 @@ function get_citizen_file_data($citID)
     global $db;
 
     $query = "SELECT id, file_name, mime_type FROM record_files WHERE citID = :citID";
-    $stmt = $db->prepare($query);
-    $stmt->bindValue(':citID', $citID, PDO::PARAM_INT);
-    $stmt->execute();
-    $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $stmt->closeCursor();
-    
+    $statement = $db->prepare($query);
+    $statement->bindValue(':citID', $citID, PDO::PARAM_INT);
+    $statement->execute();
+    $files = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $statement->closeCursor();
+
     // Transform DB rows into a clean JS-friendly format
     $result = [];
     foreach ($files as $file) {

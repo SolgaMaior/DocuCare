@@ -83,15 +83,17 @@ const InventoryApp = {
         showToast(data.error || "Failed to delete item", "error");
       }
     } catch (err) {
+      console.error("Delete error:", err);
       showToast("Connection failed. Please try again.", "error");
     }
   },
 };
 
-document
-  .querySelector("#updateInventoryForm")
-  .addEventListener("submit", async (e) => {
-    e.preventDefault(); // stop normal form reload
+// Form submission handler - only attach if form exists
+const updateForm = document.querySelector("#updateInventoryForm");
+if (updateForm) {
+  updateForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
     // 1) Persist any newly added items first
     try {
@@ -111,6 +113,7 @@ document
       // Clear pending after success
       pendingNewItems = [];
     } catch (err) {
+      console.error("Add items error:", err);
       showToast(err.message || "Failed to add new items", "error");
       return;
     }
@@ -120,38 +123,81 @@ document
     const stocks = {};
     rows.forEach((r) => {
       const id = r.dataset.id;
-      if (!id || String(id).startsWith("new-")) return; // skip temporary rows
-      const val = r.querySelector('input[type="hidden"]').value;
-      stocks[id] = val;
+      if (!id || String(id).startsWith("new-")) return;
+      const hiddenInput = r.querySelector('input[type="hidden"]');
+      if (hiddenInput) {
+        stocks[id] = hiddenInput.value;
+      }
     });
 
+    // Check if there are any stocks to update
+    if (Object.keys(stocks).length === 0) {
+      showToast("No items to update", "success");
+      setTimeout(() => {
+        window.location.href = "index.php?page=inventory";
+      }, 1000);
+      return;
+    }
+
+    // Send stocks as JSON string
     const formData = new FormData();
     formData.append("action", "update_stocks");
-    for (const [id, val] of Object.entries(stocks)) {
-      formData.append(`stocks[${id}]`, val);
-    }
+    formData.append("stocks_json", JSON.stringify(stocks));
 
     try {
       const res = await fetch("controllers/api/inventory_api.php", {
         method: "POST",
         body: formData,
       });
+      
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await res.text();
+        console.error("Non-JSON response:", text);
+        throw new Error("Server returned non-JSON response");
+      }
+      
       const data = await res.json();
+      console.log("Update response:", data); // Debug log
       showToast(data.message || data.error, data.success ? "success" : "error");
-      if (data.success) window.location.href = "index.php?page=inventory";
+      if (data.success) {
+        setTimeout(() => {
+          window.location.href = "index.php?page=inventory";
+        }, 1000);
+      }
     } catch (err) {
+      console.error("Update stocks error:", err);
       showToast("Connection failed. Please try again.", "error");
     }
   });
+}
 
-document
-  .querySelector("#addModal form")
-  .addEventListener("submit", async (e) => {
+// Modal form submission - only attach if modal exists
+const modalForm = document.querySelector("#addModal form");
+if (modalForm) {
+  modalForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const form = e.target;
-    const name = form.querySelector('[name="new_item_name"]').value.trim();
-    const category = form.querySelector('[name="new_item_category"]').value;
-    const stockVal = parseInt(form.querySelector('[name="new_item_stock"]').value, 10) || 0;
+    
+    // Get form fields - these should exist if form exists
+    const nameInput = form.querySelector('[name="name"]');
+    const categoryInput = form.querySelector('[name="category"]');
+    const stockInput = form.querySelector('[name="new_item_stock"]');
+    
+    // Extra validation
+    if (!nameInput || !categoryInput || !stockInput) {
+      console.error("Form fields not found:", {
+        name: !!nameInput,
+        category: !!categoryInput,
+        stock: !!stockInput
+      });
+      showToast("Form error. Please refresh the page.", "error");
+      return;
+    }
+    
+    const name = nameInput.value.trim();
+    const category = categoryInput.value;
+    const stockVal = parseInt(stockInput.value, 10) || 0;
 
     if (!name || !category) {
       showToast("Please fill out name and category", "error");
@@ -164,7 +210,14 @@ document
 
     // Insert a new row into the table before the add-row
     const tbody = document.querySelector(".inventory-table tbody");
-    const addRow = tbody.querySelector("tr.add-row");
+    const addRow = tbody ? tbody.querySelector("tr.add-row") : null;
+    
+    if (!tbody) {
+      console.error("Table body not found");
+      showToast("Table not found. Please refresh the page.", "error");
+      return;
+    }
+    
     const tr = document.createElement("tr");
     tr.setAttribute("data-id", tempId);
     tr.innerHTML = `
@@ -183,43 +236,78 @@ document
         <div style="display: inline-flex; margin: 0 auto; width: fit-content; gap: 4px;">
           <button type="button" class="btn small" onclick="InventoryApp.decrement(this)">–</button>
           <button type="button" class="btn small" onclick="InventoryApp.increment(this)">+</button>
-          <button type="button" class="btn btn-delete" onclick="InventoryApp.deleteItem(this)" title="Delete item">×</button>
+          <button type="button" class="btn btn-delete" onclick="InventoryApp.deleteItem(this)" title="Delete item"><i class="fa-solid fa-trash"></i></button>
         </div>
       </td>`;
-    if (addRow) tbody.insertBefore(tr, addRow);
-    else tbody.appendChild(tr);
+    
+    if (addRow) {
+      tbody.insertBefore(tr, addRow);
+    } else {
+      tbody.appendChild(tr);
+    }
 
     // Clear and close modal
     form.reset();
     closeModal();
     showToast("Added to table. Click Update Stocks to save.", "success");
   });
+}
 
-document.querySelector("#updateStocksBtn")?.addEventListener("click", () => {
-  document
-    .querySelector("#updateInventoryForm")
-    .dispatchEvent(new Event("submit"));
-});
-
+// Update button handler - only attach if button exists
+const updateBtn = document.querySelector("#updateStocksBtn");
+if (updateBtn) {
+  updateBtn.addEventListener("click", () => {
+    const form = document.querySelector("#updateInventoryForm");
+    if (form) {
+      form.dispatchEvent(new Event("submit"));
+    }
+  });
+}
 
 function showToast(message, type = "success") {
   const toast = document.createElement("div");
   toast.textContent = message;
   toast.className = `toast ${type}`;
+  
+  // Add styles inline in case CSS isn't loaded
+  Object.assign(toast.style, {
+    position: 'fixed',
+    bottom: '20px',
+    right: '20px',
+    padding: '1rem 1.5rem',
+    borderRadius: '5px',
+    color: 'white',
+    backgroundColor: type === 'error' ? '#dc3545' : '#28a745',
+    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+    zIndex: '9999',
+    animation: 'slideIn 0.3s ease-out'
+  });
+  
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3000);
 }
 
-// Modal handling
+// Modal handling functions
 function openModal() {
-  document.getElementById("addModal").style.display = "block";
+  const modal = document.getElementById("addModal");
+  if (modal) {
+    modal.style.display = "block";
+  }
 }
+
 function closeModal() {
-  document.getElementById("addModal").style.display = "none";
+  const modal = document.getElementById("addModal");
+  if (modal) {
+    modal.style.display = "none";
+  }
 }
-window.onclick = (e) => {
-  if (e.target.id === "addModal") closeModal();
-};
+
+// Close modal when clicking outside
+window.addEventListener('click', (e) => {
+  if (e.target.id === "addModal") {
+    closeModal();
+  }
+});
 
 // Simple HTML escaper for dynamic cells
 function escapeHtml(str) {

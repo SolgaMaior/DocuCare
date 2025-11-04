@@ -78,6 +78,33 @@ require('view/partials/sidebar.php');
             <?php endif; ?>
         </tbody>
     </table>
+    <?php if ($totalPages > 1): ?>
+      <div class="pagination" style="
+          margin-top: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+      ">
+          <?php if ($page > 1): ?>
+              <a href="?page=schedules&paging=<?= $page - 1 ?>" 
+                class="btn btn-outline pagination-btn">← Previous</a>
+          <?php else: ?>
+              <button class="btn btn-outline pagination-btn" disabled>← Previous</button>
+          <?php endif; ?>
+
+          <span class="page-info">
+              Page <?= $page ?> of <?= $totalPages ?> 
+          </span>
+
+          <?php if ($page < $totalPages): ?>
+              <a href="?page=schedules&paging=<?= $page + 1 ?>" 
+                class="btn btn-outline pagination-btn">Next →</a>
+          <?php else: ?>
+              <button class="btn btn-outline pagination-btn" disabled>Next →</button>
+          <?php endif; ?>
+      </div>
+    <?php endif; ?>
 </div>
 
 </body>

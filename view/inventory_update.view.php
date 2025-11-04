@@ -18,21 +18,21 @@
 <div class="content">
 
    <!-- Filter + Search + Add -->
-    <div class="filter-bar">
-      <form method="GET" action="index.php" class="filter-form">
-        <input type="hidden" name="page" value="inventory">
-        
-        <select name="category" onchange="this.form.submit()">
-          <option value="all" <?= $categoryFilter == 'all' ? 'selected' : '' ?>>All Items</option>
-          <option value="medicine" <?= $categoryFilter == 'medicine' ? 'selected' : '' ?>>Medicines</option>
-          <option value="equipment" <?= $categoryFilter == 'equipment' ? 'selected' : '' ?>>Equipment</option>
-        </select>
-        
-        <input type="text" name="search" placeholder="Search item..." value="<?= htmlspecialchars($searchQuery) ?>">
-        <button type="submit">Search</button>
-      </form>
-      <button class="add-btn" onclick="openModal()">+ Add Item</button>
-    </div>
+  <div class="filter-bar">
+    <form method="GET" action="index.php" class="filter-form">
+      <input type="hidden" name="page" value="<?= $_GET['page'] ?? 'inventory' ?>">
+      <!-- Removed paging from here - let it reset to 1 when filtering -->
+      
+      <select name="category" onchange="this.form.submit()">
+        <option value="all" <?= $categoryFilter == 'all' ? 'selected' : '' ?>>All Items</option>
+        <option value="medicine" <?= $categoryFilter == 'medicine' ? 'selected' : '' ?>>Medicines</option>
+        <option value="equipment" <?= $categoryFilter == 'equipment' ? 'selected' : '' ?>>Equipment</option>
+      </select>
+      
+      <input type="text" name="search" placeholder="Search item..." value="<?= htmlspecialchars($searchQuery) ?>">
+      <button type="submit">Search</button>
+    </form>
+  </div>
 
   <?php if (isset($_SESSION['message'])): ?>
     <div class="alert alert-<?= $_SESSION['message_type'] ?? 'success' ?>">
@@ -99,6 +99,34 @@
               <?php endif; ?>
             </tbody>
           </table>
+          <?php if ($totalPages > 1): ?>
+            <div class="pagination" style="
+                margin-top: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
+            ">
+                <?php if ($page > 1): ?>
+                    <a href="?page=inventory_update&category=<?= urlencode($categoryFilter) ?>&search=<?= urlencode($searchQuery) ?>&paging=<?= $page - 1 ?>" 
+                      class="btn btn-outline pagination-btn">← Previous</a>
+                <?php else: ?>
+                    <button class="btn btn-outline pagination-btn" disabled>← Previous</button>
+                <?php endif; ?>
+
+                <span class="page-info">
+                    Page <?= $page ?> of <?= $totalPages ?> 
+                    (<?= $totalItems ?> items)
+                </span>
+
+                <?php if ($page < $totalPages): ?>
+                    <a href="?page=inventory_update&category=<?= urlencode($categoryFilter) ?>&search=<?= urlencode($searchQuery) ?>&paging=<?= $page + 1 ?>" 
+                      class="btn btn-outline pagination-btn">Next →</a>
+                <?php else: ?>
+                    <button class="btn btn-outline pagination-btn" disabled>Next →</button>
+                <?php endif; ?>
+            </div>
+          <?php endif; ?>
         </form>
       </div>
 
