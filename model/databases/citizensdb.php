@@ -122,18 +122,21 @@ function get_citizen_file_data($citID)
     $files = $statement->fetchAll(PDO::FETCH_ASSOC);
     $statement->closeCursor();
 
-    // Transform DB rows into a clean JS-friendly format
     $result = [];
     foreach ($files as $file) {
+        $id = $file['id'];
         $result[] = [
-            'id' => $file['id'],
+            'id' => $id,
             'filename' => $file['file_name'],
-            'path' => "model/record_file_func/download_file.php?id=" . $file['id'],
-            'mime' => $file['mime_type']
+            'mime' => $file['mime_type'],
+            // new paths:
+            'path' => "model/record_file_func/display_file.php?id=$id", // for <img src="">
+            'view' => "index.php?page=download_file&id=$id"             // for <a href>
         ];
     }
     return $result;
 }
+
 
 function get_archived_citizens()
 {

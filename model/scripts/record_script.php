@@ -174,7 +174,7 @@
     const latestIllness = illnessRecords.length > 0 ? illnessRecords[0] : null;
     
     if (latestIllness) {
-        document.getElementById('commonIllness').value = latestIllness.illness_id;
+        document.getElementById('commonIllness').value = '';
         document.getElementById('commonIllness').style.color = '#333';
     } else {
         document.getElementById('commonIllness').value = '';
@@ -307,7 +307,7 @@
 
         if (file.mime.startsWith('image/')) {
           const img = document.createElement('img');
-          img.src = file.path;
+          img.src = file.path; // uses display_file.php
           img.alt = file.filename;
           img.style.width = '80px';
           img.style.height = '80px';
@@ -320,10 +320,11 @@
 
         const a = document.createElement('a');
         a.className = 'filename';
-        a.href = file.path;
+        a.href = file.view; // opens download_file.php with favicon
         a.target = '_blank';
         a.textContent = file.filename;
         span.appendChild(a);
+
 
         if (isEditMode) {
           const deleteButton = document.createElement('button');

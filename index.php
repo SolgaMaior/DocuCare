@@ -25,6 +25,7 @@ $allowedPages = [
     'inventory_update' => 'controllers/inventory_update.php',
     'reports' => 'controllers/reports.controller.php',
     'refresh_clusters' => 'controllers/refresh_clusters.php',
+    'download_file' => 'model/record_file_func/download_file.php',
 ];
 
 // Include auth check only for protected pages
@@ -40,3 +41,5 @@ if (array_key_exists($page, $allowedPages) && file_exists($allowedPages[$page]))
     http_response_code(404);
     echo "Page not found";
 }
+?>
+
