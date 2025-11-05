@@ -5,7 +5,11 @@ if (!CURRENT_USER_IS_ADMIN) {
     exit('Access denied');
 }
 
-session_start();
+// Start session safely
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once('model/databases/db_con.php');
 require_once('model/databases/inventorydb.php');
 
@@ -28,6 +32,31 @@ try {
     $totalItems = 0;
     $totalPages = 0;
     $stats = ['total_items' => 0, 'in_stock' => 0, 'low_stock' => 0, 'out_stock' => 0];
+}
+
+// ✅ Low-stock detection logic
+$lowStockItems = [];
+foreach ($inventory as $item) {
+    if ($item['stock'] < 10) {
+        $lowStockItems[] = $item['name'] . " (" . $item['stock'] . ")";
+    }
+}
+
+// ✅ Intelligent popup control
+$previousLowStock = $_SESSION['previous_low_stock'] ?? [];
+$currentLowStock = $lowStockItems;
+
+$showLowStockPopup = false;
+
+// Show popup if there's any new or changed low-stock item
+if (!empty($currentLowStock)) {
+    if ($currentLowStock !== $previousLowStock) {
+        $showLowStockPopup = true;
+        $_SESSION['previous_low_stock'] = $currentLowStock;
+    }
+} else {
+    // Clear memory if everything is restocked
+    unset($_SESSION['previous_low_stock']);
 }
 
 // --- Include View ---
