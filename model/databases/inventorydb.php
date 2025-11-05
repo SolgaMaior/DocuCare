@@ -38,6 +38,28 @@ function get_inventory($category = 'all', $search = '', $page = 1, $perPage = 7)
     return $statement->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function get_inventory_for_chart($category = 'all', $search = '') {
+    global $db;
+    
+    $query = "SELECT name, stock FROM inventory WHERE 1=1";
+    $params = [];
+    
+    if ($category !== 'all') {
+        $query .= " AND category = ?";
+        $params[] = $category;
+    }
+    
+    if (!empty($search)) {
+        $query .= " AND name LIKE ?";
+        $params[] = "%$search%";
+    }
+    
+    $statement = $db->prepare($query);
+    $statement->execute($params);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 function get_inventory_count($category = 'all', $search = '') {
     global $db;
     

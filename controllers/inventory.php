@@ -22,6 +22,7 @@ $perPage = 7;
 // --- Fetch Inventory Data ---
 try {
     $inventory = get_inventory($categoryFilter, $searchQuery, $page, $perPage);
+    $inventoryforChart = get_inventory_for_chart($categoryFilter, $searchQuery);
     $totalItems = get_inventory_count($categoryFilter, $searchQuery);
     $totalPages = ceil($totalItems / $perPage);
     $stats = get_inventory_statistics();

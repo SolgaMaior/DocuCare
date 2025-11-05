@@ -128,7 +128,7 @@
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const ctx = document.getElementById("inventoryChart");
-      const inventory = <?php echo json_encode($inventory); ?>;
+      const inventory = <?php echo json_encode($inventoryforChart); ?>;
       const labels = inventory.map(item => item.name);
       const data = inventory.map(item => parseInt(item.stock));
 
