@@ -1,131 +1,140 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import AgglomerativeClustering
-from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
+CORS(app)
 
-PUROK_COORDS = {
-    "Purok 1": (14.900573, 120.523604),
-    "Purok 2": (14.900155, 120.516251),
-    "Purok 3": (14.905449, 120.508226),
-    "Purok 4": (14.902110, 120.512887),
-    "Purok 5": (14.896526, 120.509381),
-}
 
 @app.route("/cluster", methods=["POST"])
 def cluster_data():
     """
-    Enhanced clustering using hierarchical clustering for trend detection.
-    Returns cluster assignments + trend analysis for each purok.
+    Perform hierarchical clustering on purok disease data (distance-based).
+    Returns cluster assignments, severity levels, and cluster-level disease trends.
     """
     try:
-        data = request.get_json()
-        if not data:
+        payload = request.get_json()
+        print(payload)
+        if not payload:
             return jsonify({"error": "No data provided"}), 400
-        
+
+        # If the payload is a list, it's the purok data directly
+        # If it's a dict, extract the "data" field
+        if isinstance(payload, list):
+            data = payload
+            distance_threshold = 3.88  # default threshold
+        elif isinstance(payload, dict):
+            data = payload.get("data", [])
+            distance_threshold = float(payload.get("distance_threshold", 3.88))
+        else:
+            return jsonify({"error": "Invalid JSON structure"}), 400
+
+        if not data:
+            return jsonify({"error": "No purok data found"}), 400
+
         df = pd.DataFrame(data)
-        
+        print(data)
         # Normalize column names
-        if "purokName" in df.columns:
-            df.rename(columns={"purokName": "purok"}, inplace=True)
+        df.rename(columns=lambda x: x.lower().strip(), inplace=True)
+        if "purokname" in df.columns:
+            df.rename(columns={"purokname": "purok"}, inplace=True)
         elif "purok_name" in df.columns:
             df.rename(columns={"purok_name": "purok"}, inplace=True)
-        
+
         diseases = ["dengue", "measles", "flu", "allergies", "diarrhea"]
-        
+
         # Ensure all disease columns exist
         for disease in diseases:
             if disease not in df.columns:
                 df[disease] = 0
-        
-        # Get disease matrix
-        disease_matrix = df[diseases].values.astype(float)
-        
-        # Calculate total cases
-        df['total_cases'] = disease_matrix.sum(axis=1)
-        
-        # Hierarchical clustering based on disease patterns
+
+        # Validate purok uniqueness
+        if df["purok"].duplicated().any():
+            return jsonify({"error": "Duplicate purok entries found"}), 400
+
+        # Convert numeric columns
+        df[diseases] = df[diseases].apply(pd.to_numeric, errors='coerce').fillna(0)
+        df["total_cases"] = df[diseases].sum(axis=1)
+
+        # Standardize values
         scaler = StandardScaler()
-        disease_scaled = scaler.fit_transform(disease_matrix.T).T
-        
-        # Determine optimal clusters (2-3 for 5 puroks)
-        n_clusters = min(3, len(df))
-        
-        hierarchical = AgglomerativeClustering(
-            n_clusters=n_clusters,
-            linkage='ward'
+        disease_scaled = scaler.fit_transform(df[diseases])
+
+        # Distance-based hierarchical clustering
+        clustering = AgglomerativeClustering(
+            n_clusters=None,
+            distance_threshold=distance_threshold,
+            linkage="ward"
         )
-        df["cluster"] = hierarchical.fit_predict(disease_scaled)
-        
-        # Analyze each cluster
+        df["cluster"] = clustering.fit_predict(disease_scaled)
+
+        # Analyze clusters
         cluster_info = {}
-        for cluster_id in df["cluster"].unique():
-            cluster_data = df[df["cluster"] == cluster_id]
-            avg_cases = cluster_data[diseases].mean()
-            
-            # Find dominant diseases (above 50% of max)
-            threshold = avg_cases.max() * 0.3
-            dominant = avg_cases[avg_cases > threshold].to_dict()
-            
-            cluster_info[int(cluster_id)] = {
-                "puroks": cluster_data["purok"].tolist(),
-                "dominant_diseases": dominant,
-                "avg_total": float(cluster_data["total_cases"].mean()),
-                "size": len(cluster_data)
+        for cluster_id in sorted(df["cluster"].unique()):
+            cluster_subset = df[df["cluster"] == cluster_id]
+            avg_cases = cluster_subset[diseases].mean()
+
+            # Identify dominant diseases (>= 60th percentile)
+            threshold = np.percentile(avg_cases, 60)
+            dominant_diseases = {
+                disease: round(float(value), 2)
+                for disease, value in avg_cases.items()
+                if value >= threshold
             }
-        
-        # Calculate severity level for each purok
-        max_cases = df['total_cases'].max()
-        df['severity'] = df['total_cases'].apply(
-            lambda x: 'high' if x > max_cases * 0.6 
-            else 'medium' if x > max_cases * 0.3 
-            else 'low'
+
+            cluster_info[int(cluster_id)] = {
+                "puroks": cluster_subset["purok"].tolist(),
+                "dominant_diseases": dominant_diseases,
+                "avg_total": round(float(cluster_subset["total_cases"].mean()), 2),
+                "size": int(len(cluster_subset)),
+            }
+
+        # Assign severity per purok
+        max_cases = df["total_cases"].max()
+        df["severity"] = df["total_cases"].apply(
+            lambda x: "high" if x > max_cases * 0.6
+            else "medium" if x > max_cases * 0.3
+            else "low"
         )
-        
-        # Find dominant disease for each purok
-        df['dominant_disease'] = df[diseases].idxmax(axis=1)
-        df['dominant_count'] = df[diseases].max(axis=1)
-        
-        # Prepare result
-        result = []
-        for _, row in df.iterrows():
-            result.append({
+
+        # Identify dominant disease per purok
+        df["dominant_disease"] = df[diseases].idxmax(axis=1)
+        df["dominant_count"] = df[diseases].max(axis=1)
+
+        # Prepare results
+        clusters_result = [
+            {
                 "purok": row["purok"],
                 "cluster": int(row["cluster"]),
                 "severity": row["severity"],
                 "total_cases": int(row["total_cases"]),
                 "dominant_disease": row["dominant_disease"],
                 "dominant_count": int(row["dominant_count"]),
-                "cases": {
-                    "dengue": int(row["dengue"]),
-                    "measles": int(row["measles"]),
-                    "flu": int(row["flu"]),
-                    "allergies": int(row["allergies"]),
-                    "diarrhea": int(row["diarrhea"])
-                }
-            })
-        
-        return jsonify({
-            "clusters": result,
-            "cluster_analysis": cluster_info,
-            "summary": {
-                "total_puroks": len(df),
-                "total_clusters": n_clusters,
-                "total_cases": int(df['total_cases'].sum())
+                "cases": {d: int(row[d]) for d in diseases},
             }
+            for _, row in df.iterrows()
+        ]
+
+        summary = {
+            "total_puroks": int(len(df)),
+            "total_clusters": int(df["cluster"].nunique()),
+            "total_cases": int(df["total_cases"].sum()),
+            "distance_threshold": distance_threshold
+        }
+
+        return jsonify({
+            "clusters": clusters_result,
+            "cluster_analysis": cluster_info,
+            "summary": summary,
         })
-        
+
     except Exception as e:
-        print(f"Clustering error: {str(e)}")
+        print(f"Clustering error: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route("/health", methods=["GET"])
-def health_check():
-    """Health check endpoint"""
-    return jsonify({"status": "healthy", "service": "clustering-api"})
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)

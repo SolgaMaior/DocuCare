@@ -61,6 +61,7 @@ function get_fresh_cluster_data($db) {
         // Send to Flask for clustering
         $json_data = json_encode($data);
         
+        
         $ch = curl_init("http://127.0.0.1:5000/cluster");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
