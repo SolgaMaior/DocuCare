@@ -38,27 +38,47 @@ if (empty($mime) || $mime === 'application/octet-stream') {
     ];
     $mime = $mimeMap[$ext] ?? 'application/octet-stream';
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title><?= htmlspecialchars($filename) ?></title>
-  <link rel="icon" type="image/svg+xml" href="../../resources/images/Logo.svg">
+  <link rel="icon" type="image/svg+xml" href="resources/images/Logo.svg">
   <style>
-    body { margin: 0; display: flex; justify-content: center; align-items: center; background: #f9f9f9; height: 100vh; }
-    img { max-width: 90%; max-height: 90vh; object-fit: contain; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
-    embed { width: 100%; height: 100vh; border: none; }
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f9f9f9;
+      height: 100vh;
+    }
+    img {
+      max-width: 90%;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    iframe {
+      width: 100%;
+      height: 100vh;
+      border: none;
+    }
   </style>
 </head>
 <body>
   <?php if (strpos($mime, 'image/') === 0): ?>
     <img src="data:<?= $mime ?>;base64,<?= $data ?>" alt="<?= htmlspecialchars($filename) ?>">
   <?php elseif ($mime === 'application/pdf'): ?>
-    <embed src="data:<?= $mime ?>;base64,<?= $data ?>" type="<?= $mime ?>" />
+    <iframe src="data:<?= $mime ?>;base64,<?= $data ?>"></iframe>
   <?php else: ?>
-    <p>Cannot preview this file type. <a href="data:<?= $mime ?>;base64,<?= $data ?>" download="<?= htmlspecialchars($filename) ?>">Download</a></p>
+    <p>Cannot preview this file type. 
+      <a href="data:<?= $mime ?>;base64,<?= $data ?>" download="<?= htmlspecialchars($filename) ?>">
+        Download
+      </a>
+    </p>
   <?php endif; ?>
 </body>
 </html>
