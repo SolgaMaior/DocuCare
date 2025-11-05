@@ -5045,23 +5045,23 @@ body {
 }
 
 .card-primary {
-  background: linear-gradient(120deg, #4fa7e6, #007acc);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .card-info {
-  background: linear-gradient(120deg, #4fa7e6, #007acc);
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
 }
 
 .card-success {
-  background: linear-gradient(120deg, #4fa7e6, #007acc);
+  background: linear-gradient(135deg, #4fa7e6 0%, #007acc 100%);
 }
 
 .card-warning {
-  background: linear-gradient(120deg, #4fa7e6, #007acc);
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
 }
 
 .card-danger {
-  background: linear-gradient(120deg, #4fa7e6, #007acc);
+  background: linear-gradient(135deg, #84da88 0%, #25a850 100%);
 }
 
 /*     Progress Card    */
