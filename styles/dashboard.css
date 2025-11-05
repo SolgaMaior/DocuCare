@@ -30,3 +30,24 @@
 .uppercardpar{
     font-size: 40px;
 }
+
+/* Enhanced Map Styles */
+.info.legend {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  max-width: 200px;
+}
+
+.info.legend h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  border-bottom: 2px solid #4fa7e6;
+  padding-bottom: 8px;
+}
+
+.purok-label {
+  background: none !important;
+  border: none !important;
+}
