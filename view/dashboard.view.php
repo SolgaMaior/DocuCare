@@ -522,17 +522,17 @@
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          alert('✓ Clusters refreshed successfully!');
+          alert('Clusters refreshed successfully!');
           location.reload();
         } else {
-          alert('✗ Error: ' + (data.error || 'Unknown error'));
+          alert('Error: ' + (data.error || 'Unknown error'));
           btn.innerHTML = originalHtml;
           btn.disabled = false;
         }
       })
       .catch(err => {
         console.error('Refresh failed:', err);
-        alert('✗ Failed to refresh clusters. Check console for details.');
+        alert('Failed to refresh clusters. Check console for details.');
         btn.innerHTML = originalHtml;
         btn.disabled = false;
       });
