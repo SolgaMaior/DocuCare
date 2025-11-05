@@ -1,3 +1,5 @@
+
+
 /* Footer styling */
 footer {
   position: fixed;
@@ -13,7 +15,10 @@ footer {
 
 /* Diagnosis page */
 .diagnosis-page {
-  background: linear-gradient(180deg, #ffffff 19%, #9fb4ed 100%);
+  background-image: url("../resources/images/View.svg");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
   min-height: 100vh;
   padding-bottom: 60px; /* Space for fixed footer */
 }
@@ -29,7 +34,7 @@ footer {
 
 .diagnosis-title {
   font-size: 2.5rem;
-  color: #7489c5;
+  color: #4fa7e6;;
   font-weight: bold;
   margin-bottom: 10px;
 }
@@ -49,7 +54,7 @@ footer {
 }
 
 .back-link:hover {
-  color: #5a6fa8;
+  color: #4fa7e6;
 }
 
 /* Input Display Card */
@@ -62,10 +67,10 @@ footer {
 }
 
 .input-display-card h3 {
-  color: #7489c5;
+  color: #4fa7e6;
   margin-bottom: 20px;
   font-size: 1.3rem;
-  border-bottom: 2px solid #7489c5;
+  border-bottom: 2px solid #4fa7e6;;
   padding-bottom: 10px;
 }
 
@@ -79,7 +84,7 @@ footer {
 
 .input-label {
   font-weight: 600;
-  color: #7489c5;
+  color: #4fa7e6;;
   margin-bottom: 8px;
   display: block;
   font-size: 14px;
@@ -137,7 +142,7 @@ footer {
 }
 
 .results-header-card h3 {
-  color: #7489c5;
+  color: #4fa7e6;;
   margin-bottom: 8px;
   font-size: 1.3rem;
 }
@@ -171,7 +176,7 @@ footer {
 }
 
 .diagnosis-card-header {
-  background: #7489c5;
+  background: #4fa7e6;
   padding: 20px;
   color: white;
   flex-shrink: 0; /* Prevent header from shrinking */
@@ -276,7 +281,7 @@ footer {
   color: #7489c5;
   margin-bottom: 15px;
   font-size: 1.1rem;
-  border-bottom: 2px solid #7489c5;
+  border-bottom: 2px solid #4fa7e6;
   padding-bottom: 8px;
 }
 

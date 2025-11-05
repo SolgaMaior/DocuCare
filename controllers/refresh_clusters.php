@@ -1,12 +1,8 @@
 <?php
-// Start with error handling to prevent HTML output
-error_reporting(0); // Suppress errors in production
+error_reporting(0); 
 ini_set('display_errors', 0);
-
-// Set JSON header FIRST before any output
 header('Content-Type: application/json');
 
-// Start session and check authentication
 session_start();
 
 // Include files
@@ -45,3 +41,4 @@ try {
 }
 exit;
 ?>
+

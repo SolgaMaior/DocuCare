@@ -24,6 +24,7 @@ $allowedPages = [
     'inventory' => 'controllers/inventory.php',
     'inventory_update' => 'controllers/inventory_update.php',
     'reports' => 'controllers/reports.controller.php',
+    'refresh_clusters' => 'controllers/refresh_clusters.php',
 ];
 
 // Include auth check only for protected pages
