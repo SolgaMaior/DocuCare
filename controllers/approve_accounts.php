@@ -32,9 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $citID = isset($userRow['citID']) ? (int)$userRow['citID'] : null;
 
             if ($action === 'approve') {
-                $query = "UPDATE users SET isApproved = 1 WHERE userID = :user_id";
-                $stmt = $db->prepare($query);
+                $query1 = "UPDATE users SET isApproved = 1 WHERE userID = :user_id";
+                $stmt = $db->prepare($query1);
                 $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+                $stmt->execute();
+                
+                $query2 = "UPDATE citizens SET isArchived = 0 WHERE citID = :cit_id";
+                $stmt = $db->prepare($query2);
+                $stmt->bindValue(':cit_id', $citID, PDO::PARAM_INT);
                 $stmt->execute();
                 $message = "Account approved successfully!";
                 $messageType = 'success';

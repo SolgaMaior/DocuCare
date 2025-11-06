@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else if ($user && !password_verify($password, $user['password'])) {
                 $error = 'Invalid email or password';
             }else if ($user && !$user['isApproved']) {
-                $error = 'Account not approved. Please contact support.';
+                $error = 'Account not approved. Please wait for approval in your email.';
             } else {
                 $error = 'Invalid email or password';
             }

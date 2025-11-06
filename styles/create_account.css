@@ -13,7 +13,6 @@ body {
 .main-container {
   position: relative;
   width: 1000px;
-  height: 650px;
   display: flex;
   background: #e0f2ff;
   border-radius: 20px;
@@ -59,6 +58,8 @@ body {
 /* CREATE ACCOUNT BOX */
 .create-box {
   flex: 1;
+  position: relative;
+  max-height: fit-content;
   background: white;
   border-radius: 20px;
   margin: auto 70px;
@@ -78,6 +79,8 @@ body {
   color: #111;
   font-weight: 600;
 }
+
+
 
 .subtitle {
   font-size: 0.95em;
@@ -161,3 +164,5 @@ body {
 .login-text a:hover {
   text-decoration: underline;
 }
+
+

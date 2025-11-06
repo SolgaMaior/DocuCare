@@ -584,18 +584,29 @@
     }
   }
 
-  function removeNumbers(input) {
-    input.value = input.value.replace(/[0-9]/g, '');
+  function removeNumbersandSymbols(input) {
+    input.value = input.value.replace(/[0-9!@#$%^&*(),.?":{}|<>]/g, '');
   }
 
-  ['firstName', 'lastName', 'middleName', 'occupation'].forEach(id => {
+  ['firstName', 'lastName', 'middleName', 'occupation', 'medicalCondition', 'medicalNotes'].forEach(id => {
     const element = document.getElementById(id);
     if (element) {
       element.addEventListener('input', function() {
-        removeNumbers(this);
+        removeNumbersandSymbols(this);
       });
     }
   });
+
+  function removeLetters(input) {
+    input.value = input.value.replace(/[a-zA-Z]/g, '');
+  }
+  const contactnumElement = document.getElementById('contactnum');
+  if (contactnumElement) {
+    contactnumElement.addEventListener('input', function() {
+      removeLetters(this);
+    });
+  }
+  
 
   function filterTable() {
     const searchValue = document.getElementById('searchInput').value.toLowerCase();

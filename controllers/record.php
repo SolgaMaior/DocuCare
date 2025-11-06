@@ -2,7 +2,7 @@
 
 require('model/databases/citizensdb.php');
 require('model/databases/diagnosisdb.php');
-require('model/databases/illnessdb.php'); // ADD THIS LINE
+require('model/databases/illnessdb.php');
 require('model/databases/db_con.php');
 require('model/record_file_func/diagnosis_api.php');
 
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($missingRequired) {
             $redirectPurok = $_GET['purokID'] ?? 'all';
-            header("Location: index.php?page=records&purok=$redirectPurok&error=missing_fields");
+            header("Location: index.php?page=records&purokID=$redirectPurok&error=missing_fields");
             exit;
         }
 
@@ -123,26 +123,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // ADD THIS SECTION - Handle common illness selection
+        // Handle common illness selection
         $common_illness_id = filter_input(INPUT_POST, 'common_illness', FILTER_VALIDATE_INT);
-    
-        // DEBUG: Check what's being received
-
-        if ($common_illness_id) {  // Adding new citizen - create new illness record
+        
+        if ($common_illness_id) {
             add_illness_record($targetCitizenID, $purokID, $common_illness_id);
-            
         }
-        // END OF ILLNESS SECTION
 
         // Handle diagnosis/symptoms storage
         $symptoms = trim(filter_input(INPUT_POST, 'medical_condition') ?? '');
         $description = trim(filter_input(INPUT_POST, 'medical_notes') ?? '');
         
-        if (!empty($symptoms)) {
-            // Include the diagnosis database functions
-            require_once('model/databases/diagnosisdb.php');
-            
-            // Add the diagnosis to the database
+        if (empty($symptoms)) {
             add_diagnosis($targetCitizenID, $symptoms, $description);
         } else {
             update_diagnosis($targetCitizenID, $symptoms, $description);
@@ -156,54 +148,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($symptoms)) {
             $successMessage .= "&diagnosis_saved=1";
         }
-        // ADD THIS - Include illness saved message
         if ($common_illness_id) {
             $successMessage .= "&illness_saved=1";
         }
 
-        header("Location: index.php?page=records&$successMessage");
+        header("Location: index.php?page=records&purokID=$redirectPurok&$successMessage");
         exit;
     }
 
     if ($action === 'archive_citizen') {
         $citID = filter_input(INPUT_POST, 'citID', FILTER_VALIDATE_INT);
+        $redirectPurok = $_GET['purokID'] ?? 'all';
         if ($citID) {
             archive_citizen($citID);
-            header("Location: index.php?page=records");
         }
-        $redirectPurok = $_GET['purokID'] ?? 'all';
+        header("Location: index.php?page=records&purokID=$redirectPurok");
         exit;
     }
 
     if ($action === 'unarchive_citizen') {
         $citID = filter_input(INPUT_POST, 'citID', FILTER_VALIDATE_INT);
+        $redirectPurok = $_GET['purokID'] ?? 'all';
         if ($citID) {
             restore_citizen($citID);
         }
-        header("Location: index.php?page=records");
+        header("Location: index.php?page=records&purokID=$redirectPurok");
         exit;
     }
 }
 
+// Get filter and pagination parameters
 $purokID = $_GET['purokID'] ?? 'all';
-$citizens = ($purokID === 'archived') ? get_archived_citizens() : get_citizens_by_purok($purokID);
+$page = filter_input(INPUT_GET, 'paging', FILTER_VALIDATE_INT) ?: 1;
+$perPage = 15;
 
-// ADD THIS - Load illnesses for the dropdown
+// Get all illnesses for the form
 $illnesses = get_all_illnesses();
 
-// Get pagination parameters
-$page = filter_input(INPUT_GET, 'paging', FILTER_VALIDATE_INT) ?: 1;
-$perPage = 15; // Records per page
-
-// Get paginated citizens
-$citizens = get_citizens_by_purok($purokID, $page, $perPage);
-$totalCitizens = get_citizens_count($purokID);
-$totalPages = ceil($totalCitizens / $perPage);
-
+// Handle different views based on user type
 if(CURRENT_USER_IS_ADMIN){
+    // For admins: Support pagination for both regular and archived views
+    if ($purokID === 'archived') {
+        $citizens = get_archived_citizens($page, $perPage);
+        $totalCitizens = get_archived_citizens_count();
+    } else {
+        $citizens = get_citizens_by_purok($purokID, $page, $perPage);
+        $totalCitizens = get_citizens_count($purokID);
+    }
+    
+    $totalPages = ceil($totalCitizens / $perPage);
     require_once('view/record.view.php');
-}else{ 
-    // Load both active and archived citizens
+} else { 
+    // For regular users: Load both active and archived citizens (no pagination)
     $activeCitizens = get_citizens_by_purok($purokID);
     $archivedCitizens = get_archived_citizens();
     $citizens = array_merge($activeCitizens, $archivedCitizens);

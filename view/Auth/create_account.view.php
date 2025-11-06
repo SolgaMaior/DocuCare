@@ -21,16 +21,17 @@
       <p class="subtitle">Fill in your details to get started</p>
 
       <?php if ($error): ?>
-        <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        <div class="alert error" style="background-color: #f8d7da; color: #91212c; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
           <?= htmlspecialchars($error) ?>
         </div>
       <?php endif; ?>
 
       <?php if ($success): ?>
-        <div style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        <div class="alert success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
           <?= htmlspecialchars($success) ?>
         </div>
       <?php endif; ?>
+
 
       <form method="POST" action="index.php?page=signup">
         <div class="name-group">
@@ -68,6 +69,32 @@
       </form>
     </div>
   </div>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault(); // prevent auto-submit
+
+      const password = document.getElementById('password').value.trim();
+      const confirmField = document.getElementById('confirm').value.trim();
+
+      // Check password match
+      if (password !== confirmField) {
+        alert('Passwords do not match. Please try again.');
+        return;
+      }
+
+      // Ask for confirmation using window.confirm (ensures global scope)
+      if (window.confirm('Are you sure you want to create this account?')) {
+        form.submit(); // proceed
+      }
+    });
+  });
+  </script>
+
+
+
 
 </body>
 </html>

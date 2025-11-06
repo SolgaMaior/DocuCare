@@ -34,7 +34,8 @@ function get_pie_data(){
     return $data;
 }
 
-//GET FUNCTIONS
+
+
 function get_citizens_by_id($citID)
 {
     global $db;
@@ -138,19 +139,31 @@ function get_citizen_file_data($citID)
 }
 
 
-function get_archived_citizens()
-{
+function get_archived_citizens($page = null, $perPage = null) {
     global $db;
-    $query = "SELECT citID, firstname, middlename, lastname, birth_date, sex, civilstatus, occupation, contactnum, purokID, isArchived,
-            TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) as age
-            FROM citizens
-            WHERE isArchived = 1
-            ORDER BY lastname";
+    $query = "SELECT * FROM citizens WHERE isArchived = 1 ORDER BY citID DESC";
+    
+    if ($page !== null && $perPage !== null) {
+        $offset = ($page - 1) * $perPage;
+        $query .= " LIMIT :limit OFFSET :offset";
+    }
+    
     $statement = $db->prepare($query);
+    
+    if ($page !== null && $perPage !== null) {
+        $statement->bindValue(':limit', (int)$perPage, PDO::PARAM_INT);
+        $statement->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+    }
+    
     $statement->execute();
-    $citizens = $statement->fetchAll();
-    $statement->closeCursor();
-    return $citizens;
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+    
+function get_archived_citizens_count() {
+    global $db;
+    $statement = $db->prepare("SELECT COUNT(*) FROM citizens WHERE isArchived = 1");
+    $statement->execute();
+    return $statement->fetchColumn();
 }
 
 //ADD/UPDATE FUNCTIONS

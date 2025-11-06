@@ -30,8 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         // Hash password
                         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
+                        
                         // Create citizen record first
-                        $citizenQuery = "INSERT INTO citizens (firstname, lastname) VALUES (:firstname, :lastname)";
+                        $citizenQuery = "INSERT INTO citizens (firstname, lastname, isArchived) VALUES (:firstname, :lastname, 1)";
                         $citizenStmt = $db->prepare($citizenQuery);
                         $citizenStmt->bindValue(':firstname', $firstname);
                         $citizenStmt->bindValue(':lastname', $lastname);
