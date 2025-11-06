@@ -35,7 +35,7 @@ try {
     $stats = ['total_items' => 0, 'in_stock' => 0, 'low_stock' => 0, 'out_stock' => 0];
 }
 
-// ✅ Low-stock detection logic
+// Low-stock detection logic
 $lowStockItems = [];
 foreach ($inventory as $item) {
     if ($item['stock'] < 10) {
@@ -43,7 +43,7 @@ foreach ($inventory as $item) {
     }
 }
 
-// ✅ Intelligent popup control
+//  Intelligent popup control
 $previousLowStock = $_SESSION['previous_low_stock'] ?? [];
 $currentLowStock = $lowStockItems;
 

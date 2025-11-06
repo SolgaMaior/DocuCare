@@ -22,7 +22,7 @@ function get_all_appointments($page = 1, $perPage = 15) {
               TIMESTAMPDIFF(YEAR, c.birth_date, CURDATE()) as age
               FROM appointments a
               JOIN citizens c ON a.citID = c.citID
-              WHERE a.status = 'Pending'
+            --   WHERE a.status = 'Pending'
               ORDER BY a.schedule ASC
               LIMIT :limit OFFSET :offset"; // ADDED THIS LINE
 

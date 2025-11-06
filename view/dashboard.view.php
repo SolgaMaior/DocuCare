@@ -22,9 +22,9 @@
 </head>
 
 <body>
-  <?php require('partials/sidebar.php'); ?>
-
+  
   <div id="maincontainer">
+    <?php require('partials/sidebar.php'); ?>
     <div class="container-fluid">
       <h4 class="page-title">Dashboard</h4>
       <div class="row">

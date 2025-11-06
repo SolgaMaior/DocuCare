@@ -28,6 +28,7 @@ h4 {
 th,
 td {
   text-align: center;
+  justify-content: center;
 }
 
 /* Global Transitions for Interactive Elements */
