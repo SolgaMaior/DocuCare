@@ -17,6 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user_id = (int)$_POST['user_id'];
         
         try {
+            // Fetch recipient email before making changes
+            $emailQuery = "SELECT email FROM users WHERE userID = :user_id";
+            $emailStmt = $db->prepare($emailQuery);
+            $emailStmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $emailStmt->execute();
+            $email = $emailStmt->fetchColumn();
+
+            if (!$email) {
+                throw new PDOException('User email not found.');
+            }
+
             if ($action === 'approve') {
                 $query = "UPDATE users SET isApproved = 1 WHERE userID = :user_id";
                 $stmt = $db->prepare($query);
