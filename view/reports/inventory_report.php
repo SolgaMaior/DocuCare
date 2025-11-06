@@ -93,7 +93,7 @@
     
     <?php if ($inventoryStats['low_stock'] > 0): ?>
       <div class="recommendation warning">
-        <strong>Warning:</strong> <?= $inventoryStats['low_stock'] ?> item(s) have low stock levels. Plan for restocking soon.
+        <strong>Warning:</strong> <?= $inventoryStats['low_stock'] ?> item(s) have low stock levels.
       </div>
     <?php endif; ?>
     
