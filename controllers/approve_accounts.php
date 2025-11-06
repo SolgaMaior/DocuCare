@@ -17,6 +17,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user_id = (int)$_POST['user_id'];
         
         try {
+            // Fetch recipient email and associated citizen id before making changes
+            $userQuery = "SELECT email, citID FROM users WHERE userID = :user_id";
+            $userStmt = $db->prepare($userQuery);
+            $userStmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $userStmt->execute();
+            $userRow = $userStmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$userRow || empty($userRow['email'])) {
+                throw new PDOException('User email not found.');
+            }
+
+            $email = $userRow['email'];
+            $citID = isset($userRow['citID']) ? (int)$userRow['citID'] : null;
+
             if ($action === 'approve') {
                 $query = "UPDATE users SET isApproved = 1 WHERE userID = :user_id";
                 $stmt = $db->prepare($query);
@@ -27,15 +41,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 send_account_approval_status($email, 'approved');
 
             } elseif ($action === 'deny') {
-                $query = "DELETE FROM users WHERE userID = :user_id";
-                $stmt = $db->prepare($query);
-                $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-                $stmt->execute();
+                // Remove account and associated citizen record
+                $db->beginTransaction();
+
+                // Delete the user first to satisfy potential FK constraints
+                $delUser = $db->prepare("DELETE FROM users WHERE userID = :user_id");
+                $delUser->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+                $delUser->execute();
+
+                // Then delete the citizen record if present
+                if (!empty($citID)) {
+                    $delCitizen = $db->prepare("DELETE FROM citizens WHERE citID = :cit_id");
+                    $delCitizen->bindValue(':cit_id', $citID, PDO::PARAM_INT);
+                    $delCitizen->execute();
+                }
+
+                $db->commit();
+
                 $message = "Account denied successfully!";
                 $messageType = 'success';
                 send_account_approval_status($email, 'denied');
             }
         } catch (PDOException $e) {
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
             $message = "Error processing request. Please try again.";
             $messageType = 'error';
         }
