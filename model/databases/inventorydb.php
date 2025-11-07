@@ -1,42 +1,30 @@
 <?php
 // model/Inventorydb.php
 
-function get_inventory($category = 'all', $search = '', $page = 1, $perPage = 7) {
+function get_inventory($category = 'all', $search = '', $page = 1, $perPage = 15) {
     global $db;
     $offset = ($page - 1) * $perPage;
     
     $query = "SELECT * FROM inventory WHERE 1=1";
     $params = [];
-    
+
     if ($category !== 'all') {
         $query .= " AND category = ?";
         $params[] = $category;
     }
-    
+
     if (!empty($search)) {
         $query .= " AND name LIKE ?";
         $params[] = "%$search%";
     }
-    
-    $query .= " ORDER BY name ASC LIMIT ? OFFSET ?";
-    $params[] = $perPage;
-    $params[] = $offset;
-    
-    $statement = $db->prepare($query);
-    
-    // Bind parameters with proper types
-    for ($i = 0; $i < count($params); $i++) {
-        if ($i >= count($params) - 2) {
-            // Last two params are LIMIT and OFFSET (integers)
-            $statement->bindValue($i + 1, (int)$params[$i], PDO::PARAM_INT);
-        } else {
-            $statement->bindValue($i + 1, $params[$i], PDO::PARAM_STR);
-        }
-    }
-    
-    $statement->execute();
-    return $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $query .= " ORDER BY name ASC LIMIT $perPage OFFSET $offset";
+
+    $stmt = $db->prepare($query);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 function get_inventory_for_chart($category = 'all', $search = '') {
     global $db;
@@ -62,24 +50,24 @@ function get_inventory_for_chart($category = 'all', $search = '') {
 
 function get_inventory_count($category = 'all', $search = '') {
     global $db;
-    
     $query = "SELECT COUNT(*) FROM inventory WHERE 1=1";
     $params = [];
-    
+
     if ($category !== 'all') {
         $query .= " AND category = ?";
         $params[] = $category;
     }
-    
+
     if (!empty($search)) {
         $query .= " AND name LIKE ?";
         $params[] = "%$search%";
     }
-    
-    $statement = $db->prepare($query);
-    $statement->execute($params);
-    return $statement->fetchColumn();
+
+    $stmt = $db->prepare($query);
+    $stmt->execute($params);
+    return $stmt->fetchColumn();
 }
+
 
 function update_multiple_stocks($stocks) {
     global $db;

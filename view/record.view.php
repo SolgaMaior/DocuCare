@@ -38,12 +38,14 @@ require('view/partials/sidebar.php');
             id="searchInput" 
             value="<?= htmlspecialchars($searchTerm ?? '') ?>"
             autocomplete="off"
+            pattern="[A-Za-z ]+"
+            oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '');"
           >
           <button type="submit" class="btn btn-outline" style="margin-left: 10px;">Search</button>
           <?php if (!empty($searchTerm)): ?>
             <a href="index.php?page=records&purokID=<?= htmlspecialchars($purokID) ?>"
             class="btn btn-outline"
-              style="margin-left: 10px;">Clear Search</a>
+              style="margin-left: 10px; height: 2.5rem;">Clear Search</a>
           <?php endif; ?>
         </form>
       </div>
@@ -189,17 +191,17 @@ require('view/partials/sidebar.php');
 
             <div class="form-field">
               <label for="lastName">Last Name</label>
-              <input type="text" name="last_name" id="lastName" required autocomplete="off">
+              <input type="text" name="last_name" id="lastName" required autocomplete="off" pattern="[A-Za-z ]+" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '');">
             </div>
 
             <div class="form-field">
               <label for="firstName">First Name</label>
-              <input type="text" name="first_name" id="firstName" required autocomplete="off">
+              <input type="text" name="first_name" id="firstName" required autocomplete="off" pattern="[A-Za-z ]+" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '');">
             </div>
 
             <div class="form-field">
               <label for="middleName">Middle Name</label>
-              <input type="text" name="middle_name" id="middleName" autocomplete="off">
+              <input type="text" name="middle_name" id="middleName" autocomplete="off" pattern="[A-Za-z ]+" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, ''); ">
             </div>
 
             <div class="form-field">
@@ -218,7 +220,7 @@ require('view/partials/sidebar.php');
 
             <div class="form-field">
               <label for="ageDisplay">Age</label>
-              <input type="text" id="ageDisplay" readonly style="background-color: #f5f5f5; cursor: not-allowed;">
+              <input type="text" id="ageDisplay" readonly style="background-color: #f5f5f5; cursor: not-allowed;" pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
             </div>
 
             <div class="form-field">
@@ -234,12 +236,12 @@ require('view/partials/sidebar.php');
 
             <div class="form-field">
               <label for="occupation">Occupation</label>
-              <input type="text" name="occupation" id="occupation" required autocomplete="off">
+              <input type="text" name="occupation" id="occupation" required autocomplete="off" pattern="[A-Za-z ]+" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, ''); ">
             </div>
 
             <div class="form-field">
               <label for="contactnum">Contact Number</label>
-              <input type="tel" name="contactnum" id="contactnum" required autocomplete="off" pattern="[0-9]{10,11}">
+              <input type="tel" name="contactnum" id="contactnum" required autocomplete="off" pattern="[0-9]{10,11}" maxlength="11" placeholder="09*********">
             </div>
 
             <div class="form-field">

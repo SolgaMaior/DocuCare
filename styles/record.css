@@ -86,7 +86,6 @@ td {
   padding: 0;
 }
 
-
 .pagination-btn {
   min-width: 120px; /* same width for both buttons */
   text-align: center;
@@ -95,7 +94,6 @@ td {
   opacity: 0.5;
   cursor: not-allowed;
 }
-
 
 /* =========================================================================
    3. MAIN CONTENT & HEADER
@@ -182,9 +180,13 @@ td {
 }
 
 .btn-outline {
-  background: #fff;
-  border: 1px solid #41a8e8;
-  color: #41a8e8;
+  background: transparent;
+  color: #007acc;
+  border: 1px solid #bfe0ff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
 }
 
 .actions {
@@ -399,7 +401,7 @@ td img {
   align-items: center;
   gap: 1rem;
   margin-top: 5px;
-  padding: .5rem;
+  padding: 0.5rem;
 }
 
 .pagination .page-info {

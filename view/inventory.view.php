@@ -15,25 +15,72 @@
 
   <div class="content">
 
-    <!-- FILTER + SEARCH BAR -->
+    <!-- filter bar -->
     <div class="filter-bar">
-      <form method="GET" action="index.php" class="filter-form">
+      <form method="GET" action="index.php" class="filter-form" id="filterForm" style="display: flex; gap: 0.5rem; align-items: center;">
         <input type="hidden" name="page" value="<?= $_GET['page'] ?? 'inventory' ?>">
-        <!-- Removed paging from here - let it reset to 1 when filtering -->
-        
-        <select name="category" onchange="this.form.submit()">
+        <!-- REMOVE the hardcoded paging input - we'll set it dynamically in JS -->
+
+        <label for="category" style="font-weight: bold;">Filter:</label>
+        <select name="category" id="category" onchange="this.form.submit()">
           <option value="all" <?= $categoryFilter == 'all' ? 'selected' : '' ?>>All Items</option>
           <option value="medicine" <?= $categoryFilter == 'medicine' ? 'selected' : '' ?>>Medicines</option>
           <option value="equipment" <?= $categoryFilter == 'equipment' ? 'selected' : '' ?>>Equipment</option>
         </select>
-        
-        <input type="text" name="search" placeholder="Search item..." value="<?= htmlspecialchars($searchQuery) ?>">
-        <button type="submit">Search</button>
+
+        <input 
+          type="text" 
+          name="search" 
+          placeholder="Search item..." 
+          value="<?= htmlspecialchars($searchQuery) ?>"
+          id="searchInput"
+          style="flex:1; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;"
+          pattern="[A-Za-z ]+"
+          oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '');"
+        >
+
+        <button type="submit" class="btn btn-outline" style="height: 2.5rem;">Search</button>
+        <?php if (!empty($searchQuery)): ?>
+          <button type="button" class="btn btn-outline" id="clearSearchBtn" style="height: 2.5rem;">Clear</button>
+        <?php else: ?>
+          <button type="button" class="btn btn-outline" id="clearSearchBtn" style="height: 2.5rem; display: none;">Clear</button>
+        <?php endif; ?>
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("searchInput");
+            const clearBtn = document.getElementById("clearSearchBtn");
+            const filterForm = document.getElementById("filterForm");
+
+            if (!searchInput || !filterForm) return;
+
+            // Clear button functionality
+            if (clearBtn) {
+              clearBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                // Get current page value from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const currentPage = urlParams.get('page') || 'inventory';
+                const currentCategory = document.getElementById('category').value;
+
+                // Redirect to page without search parameter
+                window.location.href = `index.php?page=${currentPage}&category=${currentCategory}`;
+              });
+            }
+
+            // Submit on Enter key
+            searchInput.addEventListener("keypress", (e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                filterForm.submit();
+              }
+            });
+          });
+        </script>
       </form>
-      <?php if ($_GET['page'] === 'inventory_update'): ?>
-      <button class="add-btn" onclick="openModal()">+ Add Item</button>
-      <?php endif; ?>
     </div>
+
+
 
     <?php if (isset($_SESSION['message'])): ?>
       <div class="alert alert-<?= $_SESSION['message_type'] ?? 'success' ?>">

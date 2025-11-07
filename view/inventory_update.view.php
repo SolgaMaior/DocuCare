@@ -18,20 +18,38 @@
 <div class="content">
 
    <!-- Filter + Search + Add -->
-    <div class="filter-bar">
-      <form method="GET" action="index.php" class="filter-form">
-        <input type="hidden" name="page" value="inventory">
-        
-        <select name="category" onchange="this.form.submit()">
-          <option value="all" <?= $categoryFilter == 'all' ? 'selected' : '' ?>>All Items</option>
-          <option value="medicine" <?= $categoryFilter == 'medicine' ? 'selected' : '' ?>>Medicines</option>
-          <option value="equipment" <?= $categoryFilter == 'equipment' ? 'selected' : '' ?>>Equipment</option>
-        </select>
-        
-        <input type="text" name="search" placeholder="Search item..." value="<?= htmlspecialchars($searchQuery) ?>">
-        <button type="submit">Search</button>
-      </form>
-    </div>
+  <div class="filter-bar">
+    <form method="GET" action="index.php" class="filter-form" id="filterForm" style="display: flex; gap: 0.5rem; align-items: center;">
+      <input type="hidden" name="page" value="<?= $_GET['page'] ?? 'inventory' ?>">
+
+      <label for="category" style="font-weight: bold;">Filter:</label>
+      <select name="category" id="category" onchange="this.form.submit()">
+        <option value="all" <?= $categoryFilter == 'all' ? 'selected' : '' ?>>All Items</option>
+        <option value="medicine" <?= $categoryFilter == 'medicine' ? 'selected' : '' ?>>Medicines</option>
+        <option value="equipment" <?= $categoryFilter == 'equipment' ? 'selected' : '' ?>>Equipment</option>
+      </select>
+
+      <input 
+        type="text" 
+        name="search" 
+        placeholder="Search item..." 
+        value="<?= htmlspecialchars($searchQuery) ?>"
+        id="searchInput"
+        style="flex:1; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;"
+        pattern="[A-Za-z ]+"
+        oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '');"
+      >
+
+      <button type="submit" class="btn btn-outline" style="height: 2.5rem;">Search</button>
+      <?php if (!empty($searchQuery)): ?>
+        <button type="button" class="btn btn-outline" id="clearSearchBtn" style="height: 2.5rem;">Clear</button>
+      <?php else: ?>
+        <button type="button" class="btn btn-outline" id="clearSearchBtn" style="height: 2.5rem; display: none;">Clear</button>
+      <?php endif; ?>
+    </form>
+  </div>
+
+
 
   <?php if (isset($_SESSION['message'])): ?>
     <div class="alert alert-<?= $_SESSION['message_type'] ?? 'success' ?>">
@@ -105,7 +123,8 @@
                   <a href="?page=inventory_update&category=<?= urlencode($categoryFilter) ?>&search=<?= urlencode($searchQuery) ?>&paging=<?= $page - 1 ?>" 
                     class="btn btn-outline pagination-btn">← Previous</a>
               <?php else: ?>
-                  <button class="btn btn-outline pagination-btn" disabled>← Previous</button>
+                  <a href="?page=inventory&category=<?= urlencode($categoryFilter) ?>&search=<?= urlencode($searchQuery) ?>&paging=<?= $page - 1 ?>" class="btn btn-outline pagination-btn">← Previous</a>
+
               <?php endif; ?>
 
               <span class="page-info">
@@ -117,7 +136,7 @@
                   <a href="?page=inventory_update&category=<?= urlencode($categoryFilter) ?>&search=<?= urlencode($searchQuery) ?>&paging=<?= $page + 1 ?>" 
                     class="btn btn-outline pagination-btn">Next →</a>
               <?php else: ?>
-                  <button class="btn btn-outline pagination-btn" disabled>Next →</button>
+                  <a href="?page=inventory&category=<?= urlencode($categoryFilter) ?>&search=<?= urlencode($searchQuery) ?>&paging=<?= $page + 1 ?>" class="btn btn-outline pagination-btn">Next →</a>
               <?php endif; ?>
           </div>
         <?php endif; ?>

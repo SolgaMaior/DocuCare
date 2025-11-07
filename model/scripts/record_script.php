@@ -584,29 +584,7 @@
     }
   }
 
-  function removeNumbersandSymbols(input) {
-    input.value = input.value.replace(/[0-9!@#$%^&*(),.?":{}|<>]/g, '');
-  }
 
-  ['firstName', 'lastName', 'middleName', 'occupation', 'medicalCondition', 'medicalNotes'].forEach(id => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.addEventListener('input', function() {
-        removeNumbersandSymbols(this);
-      });
-    }
-  });
-
-  function removeLetters(input) {
-    input.value = input.value.replace(/[a-zA-Z]/g, '');
-  }
-  const contactnumElement = document.getElementById('contactnum');
-  if (contactnumElement) {
-    contactnumElement.addEventListener('input', function() {
-      removeLetters(this);
-    });
-  }
-  
 
   const alertMessage = document.getElementById('alertMessage');
   if (alertMessage) {
@@ -615,9 +593,6 @@
       setTimeout(() => alertMessage.remove(), 500);
     }, 3000);
   }
-
-
-
 
 
   const searchForm = document.getElementById('searchForm');
@@ -703,14 +678,6 @@
   }
 
 
-  if (searchInput) {
-    searchInput.addEventListener('input', () => {
-      const purokID = document.getElementById('filter').value;
-      if (searchInput.value.trim().length === 0) {
-        window.location.href = `index.php?page=records&purokID=${purokID}`;
-      }
-    });
-  }
 
   const clearSearchBtn = document.querySelector('.btn.btn-outline[href*="Clear"]');
 
