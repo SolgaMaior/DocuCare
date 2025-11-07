@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($currentAppointment && $currentAppointment['status'] === 'Approved' && $currentAppointment['status'] === 'Denied') {
                 $message = "Cannot edit an approved appointment!";
             } else {
-                update_appointment($id, $schedule, CURRENT_USER_ID);
+                update_appointment($id, $schedule);
                 $message = "Appointment updated successfully!";
             }
         } else {
