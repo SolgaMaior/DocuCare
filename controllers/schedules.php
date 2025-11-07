@@ -33,10 +33,14 @@ if (isset($_POST['action']) && isset($_POST['appointment_id'])) {
 $page = filter_input(INPUT_GET, 'paging', FILTER_VALIDATE_INT) ?: 1;
 $perPage = 15;
 
-// Get paginated appointments
-$appointments = get_all_appointments($page, $perPage);
-$totalAppointments = get_appointments_count();
+// Get status filter
+$status = filter_input(INPUT_GET, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?: 'all';
+
+// Get paginated appointments based on filter
+$appointments = get_all_appointments($page, $perPage, $status);
+$totalAppointments = get_appointments_count($status);
 $totalPages = ceil($totalAppointments / $perPage);
+
 
 // Check for success message after redirect
 if (isset($_GET['success'])) {

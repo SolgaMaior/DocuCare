@@ -24,6 +24,23 @@ require('view/partials/sidebar.php');
             <?= htmlspecialchars($message) ?>
         </div>
     <?php endif; ?>
+    <div class="filter-bar" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+        <form method="GET" action="index.php" style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="hidden" name="page" value="schedules">
+            
+            <label for="status" style="font-weight: bold;">Filter by Status:</label>
+            <select name="status" id="status" onchange="this.form.submit()" class="btn btn-outline">
+                <option value="all" <?= (!isset($_GET['status']) || $_GET['status'] === 'all') ? 'selected' : '' ?>>All</option>
+                <option value="Pending" <?= (isset($_GET['status']) && $_GET['status'] === 'Pending') ? 'selected' : '' ?>>Pending</option>
+                <option value="Approved" <?= (isset($_GET['status']) && $_GET['status'] === 'Approved') ? 'selected' : '' ?>>Approved</option>
+                <option value="Denied" <?= (isset($_GET['status']) && $_GET['status'] === 'Denied') ? 'selected' : '' ?>>Denied</option>
+            </select>
+        </form>
+
+        <span style="font-style: italic;">Showing appointments: 
+            <?= isset($_GET['status']) && $_GET['status'] !== 'all' ? htmlspecialchars($_GET['status']) : 'All' ?>
+        </span>
+    </div>
 
     <table>
         <thead>
@@ -51,7 +68,7 @@ require('view/partials/sidebar.php');
                         <td><?= htmlspecialchars($app['purokID'] ?? '') ?></td>
                         <td><?= htmlspecialchars($app['schedule'] ?? '') ?></td>
                         <td><?= htmlspecialchars($app['status'] ?? '') ?></td>
-                        <td>
+                        <td style="display: flex; gap: 0.5rem;">
                             <?php if ($app['status'] === 'Pending'): ?>
                                 <form method="POST" action="index.php?page=schedules" style="margin:0;">
                                     <input type="hidden" name="appointment_id" value="<?= $app['id'] ?>">
@@ -85,7 +102,7 @@ require('view/partials/sidebar.php');
           <a href="?page=schedules&paging=<?= $page - 1 ?>" 
             class="btn btn-outline pagination-btn">← Previous</a>
       <?php else: ?>
-          <button class="btn btn-outline pagination-btn" disabled>← Previous</button>
+          <a href="?page=schedules&status=<?= urlencode($status) ?>&paging=<?= $page - 1 ?>">← Previous</a>
       <?php endif; ?>
 
       <span class="page-info">
@@ -96,7 +113,7 @@ require('view/partials/sidebar.php');
           <a href="?page=schedules&paging=<?= $page + 1 ?>" 
             class="btn btn-outline pagination-btn">Next →</a>
       <?php else: ?>
-          <button class="btn btn-outline pagination-btn" disabled>Next →</button>
+          <a href="?page=schedules&status=<?= urlencode($status) ?>&paging=<?= $page + 1 ?>">Next →</a>
       <?php endif; ?>
   </div>
 <?php endif; ?>

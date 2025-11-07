@@ -48,7 +48,7 @@ require('view/partials/sidebar.php');
                             <td><?= htmlspecialchars($app['sex'] ?? '') ?></td>
                             <td><?= htmlspecialchars($app['age'] ?? '') ?></td>
                             <td><?= htmlspecialchars($app['purokID'] ?? '') ?></td>
-                            <td><?= htmlspecialchars($app['schedule']) ?></td>
+                            <td><?= date("F j, Y \\a\\t h:i A", strtotime($app['schedule'])) ?></td>
                             <td>
                                 <span style="color:<?= $app['status'] === 'Approved' ? 'green' : ($app['status'] === 'Denied' ? 'red' : '#333') ?>">
                                     <?= htmlspecialchars($app['status']) ?>
@@ -126,53 +126,84 @@ require('view/partials/sidebar.php');
 </div>
 
 <script>
-const appointments = <?= json_encode($appointments) ?>;
-function editAppointment(id) {
-    const app = appointments.find(a => a.id == id);
-    if (!app) return;
+    const appointments = <?= json_encode($appointments ?: []) ?>;
 
-    // Disallow editing approved appointments
-    if (app.status === 'Approved') {
-        alert('Cannot edit an approved appointment. The schedule is locked.');
-        return;
-    }
+    function editAppointment(id) {
+        const app = appointments.find(a => a.id == id);
+        if (!app) return;
 
-    // Set hidden values
-    document.getElementById('appointmentID').value = app.id;
-    document.getElementById('appointmentStatus').value = app.status;
-
-    // Get references
-    const scheduleField = document.getElementById('scheduleInput');
-    const formattedField = document.getElementById('formattedSchedule');
-
-    // Attempt to convert the saved schedule (string) to datetime-local format
-    let parsedDate;
-    if (app.schedule.includes('T')) {
-        // Already looks like "2025-11-13T00:30"
-        parsedDate = app.schedule;
-    } else {
-        // Convert a string like "November 13, 2025, 12:30 AM"
-        parsedDate = new Date(app.schedule);
-        if (!isNaN(parsedDate)) {
-            const local = new Date(parsedDate.getTime() - (parsedDate.getTimezoneOffset() * 60000))
-              .toISOString().slice(0,16);
-            scheduleField.value = local; // "2025-11-13T00:30"
-        } else {
-            scheduleField.value = ''; // fallback
+        // Prevent editing approved or denied appointments
+        if (app.status === 'Approved' || app.status === 'Denied') {
+            alert('Cannot edit an approved or denied appointment.');
+            return;
         }
+
+        const scheduleField = document.getElementById('scheduleInput');
+        const appointmentID = document.getElementById('appointmentID');
+        const appointmentStatus = document.getElementById('appointmentStatus');
+
+        // Convert "November 14, 2025 at 08:59 PM" → "2025-11-14T20:59"
+        let formattedValue = "";
+
+        try {
+            // Remove the "at" and parse the date
+            const cleaned = app.schedule.replace(' at ', ' ');
+            const parsedDate = new Date(cleaned);
+
+            if (!isNaN(parsedDate)) {
+                // Convert to local ISO format for datetime-local input
+                const local = new Date(parsedDate.getTime() - parsedDate.getTimezoneOffset() * 60000);
+                formattedValue = local.toISOString().slice(0, 16);
+            }
+        } catch (e) {
+            console.error("Date parsing error:", e);
+        }
+        
+
+
+        // Fill the fields
+        appointmentID.value = app.id;
+        appointmentStatus.value = app.status;
+        scheduleField.value = formattedValue;
+
+        // Enable editing
+        scheduleField.disabled = false;
+        scheduleField.style.backgroundColor = '';
+        scheduleField.style.cursor = '';
+
+        // Scroll to the form
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
-    // Set hidden formatted field (optional)
-    formattedField.value = app.schedule;
 
-    // Enable schedule field for editing (unless denied)
-    scheduleField.disabled = app.status === 'Approved';
-    scheduleField.style.backgroundColor = scheduleField.disabled ? '#f0f0f0' : '';
-    scheduleField.style.cursor = scheduleField.disabled ? 'not-allowed' : '';
+    form.addEventListener('submit', (e) => {
+        const raw = scheduleInput.value; // e.g. "2025-11-14T20:59"
+        if (!raw) {
+            e.preventDefault();
+            alert("Please select a schedule before submitting.");
+            return;
+        }
 
-    // Scroll smoothly to the form
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-}
+        const date = new Date(raw);
+        if (isNaN(date.getTime())) {
+            e.preventDefault();
+            alert("Invalid date format.");
+            return;
+        }
+        formattedSchedule.value = date.toISOString();
+    });
+
+
+
+    function clearForm() {
+        document.getElementById('appointmentID').value = '';
+        document.getElementById('appointmentStatus').value = '';
+        const scheduleField = document.getElementById('scheduleInput');
+        scheduleField.value = '';
+        scheduleField.disabled = false;
+        scheduleField.style.backgroundColor = '';
+        scheduleField.style.cursor = '';
+    }
 </script>
 
 </body>

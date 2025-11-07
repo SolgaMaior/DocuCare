@@ -13,27 +13,36 @@ function add_appointment($schedule, $userID, $citID) {
     $statement->closeCursor();
 }
 
-function get_all_appointments($page = 1, $perPage = 15) {
+function get_all_appointments($page = 1, $perPage = 15, $status = 'all') {
     global $db;
     $offset = ($page - 1) * $perPage;
 
     $query = "SELECT a.id, a.citID, a.schedule, a.status, 
-              c.lastname, c.firstname, c.middlename, c.purokID, c.sex, c.birth_date,
-              TIMESTAMPDIFF(YEAR, c.birth_date, CURDATE()) as age
+                     c.lastname, c.firstname, c.middlename, c.purokID, c.sex, c.birth_date,
+                     TIMESTAMPDIFF(YEAR, c.birth_date, CURDATE()) as age
               FROM appointments a
-              JOIN citizens c ON a.citID = c.citID
-            --   WHERE a.status = 'Pending'
-              ORDER BY a.schedule ASC
-              LIMIT :limit OFFSET :offset"; // ADDED THIS LINE
+              JOIN citizens c ON a.citID = c.citID";
+
+    if ($status !== 'all') {
+        $query .= " WHERE a.status = :status";
+    }
+
+    $query .= " ORDER BY a.schedule ASC
+                LIMIT :limit OFFSET :offset";
 
     $statement = $db->prepare($query);
-    $statement->bindValue(':limit', $perPage, PDO::PARAM_INT); // FIXED: was missing
+    if ($status !== 'all') {
+        $statement->bindValue(':status', $status);
+    }
+    $statement->bindValue(':limit', $perPage, PDO::PARAM_INT);
     $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     $statement->closeCursor();
+
     return $results;
 }
+
 
 function get_appointments($userID = null) {
     global $db;
@@ -58,18 +67,25 @@ function get_appointments($userID = null) {
     return $results;
 }
 
-// Fixed: Count only pending appointments to match the query filter
-function get_appointments_count()
-{
+function get_appointments_count($status = 'all') {
     global $db;
+    $query = "SELECT COUNT(*) FROM appointments";
 
-    $query = "SELECT COUNT(*) FROM appointments WHERE status = 'Pending'"; // FIXED: removed isArchived, added status filter
+    if ($status !== 'all') {
+        $query .= " WHERE status = :status";
+    }
+
     $statement = $db->prepare($query);
+    if ($status !== 'all') {
+        $statement->bindValue(':status', $status);
+    }
     $statement->execute();
     $count = $statement->fetchColumn();
     $statement->closeCursor();
+
     return $count;
 }
+
 
 function update_appointment($id, $schedule) {
     global $db;
@@ -126,4 +142,17 @@ function get_user_email_by_appointment_id($id) {
     $statement->closeCursor();
     return $result ? $result['email'] : null;
 }
+function check_pending_appointments($userID) {
+    global $db;
+    $query = "SELECT id FROM appointments 
+              WHERE userID = :userID AND status = 'Pending'
+              LIMIT 1";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':userID', $userID, PDO::PARAM_INT);
+    $statement->execute();
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    $statement->closeCursor();
+    return $result; // will be array OR false
+}
+
 ?>
