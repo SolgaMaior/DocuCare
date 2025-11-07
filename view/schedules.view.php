@@ -51,7 +51,7 @@ require('view/partials/sidebar.php');
                         <td><?= htmlspecialchars($app['purokID'] ?? '') ?></td>
                         <td><?= htmlspecialchars($app['schedule'] ?? '') ?></td>
                         <td><?= htmlspecialchars($app['status'] ?? '') ?></td>
-                        <td style="display:flex; gap:5px;">
+                        <td>
                             <?php if ($app['status'] === 'Pending'): ?>
                                 <form method="POST" action="index.php?page=schedules" style="margin:0;">
                                     <input type="hidden" name="appointment_id" value="<?= $app['id'] ?>">

@@ -324,4 +324,89 @@ function checkCitizenExists($firstname, $middlename, $lastname)
     $statement->closeCursor();
     return $count > 0;
 }
+
+function search_citizens($searchTerm, $purokID = 'all', $page = 1, $perPage = 15)
+{
+    global $db;
+    $offset = ($page - 1) * $perPage;
+    
+    // Prepare search pattern
+    $searchPattern = "%{$searchTerm}%";
+    
+    // Base query with search conditions
+    $baseWhere = "(firstname LIKE :search OR 
+                   middlename LIKE :search OR 
+                   lastname LIKE :search OR 
+                   contactnum LIKE :search OR 
+                   occupation LIKE :search)";
+    
+    // Add purok filter
+    if ($purokID === 'all') {
+        $whereClause = "$baseWhere AND isArchived = 0";
+    } elseif ($purokID === 'archived') {
+        $whereClause = "$baseWhere AND isArchived = 1";
+    } else {
+        $whereClause = "$baseWhere AND purokID = :purokID AND isArchived = 0";
+    }
+    
+    // Main query
+    $query = "SELECT citID, firstname, middlename, lastname, birth_date, sex, 
+              civilstatus, occupation, contactnum, purokID, isArchived,
+              TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) as age
+              FROM citizens 
+              WHERE $whereClause
+              ORDER BY lastname
+              LIMIT :limit OFFSET :offset";
+    
+    $statement = $db->prepare($query);
+    $statement->bindValue(':search', $searchPattern, PDO::PARAM_STR);
+    
+    if ($purokID !== 'all' && $purokID !== 'archived') {
+        $statement->bindValue(':purokID', $purokID, PDO::PARAM_INT);
+    }
+    
+    $statement->bindValue(':limit', $perPage, PDO::PARAM_INT);
+    $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $statement->execute();
+    
+    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $statement->closeCursor();
+    
+    return $result;
+}
+
+function get_search_count($searchTerm, $purokID = 'all')
+{
+    global $db;
+    
+    $searchPattern = "%{$searchTerm}%";
+    
+    $baseWhere = "(firstname LIKE :search OR 
+                   middlename LIKE :search OR 
+                   lastname LIKE :search OR 
+                   contactnum LIKE :search OR 
+                   occupation LIKE :search)";
+    
+    if ($purokID === 'all') {
+        $whereClause = "$baseWhere AND isArchived = 0";
+    } elseif ($purokID === 'archived') {
+        $whereClause = "$baseWhere AND isArchived = 1";
+    } else {
+        $whereClause = "$baseWhere AND purokID = :purokID AND isArchived = 0";
+    }
+    
+    $query = "SELECT COUNT(*) FROM citizens WHERE $whereClause";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':search', $searchPattern, PDO::PARAM_STR);
+    
+    if ($purokID !== 'all' && $purokID !== 'archived') {
+        $statement->bindValue(':purokID', $purokID, PDO::PARAM_INT);
+    }
+    
+    $statement->execute();
+    $count = $statement->fetchColumn();
+    $statement->closeCursor();
+    
+    return $count;
+}
 ?>

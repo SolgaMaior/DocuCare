@@ -608,21 +608,112 @@
   }
   
 
-  function filterTable() {
-    const searchValue = document.getElementById('searchInput').value.toLowerCase();
-    const rows = document.querySelectorAll("#citizenTableBody tr");
-
-    rows.forEach(row => {
-      const text = row.textContent.toLowerCase();
-      row.style.display = text.includes(searchValue) ? "" : "none";
-    });
-  }
-
   const alertMessage = document.getElementById('alertMessage');
   if (alertMessage) {
     setTimeout(() => {
       alertMessage.style.opacity = '0';
       setTimeout(() => alertMessage.remove(), 500);
     }, 3000);
+  }
+
+
+  let searchTimeout;
+  const searchInput = document.getElementById('searchInput');
+  const citizenTableBody = document.getElementById('citizenTableBody');
+
+  function performSearch() {
+    const searchTerm = searchInput.value.trim();
+    const purokID = document.getElementById('filter').value;
+    
+    // If search is empty, reload page to show normal results
+    if (searchTerm.length === 0) {
+      window.location.href = `index.php?page=records&purokID=${purokID}`;
+      return;
+    }
+    
+    // Only search if 2+ characters
+    if (searchTerm.length < 2) return;
+    
+    // Show loading state
+    citizenTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Searching...</td></tr>';
+    
+    fetch(`model/ajax/search_citizens.php?search=${encodeURIComponent(searchTerm)}&purokID=${purokID}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          citizenTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">${data.error}</td></tr>`;
+          return;
+        }
+        
+        if (data.citizens.length === 0) {
+          citizenTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No results found.</td></tr>';
+          return;
+        }
+        
+        // Build table rows
+        let html = '';
+        data.citizens.forEach(citizen => {
+          html += `
+            <tr>
+              <td style="display: flex; justify-content: center; align-items: center;">
+                <img src="model/record_file_func/display_image.php?citID=${citizen.citID}"
+                    alt="Profile"
+                    onerror="this.src='resources/defaultprofile.png'">
+              </td>
+              <td>${escapeHtml(citizen.lastname)}</td>
+              <td>${escapeHtml(citizen.firstname)}</td>
+              <td>${escapeHtml(citizen.middlename || '')}</td>
+              <td>${escapeHtml(citizen.purokID || '')}</td>
+              <td>
+                <form method="POST" action="" style="display: inline;">
+                  <input type="hidden" name="action" value="${citizen.isArchived == 1 ? 'unarchive_citizen' : 'archive_citizen'}">
+                  <input type="hidden" name="citID" value="${citizen.citID}">
+                  <button type="submit" class="btn btn-outline"
+                    onclick="return confirm('${citizen.isArchived == 1 ? 'Remove from archive?' : 'Archive this record?'}');">
+                    ${citizen.isArchived == 1 ? 'Unarchive' : 'Archive'}
+                  </button>
+                  <button type="button" class="btn btn-outline" onclick="showEditForm(${citizen.citID})">Edit</button>
+                  <button type="button" class="btn btn-outline" onclick="showViewForm(${citizen.citID})">View</button>
+                </form>
+              </td>
+            </tr>
+          `;
+        });
+        
+        citizenTableBody.innerHTML = html;
+        
+        // Update pagination info if you have one
+        const pageInfo = document.querySelector('.page-info');
+        if (pageInfo) {
+          pageInfo.textContent = `Found ${data.total} result${data.total !== 1 ? 's' : ''}`;
+        }
+      })
+      .catch(error => {
+        console.error('Search error:', error);
+        citizenTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Search failed. Please try again.</td></tr>';
+      });
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Debounced search on input
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(performSearch, 500);
+    });
+    
+    // // Immediate search on Enter key
+    // searchInput.addEventListener('keypress', function(e) {
+    //   if (e.key === 'Enter') {
+    //     e.preventDefault();
+    //     clearTimeout(searchTimeout);
+    //     performSearch();
+    //   }
+    // });
   }
 </script>

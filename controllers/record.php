@@ -177,9 +177,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get filter and pagination parameters
+// ============================================================================
+// REPLACE EVERYTHING BELOW THIS LINE WITH THE NEW CODE
+// ============================================================================
+
+// Get filter, pagination, and search parameters
 $purokID = $_GET['purokID'] ?? 'all';
 $page = filter_input(INPUT_GET, 'paging', FILTER_VALIDATE_INT) ?: 1;
+$searchTerm = trim($_GET['search'] ?? '');
 $perPage = 15;
 
 // Get all illnesses for the form
@@ -187,21 +192,35 @@ $illnesses = get_all_illnesses();
 
 // Handle different views based on user type
 if(CURRENT_USER_IS_ADMIN){
-    // For admins: Support pagination for both regular and archived views
-    if ($purokID === 'archived') {
-        $citizens = get_archived_citizens($page, $perPage);
-        $totalCitizens = get_archived_citizens_count();
+    // Check if we're searching
+    if (!empty($searchTerm)) {
+        // Search mode
+        $citizens = search_citizens($searchTerm, $purokID, $page, $perPage);
+        $totalCitizens = get_search_count($searchTerm, $purokID);
     } else {
-        $citizens = get_citizens_by_purok($purokID, $page, $perPage);
-        $totalCitizens = get_citizens_count($purokID);
+        // Normal mode - paginated view
+        if ($purokID === 'archived') {
+            $citizens = get_archived_citizens($page, $perPage);
+            $totalCitizens = get_archived_citizens_count();
+        } else {
+            $citizens = get_citizens_by_purok($purokID, $page, $perPage);
+            $totalCitizens = get_citizens_count($purokID);
+        }
     }
     
     $totalPages = ceil($totalCitizens / $perPage);
     require_once('view/record.view.php');
 } else { 
     // For regular users: Load both active and archived citizens (no pagination)
-    $activeCitizens = get_citizens_by_purok($purokID);
-    $archivedCitizens = get_archived_citizens();
-    $citizens = array_merge($activeCitizens, $archivedCitizens);
+    if (!empty($searchTerm)) {
+        // For non-admin users, search without pagination
+        $activeCitizens = search_citizens($searchTerm, $purokID);
+        $archivedCitizens = []; // or search archived if needed
+        $citizens = array_merge($activeCitizens, $archivedCitizens);
+    } else {
+        $activeCitizens = get_citizens_by_purok($purokID);
+        $archivedCitizens = get_archived_citizens();
+        $citizens = array_merge($activeCitizens, $archivedCitizens);
+    }
     require_once('view/user_record.view.php');
 }

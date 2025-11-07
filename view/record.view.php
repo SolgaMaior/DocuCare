@@ -25,17 +25,35 @@ require('view/partials/sidebar.php');
 
 
   <div class="content">
-    <div class="header">
-    </div>
 
     <div class="top-bar" id="top-controls">
       <div class="search-box">
-        <input type="text" placeholder="Search..." id="searchInput" onkeyup="filterTable()">
+        <form method="GET" action="index.php" id="searchForm">
+          <input type="hidden" name="page" value="records">
+          <input type="hidden" name="purokID" value="<?= htmlspecialchars($purokID) ?>">
+          <input 
+            type="text" 
+            name="search" 
+            placeholder="Search by name, contact, occupation..." 
+            id="searchInput" 
+            value="<?= htmlspecialchars($searchTerm ?? '') ?>"
+            autocomplete="off"
+          >
+          <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Search</button>
+          <?php if (!empty($searchTerm)): ?>
+            <a href="index.php?page=records&purokID=<?= htmlspecialchars($purokID) ?>" 
+              class="btn btn-outline" 
+              style="margin-left: 10px;">Clear Search</a>
+          <?php endif; ?>
+        </form>
       </div>
 
       <div class="controls">
         <form method="GET" action="index.php">
           <input type="hidden" name="page" value="records">
+          <?php if (!empty($searchTerm)): ?>
+            <input type="hidden" name="search" value="<?= htmlspecialchars($searchTerm) ?>">
+          <?php endif; ?>
           <select id="filter" name="purokID" onchange="this.form.submit()">
             <option value="all" <?= $purokID === 'all' ? 'selected' : '' ?>>All Puroks</option>
             <?php for ($i = 1; $i <= 5; $i++): ?>
@@ -47,6 +65,22 @@ require('view/partials/sidebar.php');
         <button class="btn btn-primary" style="height: 42px;" onclick="showForm()">+ Add Record</button>
       </div>
     </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        
+        if (searchInput && searchForm) {
+          searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              searchForm.submit();
+            }
+          });
+        }
+      });
+    </script>
 
  
     <div id="records-section">
@@ -108,19 +142,35 @@ require('view/partials/sidebar.php');
           justify-content: center;
           gap: 1rem;
       ">
+          <?php 
+          // Build the query string
+          $queryParams = [
+              'page' => 'records',
+              'purokID' => $purokID
+          ];
+          if (!empty($searchTerm)) {
+              $queryParams['search'] = $searchTerm;
+          }
+          
+          $queryString = http_build_query($queryParams);
+          ?>
+          
           <?php if ($page > 1): ?>
-              <a href="?page=records&purokID=<?= $purokID ?>&paging=<?= $page - 1 ?>" 
+              <a href="?<?= $queryString ?>&paging=<?= $page - 1 ?>" 
                 class="btn btn-outline pagination-btn">← Previous</a>
           <?php else: ?>
               <button class="btn btn-outline pagination-btn" disabled>← Previous</button>
           <?php endif; ?>
 
           <span class="page-info">
-              Page <?= $page ?> of <?= $totalPages ?> 
+              Page <?= $page ?> of <?= $totalPages ?>
+              <?php if (!empty($searchTerm)): ?>
+                  (Searching: "<?= htmlspecialchars($searchTerm) ?>")
+              <?php endif; ?>
           </span>
 
           <?php if ($page < $totalPages): ?>
-              <a href="?page=records&purokID=<?= $purokID ?>&paging=<?= $page + 1 ?>" 
+              <a href="?<?= $queryString ?>&paging=<?= $page + 1 ?>" 
                 class="btn btn-outline pagination-btn">Next →</a>
           <?php else: ?>
               <button class="btn btn-outline pagination-btn" disabled>Next →</button>
