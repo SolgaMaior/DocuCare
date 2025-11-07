@@ -39,7 +39,7 @@ try {
 $lowStockItems = [];
 foreach ($inventory as $item) {
     if ($item['stock'] < 10) {
-        $lowStockItems[] = $item['name'] . " (" . $item['stock'] . ")";
+        $lowStockItems[] = $item['name'];
     }
 }
 
