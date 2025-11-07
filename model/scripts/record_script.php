@@ -617,26 +617,36 @@
   }
 
 
-  let searchTimeout;
+
+
+
+  const searchForm = document.getElementById('searchForm');
   const searchInput = document.getElementById('searchInput');
   const citizenTableBody = document.getElementById('citizenTableBody');
+  const searchBox = document.querySelector('.search-box');
 
-  function performSearch() {
+  function performSearch(e) {
+    e.preventDefault();
     const searchTerm = searchInput.value.trim();
     const purokID = document.getElementById('filter').value;
-    
-    // If search is empty, reload page to show normal results
+
     if (searchTerm.length === 0) {
       window.location.href = `index.php?page=records&purokID=${purokID}`;
       return;
     }
-    
-    // Only search if 2+ characters
-    if (searchTerm.length < 2) return;
-    
-    // Show loading state
-    citizenTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Searching...</td></tr>';
-    
+
+    // Add Clear Search button dynamically if missing
+    if (!document.getElementById('clearSearchBtn')) {
+      const clearBtn = document.createElement('a');
+      clearBtn.href = `index.php?page=records&purokID=${purokID}`;
+      clearBtn.textContent = 'Clear Search';
+      clearBtn.className = 'btn btn-outline';
+      clearBtn.id = 'clearSearchBtn';
+      clearBtn.style.marginLeft = '10px';
+      searchBox.querySelector('form').appendChild(clearBtn);
+    }
+
+    // Continue with your fetch search...
     fetch(`model/ajax/search_citizens.php?search=${encodeURIComponent(searchTerm)}&purokID=${purokID}`)
       .then(response => response.json())
       .then(data => {
@@ -644,13 +654,13 @@
           citizenTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">${data.error}</td></tr>`;
           return;
         }
-        
+
         if (data.citizens.length === 0) {
           citizenTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No results found.</td></tr>';
           return;
         }
-        
-        // Build table rows
+
+        // Build table rows (same as before)
         let html = '';
         data.citizens.forEach(citizen => {
           html += `
@@ -679,14 +689,8 @@
             </tr>
           `;
         });
-        
+
         citizenTableBody.innerHTML = html;
-        
-        // Update pagination info if you have one
-        const pageInfo = document.querySelector('.page-info');
-        if (pageInfo) {
-          pageInfo.textContent = `Found ${data.total} result${data.total !== 1 ? 's' : ''}`;
-        }
       })
       .catch(error => {
         console.error('Search error:', error);
@@ -694,26 +698,77 @@
       });
   }
 
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+  if (searchForm) {
+    searchForm.addEventListener('submit', performSearch);
   }
 
-  // Debounced search on input
+
   if (searchInput) {
-    searchInput.addEventListener('input', function() {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(performSearch, 500);
+    searchInput.addEventListener('input', () => {
+      const purokID = document.getElementById('filter').value;
+      if (searchInput.value.trim().length === 0) {
+        window.location.href = `index.php?page=records&purokID=${purokID}`;
+      }
     });
-    
-    // // Immediate search on Enter key
-    // searchInput.addEventListener('keypress', function(e) {
-    //   if (e.key === 'Enter') {
-    //     e.preventDefault();
-    //     clearTimeout(searchTimeout);
-    //     performSearch();
-    //   }
-    // });
   }
+
+  const clearSearchBtn = document.querySelector('.btn.btn-outline[href*="Clear"]');
+
+  if (clearSearchBtn) {
+    clearSearchBtn.addEventListener('click', function (e) {
+      e.preventDefault(); // stop page reload
+      searchInput.value = '';
+      const purokID = document.getElementById('filter').value;
+
+      // Show loading indicator
+      citizenTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Loading all records...</td></tr>';
+
+      // Fetch and restore default (non-searched) list
+      fetch(`model/ajax/get_citizens.php?purokID=${purokID}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.citizens.length === 0) {
+            citizenTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No records found.</td></tr>';
+            return;
+          }
+
+          let html = '';
+          data.citizens.forEach(citizen => {
+            html += `
+              <tr>
+                <td style="display: flex; justify-content: center; align-items: center;">
+                  <img src="model/record_file_func/display_image.php?citID=${citizen.citID}"
+                      alt="Profile"
+                      onerror="this.src='resources/defaultprofile.png'">
+                </td>
+                <td>${escapeHtml(citizen.lastname)}</td>
+                <td>${escapeHtml(citizen.firstname)}</td>
+                <td>${escapeHtml(citizen.middlename || '')}</td>
+                <td>${escapeHtml(citizen.purokID || '')}</td>
+                <td>
+                  <form method="POST" action="" style="display: inline;">
+                    <input type="hidden" name="action" value="${citizen.isArchived == 1 ? 'unarchive_citizen' : 'archive_citizen'}">
+                    <input type="hidden" name="citID" value="${citizen.citID}">
+                    <button type="submit" class="btn btn-outline"
+                      onclick="return confirm('${citizen.isArchived == 1 ? 'Remove from archive?' : 'Archive this record?'}');">
+                      ${citizen.isArchived == 1 ? 'Unarchive' : 'Archive'}
+                    </button>
+                    <button type="button" class="btn btn-outline" onclick="showEditForm(${citizen.citID})">Edit</button>
+                    <button type="button" class="btn btn-outline" onclick="showViewForm(${citizen.citID})">View</button>
+                  </form>
+                </td>
+              </tr>
+            `;
+          });
+
+          citizenTableBody.innerHTML = html;
+        })
+        .catch(error => {
+          console.error('Error clearing search:', error);
+          citizenTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Failed to reload records.</td></tr>';
+        });
+    });
+  }
+
+
 </script>

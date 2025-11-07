@@ -175,6 +175,12 @@ td {
   color: #fff;
 }
 
+.btn-blue {
+  background: #fff;
+  border: 1px solid #41a8e8;
+  color: #41a8e8;
+}
+
 .btn-outline {
   background: #fff;
   border: 1px solid #41a8e8;

@@ -34,15 +34,15 @@ require('view/partials/sidebar.php');
           <input 
             type="text" 
             name="search" 
-            placeholder="Search by name, contact, occupation..." 
+            placeholder="Search" 
             id="searchInput" 
             value="<?= htmlspecialchars($searchTerm ?? '') ?>"
             autocomplete="off"
           >
-          <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Search</button>
+          <button type="submit" class="btn btn-outline" style="margin-left: 10px;">Search</button>
           <?php if (!empty($searchTerm)): ?>
-            <a href="index.php?page=records&purokID=<?= htmlspecialchars($purokID) ?>" 
-              class="btn btn-outline" 
+            <a href="index.php?page=records&purokID=<?= htmlspecialchars($purokID) ?>"
+            class="btn btn-outline"
               style="margin-left: 10px;">Clear Search</a>
           <?php endif; ?>
         </form>
@@ -66,21 +66,6 @@ require('view/partials/sidebar.php');
       </div>
     </div>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('searchInput');
-        const searchForm = document.getElementById('searchForm');
-        
-        if (searchInput && searchForm) {
-          searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              searchForm.submit();
-            }
-          });
-        }
-      });
-    </script>
 
  
     <div id="records-section">

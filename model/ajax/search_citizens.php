@@ -1,5 +1,4 @@
 <?php
-// Create a new file: model/ajax/search_citizens.php
 
 require_once('../databases/db_con.php');
 require_once('../databases/citizensdb.php');
