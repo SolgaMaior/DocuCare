@@ -1,34 +1,35 @@
-#maincontainer{
-    margin-left: 17rem;
-    margin-top: 2rem;
-    width: 100rem;
+#maincontainer {
+  margin-left: 17rem;
+  margin-top: 2rem;
+  width: 100rem;
 }
 
-#uppercard{
-    width: 90rem;
-    height: 12rem;
-    border-radius: 15px;
-    margin-left: 24rem;
-    margin-top: 3rem;
-    background: linear-gradient(120deg, #4fa7e6, #007acc);
+#uppercard {
+  width: 90rem;
+  height: 12rem;
+  border-radius: 15px;
+  margin-left: 24rem;
+  margin-top: 3rem;
+  background: linear-gradient(120deg, #4fa7e6, #007acc);
 
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
-.uppercardcon{
-    width: 29rem;
-    height: 10rem;
-    background-color: #c8e8ff;
-    border: 2px solid rgb(67, 129, 158);
-    margin-top: .9rem;
-}
-
-.uppercardcon h2, p{
-    margin-left: 1rem;
+.uppercardcon {
+  width: 29rem;
+  height: 10rem;
+  background-color: #c8e8ff;
+  border: 2px solid rgb(67, 129, 158);
+  margin-top: 0.9rem;
 }
 
-.uppercardpar{
-    font-size: 40px;
+.uppercardcon h2,
+p {
+  margin-left: 1rem;
+}
+
+.uppercardpar {
+  font-size: 40px;
 }
 
 /* Enhanced Map Styles */
@@ -36,7 +37,7 @@
   background: white;
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   max-width: 200px;
 }
 
@@ -50,4 +51,59 @@
 .purok-label {
   background: none !important;
   border: none !important;
+}
+
+.date-filter-container {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #dee2e6;
+}
+.date-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.date-filter-row label {
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+}
+.date-filter-row input[type="date"] {
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.date-filter-row button {
+  padding: 6px 15px;
+  font-size: 14px;
+}
+.quick-filters {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.quick-filters button {
+  padding: 5px 12px;
+  font-size: 13px;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.quick-filters button:hover {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+#date-filter-info {
+  font-size: 13px;
+  color: #6c757d;
+  margin-top: 8px;
+  font-style: italic;
 }
