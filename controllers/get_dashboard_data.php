@@ -9,8 +9,8 @@ try {
     require_once(__DIR__ . '/../model/databases/citizensdb.php');
     
     // Get date range from query parameters
-    $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : null;
-    $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : null;
+    $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d', strtotime('-30 days'));
+    $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d');
     
     // Validate date format if provided
     if ($start_date && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $start_date)) {

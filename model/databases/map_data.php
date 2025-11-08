@@ -29,7 +29,7 @@ function get_map_data_cached($start_date = null, $end_date = null) {
 
 function get_fresh_cluster_data($db, $start_date = null, $end_date = null) {
     try {
-        // Build the WHERE clause for date filtering
+       
         $date_condition = '';
         $params = [];
         
@@ -60,15 +60,15 @@ function get_fresh_cluster_data($db, $start_date = null, $end_date = null) {
         GROUP BY p.purokName
         ORDER BY p.purokName";
         
-        $stmt = $db->prepare($sql);
+        $statement = $db->prepare($sql);
         
         // Bind parameters if they exist
         foreach ($params as $key => $value) {
-            $stmt->bindValue($key, $value);
+            $statement->bindValue($key, $value);
         }
         
-        $stmt->execute();
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $statement->execute();
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
         
         if (empty($data)) {
             error_log("No purok data found for date range: $start_date to $end_date");
