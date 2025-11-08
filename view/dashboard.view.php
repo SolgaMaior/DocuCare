@@ -7,17 +7,11 @@
   <link rel="stylesheet" href="styles/dashboard.css">
   <link rel="icon" type="image/svg" href="resources/images/Logo.svg">
   <title>Dashboard</title>
-  
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  
-  <!-- Bootstrap & Other CSS -->
   <link rel="stylesheet" href="resources/dashboardassets/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
   <link rel="stylesheet" href="resources/dashboardassets/css/ready.css">
   <link rel="stylesheet" href="resources/dashboardassets/css/demo.css">
-  
-  <!-- Preload center map tile -->
   <link rel="preload" as="image" href="https://a.tile.openstreetmap.org/14/13421/7468.png">
 </head>
 
@@ -61,7 +55,7 @@
                 </div>
                 <div class="col-7 d-flex align-items-center">
                   <div class="numbers">
-                    <p class="card-category">Illness Count this Month</p>
+                    <p class="card-category">Illness Count</p>
                     <h4 class="card-title" id="total-illness">
                       <span class="spinner-border spinner-border-sm"></span>
                     </h4>
@@ -128,14 +122,37 @@
               <h4 class="card-title">Map of the Barangay</h4>
               <p class="card-category">
                 See the current status in your area
-                <?php if (CURRENT_USER_IS_ADMIN): ?>
-                  <button onclick="refreshClusters()" class="btn btn-sm btn-primary float-right h-8">
+                  <button onclick="refreshClusters()" class="btn btn-sm btn-primary float-right">
                     <i class="la la-refresh"></i> Refresh Clusters
                   </button>
-                <?php endif; ?>
               </p>
             </div>
             <div class="card-body">
+              <!-- Date Range Filter -->
+              <div class="date-filter-container">
+                <div class="date-filter-row">
+                  <label><i class="la la-calendar"></i> Date Range:</label>
+                  <input type="date" id="filter-start-date" />
+                  <span>to</span>
+                  <input type="date" id="filter-end-date" />
+                  <button class="btn btn-sm btn-primary" onclick="applyDateFilter()">
+                    <i class="la la-filter"></i> Apply Filter
+                  </button>
+                  <button class="btn btn-sm btn-secondary" onclick="resetDateFilter()">
+                    <i class="la la-undo"></i> Reset
+                  </button>
+                </div>
+                <div class="quick-filters">
+                  <span style="font-size: 13px; color: #6c757d; margin-right: 5px;">Quick select:</span>
+                  <button onclick="setQuickDateRange(7)">Last 7 days</button>
+                  <button onclick="setQuickDateRange(30)">Last 30 days</button>
+                  <button onclick="setQuickDateRange(90)">Last 3 months</button>
+                  <button onclick="setQuickDateRange(180)">Last 6 months</button>
+                  <button onclick="setQuickDateRange(365)">Last year</button>
+                </div>
+                <div id="date-filter-info">Showing last 30 days</div>
+              </div>
+              
               <div class="mapcontainer">
                 <div id="map" style="height:50vh; width: 100%; border-radius: 10px; border: 3px solid #4fa7e6;"></div>
               </div>

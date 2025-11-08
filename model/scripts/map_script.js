@@ -168,7 +168,7 @@ function initEnhancedMap(purokData) {
       fillOpacity: 0.1,
     })
       .addTo(mapInstance)
-      .bindPopup("<b>Barangay Pinanggalingan</b>");
+      .bindPopup("<b>Barangay Santiago</b>");
 
     markersLayer = L.layerGroup().addTo(mapInstance);
   } else {
@@ -312,7 +312,7 @@ function addClusterLegendToMap() {
     div.style.fontSize = "13px";
 
     let html =
-      '<h4 style="margin:0 0 10px 0;font-size:14px;border-bottom:2px solid #4fa7e6;padding-bottom:8px;">Disease Clusters</h4>';
+      '<h4 style="margin:0 0 10px 0;font-size:14px;border-bottom:2px solid #4fa7e6;padding-bottom:8px;">Illness Clusters</h4>';
 
     const sortedClusters = Object.keys(clusterData).sort((a, b) => {
       if (a == -1) return 1; // Put outliers last
