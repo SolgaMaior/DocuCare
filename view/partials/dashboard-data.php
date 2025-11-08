@@ -9,11 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('total-illness').textContent = data.stats.total_illness_records;
       document.getElementById('total-citizens').textContent = data.stats.total_citizens;
       document.getElementById('total-pending').textContent = data.stats.total_pending_accounts;
-      
-      // Initialize pie chart
+
       initPieChart(data.pie);
       
-      // Initialize map
+
       initMap(data.map);
     })
     .catch(err => {

@@ -425,5 +425,110 @@ function refreshClusters() {
     });
 }
 
-// Make highlightCluster available globally for onclick in legend
+
+
+const currentDateRange = { start: null, end: null };
+
+function initializeDateFilter() {
+  // Set default date range (last 30 days)
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - 30);
+  
+  const startInput = document.getElementById('filter-start-date');
+  const endInput = document.getElementById('filter-end-date');
+  
+  if (startInput && endInput) {
+    startInput.value = formatDateForInput(startDate);
+    endInput.value = formatDateForInput(endDate);
+    
+    currentDateRange.start = formatDateForInput(startDate);
+    currentDateRange.end = formatDateForInput(endDate);
+  }
+}
+
+function formatDateForInput(date) {
+  return date.toISOString().split('T')[0];
+}
+
+
+
+
+
+function applyDateFilter() {
+  const startInput = document.getElementById('filter-start-date');
+  const endInput = document.getElementById('filter-end-date');
+  
+  if (!startInput || !endInput) return;
+  
+  const startDate = startInput.value;
+  const endDate = endInput.value;
+  
+  // Validation
+  if (!startDate || !endDate) {
+    alert('Please select both start and end dates');
+    return;
+  }
+  
+  if (new Date(startDate) > new Date(endDate)) {
+    alert('Start date must be before end date');
+    return;
+  }
+  
+  currentDateRange.start = startDate;
+  currentDateRange.end = endDate;
+  
+  // Update display text
+  const filterInfo = document.getElementById('date-filter-info');
+  if (filterInfo) {
+    filterInfo.textContent = `Showing data from ${startDate} to ${endDate}`;
+  }
+  
+
+}
+
+function resetDateFilter() {
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - 30);
+  
+  const startInput = document.getElementById('filter-start-date');
+  const endInput = document.getElementById('filter-end-date');
+  
+  if (startInput && endInput) {
+    startInput.value = formatDateForInput(startDate);
+    endInput.value = formatDateForInput(endDate);
+  }
+  
+  currentDateRange.start = formatDateForInput(startDate);
+  currentDateRange.end = formatDateForInput(endDate);
+  
+  const filterInfo = document.getElementById('date-filter-info');
+  if (filterInfo) {
+    filterInfo.textContent = 'Showing this months data';
+  }
+  
+}
+
+function setQuickDateRange(days) {
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+  
+  const startInput = document.getElementById('filter-start-date');
+  const endInput = document.getElementById('filter-end-date');
+  
+  if (startInput && endInput) {
+    startInput.value = formatDateForInput(startDate);
+    endInput.value = formatDateForInput(endDate);
+  }
+  
+  applyDateFilter();
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  initializeDateFilter();
+});
+
 window.highlightCluster = highlightCluster;

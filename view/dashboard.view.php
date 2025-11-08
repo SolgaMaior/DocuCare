@@ -129,30 +129,26 @@
             </div>
             <div class="card-body">
               <!-- Date Range Filter -->
-              <div class="date-filter-container">
-                <div class="date-filter-row">
+              <div class="date-filter-container mb-3">
+                <div class="date-filter-row d-flex align-items-center gap-2">
                   <label><i class="la la-calendar"></i> Date Range:</label>
-                  <input type="date" id="filter-start-date" />
+                  <input type="date" id="filter-start-date" class="form-control form-control-sm" style="width: 160px;">
                   <span>to</span>
-                  <input type="date" id="filter-end-date" />
-                  <button class="btn btn-sm btn-primary" onclick="applyDateFilter()">
-                    <i class="la la-filter"></i> Apply Filter
+                  <input type="date" id="filter-end-date" class="form-control form-control-sm" style="width: 160px;">
+                  <button onclick="applyDateFilter()" class="btn btn-sm btn-primary ml-2">
+                    <i class="la la-filter"></i> Apply
                   </button>
-                  <button class="btn btn-sm btn-secondary" onclick="resetDateFilter()">
+                  <button onclick="resetDateFilter()" class="btn btn-sm btn-secondary ml-1">
                     <i class="la la-undo"></i> Reset
                   </button>
+                  <div class="btn-group ml-3">
+                    <button class="btn btn-sm btn-outline-info" onclick="setQuickDateRange(7)">Last 7 Days</button>
+                    <button class="btn btn-sm btn-outline-info" onclick="setQuickDateRange(30)">Last 30 Days</button>
+                    <button class="btn btn-sm btn-outline-info" onclick="setQuickDateRange(90)">Last 3 Months</button>
+                  </div>
                 </div>
-                <div class="quick-filters">
-                  <span style="font-size: 13px; color: #6c757d; margin-right: 5px;">Quick select:</span>
-                  <button onclick="setQuickDateRange(7)">Last 7 days</button>
-                  <button onclick="setQuickDateRange(30)">Last 30 days</button>
-                  <button onclick="setQuickDateRange(90)">Last 3 months</button>
-                  <button onclick="setQuickDateRange(180)">Last 6 months</button>
-                  <button onclick="setQuickDateRange(365)">Last year</button>
-                </div>
-                <div id="date-filter-info">Showing last 30 days</div>
+                <div id="date-filter-info" class="text-muted mt-1 small">Showing this month's data</div>
               </div>
-              
               <div class="mapcontainer">
                 <div id="map" style="height:50vh; width: 100%; border-radius: 10px; border: 3px solid #4fa7e6;"></div>
               </div>
