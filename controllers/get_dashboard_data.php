@@ -1,13 +1,10 @@
 <?php
-// Prevent HTML errors from appearing in JSON response
 error_reporting(0);
 ini_set('display_errors', 0);
-// Set JSON header FIRST
 header('Content-Type: application/json');
 session_start();
 
 try {
-    // Include files
     require_once(__DIR__ . '/../model/databases/map_data.php');
     require_once(__DIR__ . '/../model/databases/citizensdb.php');
     
@@ -27,7 +24,7 @@ try {
     $data = [
         'stats' => get_dashboard_stats(),
         'pie' => get_pie_data(),
-        'map' => get_map_data_cached($start_date, $end_date), // Pass date parameters
+        'map' => get_map_data_cached($start_date, $end_date),
         'date_range' => [
             'start' => $start_date,
             'end' => $end_date
