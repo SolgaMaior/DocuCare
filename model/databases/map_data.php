@@ -5,8 +5,9 @@ require_once('db_con.php');
 function get_map_data_cached($start_date = null, $end_date = null) {
     global $db;
     
-
-    $cache_file = __DIR__ . '/../../cache/map_clusters.json';
+    // Create cache key based on date range
+    $cache_key = $start_date && $end_date ? md5($start_date . $end_date) : 'default';
+    $cache_file = __DIR__ . '/../../cache/map_clusters_' . $cache_key . '.json';
     $cache_time = 300; // 5 minutes
     
     if (file_exists($cache_file) && (time() - filemtime($cache_file) < $cache_time)) {

@@ -325,29 +325,65 @@ require('view/partials/sidebar.php');
           </div>
 
           <script>
-            function generateDiagnosis(citizenID, firstname, middlename, lastname) {
-              const symptoms = document.getElementById('medicalCondition').value.trim();
-              const notes = document.getElementById('medicalNotes').value.trim();
-              
-              if (!symptoms) {
-                  alert('Please enter symptoms before generating diagnosis.');
-                  document.getElementById('medicalCondition').focus();
-                  return;
+
+            document.addEventListener('DOMContentLoaded', function() {
+              const birthDateInput = document.getElementById('birthDate');
+              if (birthDateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                birthDateInput.setAttribute('max', today);
               }
-              
-              let url = 'index.php?page=diagnosis';
-              url += '&symptoms=' + encodeURIComponent(symptoms);
-              
-              if (notes) {
-                  url += '&additional_description=' + encodeURIComponent(notes);
-              }
-              
-              if (citizenID) {
-                  url += '&citID=' + citizenID;
-              }
-              
-              window.location.href = url;
+            });
+
+
+            function generateDiagnosis(citizenID) {
+            const symptoms = document.getElementById('medicalCondition').value.trim();
+            const notes = document.getElementById('medicalNotes').value.trim();
+            const diagButton = document.getElementById('diagButton');
+            
+            if (!symptoms) {
+              alert('Please enter symptoms before generating diagnosis.');
+              document.getElementById('medicalCondition').focus();
+              return;
             }
+            
+            // Save original button state
+            const originalHTML = diagButton.innerHTML;
+            
+            // Show loading state
+            diagButton.innerHTML = '<span class="spinner"></span>...';
+            diagButton.disabled = true;
+            diagButton.style.cursor = 'not-allowed';
+            diagButton.style.opacity = '0.7';
+            
+            // Disable form inputs during loading
+            document.getElementById('medicalCondition').disabled = true;
+            document.getElementById('medicalNotes').disabled = true;
+            
+            // Build URL with parameters
+            let url = 'index.php?page=diagnosis';
+            url += '&symptoms=' + encodeURIComponent(symptoms);
+            
+            if (notes) {
+              url += '&additional_description=' + encodeURIComponent(notes);
+            }
+            
+            if (citizenID) {
+              url += '&citID=' + citizenID;
+            }
+            
+            // Navigate to diagnosis page
+            window.location.href = url;
+            
+            // Fallback: Re-enable button if navigation fails (shouldn't happen normally)
+            setTimeout(() => {
+              diagButton.innerHTML = originalHTML;
+              diagButton.disabled = false;
+              diagButton.style.cursor = 'pointer';
+              diagButton.style.opacity = '1';
+              document.getElementById('medicalCondition').disabled = false;
+              document.getElementById('medicalNotes').disabled = false;
+            }, 5000);
+          }
           </script>
 
           <div class="actions" style="margin-top: 1rem;">

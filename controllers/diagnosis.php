@@ -4,10 +4,7 @@
 require_once('model/record_file_func/diagnosis_api.php');
 require_once('model/databases/db_con.php');
 
-if (!CURRENT_USER_IS_ADMIN) {
-    header('HTTP/1.1 403 Forbidden');
-    exit('Access denied');
-}
+
 
 // Initialize variables
 $diagnosisResults = null;
@@ -26,8 +23,6 @@ $lastname = '';
 
 
 
-
-// Get data from URL parameters (passed from records page)
 if (isset($_GET['symptoms'])) {
     $symptoms = trim($_GET['symptoms']);
     $additionalDescription = trim($_GET['additional_description'] ?? '');

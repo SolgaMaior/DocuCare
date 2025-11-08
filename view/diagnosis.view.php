@@ -128,25 +128,6 @@
                         </div>
                     <?php endforeach; ?>
                 </div>
-
-                <!-- Metadata -->
-                <div class="metadata-card">
-                    <h4>Analysis Information</h4>
-                    <div class="metadata-content">
-                        <div class="metadata-item">
-                            Model: <strong><?php echo htmlspecialchars($diagnosisResults['data']['model']); ?></strong>
-                        </div>
-                        <div class="metadata-item">
-                            Language: <strong><?php echo htmlspecialchars($diagnosisResults['data']['detectedLang']); ?></strong>
-                        </div>
-                        <div class="metadata-item">
-                            Query Type: <strong><?php echo htmlspecialchars($diagnosisResults['data']['queryType']); ?></strong>
-                        </div>
-                        <div class="metadata-item">
-                            Generated: <strong><?php echo date('F j, Y g:i A'); ?></strong>
-                        </div>
-                    </div>
-                </div>
             </div>
         <?php elseif (empty($error) && empty($symptoms)): ?>
             <!-- No Input Provided -->
