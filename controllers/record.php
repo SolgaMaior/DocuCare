@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $symptoms = trim(filter_input(INPUT_POST, 'medical_condition') ?? '');
         $additionalDescription = trim(filter_input(INPUT_POST, 'medical_notes') ?? '');
 
-        if (empty($symptoms)) {
+        if (empty($symptoms) && empty($additionalDescription)) {
             $diagnosisResults = [
                 'success' => false,
                 'error' => 'Please enter symptoms to generate diagnosis.'
@@ -130,14 +130,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             add_illness_record($targetCitizenID, $purokID, $common_illness_id);
         }
 
+
         // Handle diagnosis/symptoms storage
         $symptoms = trim(filter_input(INPUT_POST, 'medical_condition') ?? '');
         $description = trim(filter_input(INPUT_POST, 'medical_notes') ?? '');
-        
-        if (empty($symptoms)) {
-            add_diagnosis($targetCitizenID, $symptoms, $description);
-        } else {
-            update_diagnosis($targetCitizenID, $symptoms, $description);
+
+        // Only save if symptoms or description is provided
+        if (!empty($symptoms) || !empty($description)) {
+            // Check if citizen already has a diagnosis
+            $existingDiagnoses = getdiagnoses($targetCitizenID);
+            
+            if (!empty($existingDiagnoses)) {
+                // Update the most recent diagnosis
+                $latestDiagnosis = end($existingDiagnoses);
+                update_diagnosis($latestDiagnosis['diagID'], $symptoms, $description);
+            } else {
+                // Create new diagnosis
+                add_diagnosis($targetCitizenID, $symptoms, $description);
+            }
         }
 
         $redirectPurok = $_GET['purokID'] ?? 'all';
@@ -177,11 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// ============================================================================
-// REPLACE EVERYTHING BELOW THIS LINE WITH THE NEW CODE
-// ============================================================================
 
-// Get filter, pagination, and search parameters
 $purokID = $_GET['purokID'] ?? 'all';
 $page = filter_input(INPUT_GET, 'paging', FILTER_VALIDATE_INT) ?: 1;
 $searchTerm = trim($_GET['search'] ?? '');
@@ -198,7 +204,6 @@ if(CURRENT_USER_IS_ADMIN){
         $citizens = search_citizens($searchTerm, $purokID, $page, $perPage);
         $totalCitizens = get_search_count($searchTerm, $purokID);
     } else {
-        // Normal mode - paginated view
         if ($purokID === 'archived') {
             $citizens = get_archived_citizens($page, $perPage);
             $totalCitizens = get_archived_citizens_count();
@@ -211,11 +216,10 @@ if(CURRENT_USER_IS_ADMIN){
     $totalPages = ceil($totalCitizens / $perPage);
     require_once('view/record.view.php');
 } else { 
-    // For regular users: Load both active and archived citizens (no pagination)
     if (!empty($searchTerm)) {
-        // For non-admin users, search without pagination
+        
         $activeCitizens = search_citizens($searchTerm, $purokID);
-        $archivedCitizens = []; // or search archived if needed
+        $archivedCitizens = [];
         $citizens = array_merge($activeCitizens, $archivedCitizens);
     } else {
         $activeCitizens = get_citizens_by_purok($purokID);
