@@ -19,6 +19,6 @@ if ($image && !empty($image['profile_image'])) {
     echo $image['profile_image'];
 } else {
     header("Content-Type: image/png");
-    readfile("../../resources/defaultprofile.png"); // fixed path
+    readfile("../../resources/defaultprofile.png"); // alt image
 }
 ?>

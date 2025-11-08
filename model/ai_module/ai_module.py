@@ -21,11 +21,10 @@ def cluster_data():
         if not payload:
             return jsonify({"error": "No data provided"}), 400
 
-        # If the payload is a list, it's the purok data directly
-        # If it's a dict, extract the "data" field
+
         if isinstance(payload, list):
             data = payload
-            distance_threshold = 3.88  # default threshold
+            distance_threshold = 3.88  
         elif isinstance(payload, dict):
             data = payload.get("data", [])
             distance_threshold = float(payload.get("distance_threshold", 3.88))

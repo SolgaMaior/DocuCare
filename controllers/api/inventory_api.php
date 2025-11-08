@@ -1,9 +1,8 @@
 <?php
-// controllers/api/inventory_api.php
 header('Content-Type: application/json');
 session_start();
 
-require_once('../../model/databases/db_con.php');  // Your PDO connection (defines $db)
+require_once('../../model/databases/db_con.php');  
 require_once('../../model/databases/inventorydb.php');
 
 $action = $_POST['action'] ?? '';

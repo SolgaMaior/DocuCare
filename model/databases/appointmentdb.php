@@ -152,7 +152,7 @@ function check_pending_appointments($userID) {
     $statement->execute();
     $result = $statement->fetch(PDO::FETCH_ASSOC);
     $statement->closeCursor();
-    return $result; // will be array OR false
+    return $result; 
 }
 
 ?>

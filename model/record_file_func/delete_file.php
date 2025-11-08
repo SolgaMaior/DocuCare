@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    // Get POST data
+    
     $rawInput = file_get_contents('php://input');
     $input = json_decode($rawInput, true);
     
@@ -50,7 +50,7 @@ try {
         throw new Exception('Invalid file ID: ' . $fileID);
     }
     
-    // Check if $db exists (PDO)
+   
     if (!isset($db)) {
         throw new Exception('Database connection not available');
     }

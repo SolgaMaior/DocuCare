@@ -1,7 +1,5 @@
 <?php
-// index.php - Main Entry Point
 
-// Get the page parameter from URL
 $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 // Default page

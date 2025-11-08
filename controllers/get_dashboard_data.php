@@ -13,11 +13,11 @@ try {
     require_once(__DIR__ . '/../model/databases/map_data.php');
     require_once(__DIR__ . '/../model/databases/citizensdb.php');
 
-    // Fetch all data (map data uses cache automatically)
+    // Fetch all data 
     $data = [
         'stats' => get_dashboard_stats(),
         'pie' => get_pie_data(),
-        'map' => get_map_data_cached() // Uses cache!
+        'map' => get_map_data_cached() // Cache Map for faster loading
     ];
     
     echo json_encode($data);

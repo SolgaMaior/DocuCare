@@ -1,7 +1,7 @@
 <!-- Map Container -->
 <div id="map" style="height:50vh; width: 100%; border-radius: 10px; border: 3px solid #4fa7e6;"></div>
 
-<!-- Async Map Script -->
+
 <script defer>
 document.addEventListener("DOMContentLoaded", () => {
   // Initialize the map

@@ -20,7 +20,7 @@ require_once('authCheck.php'); // ensures CURRENT_USER_* are defined
 
   <ul class="space-y-2 font-medium">
 
-    <!-- Dashboard (Visible to everyone) -->
+
     <li>
       <a href="/DocuCare/index.php?page=dashboard" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-400 group">
         <svg class="w-5 h-5 ml-3" fill="white" viewBox="0 0 22 21">
@@ -45,9 +45,9 @@ require_once('authCheck.php'); // ensures CURRENT_USER_* are defined
       </a>
     </li>
   
-
+    <!-- Non-Admin Only -->
     <?php if (!CURRENT_USER_IS_ADMIN): ?>
-    <!-- Set Appointment (Visible to everyone) -->
+
     <li>
       <a href="/DocuCare/index.php?page=appointments" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-400 group">
         <svg class="w-5 h-5 ml-3" fill="white" viewBox="0 0 20 20">

@@ -1,9 +1,7 @@
 <?php
-// view/user_record.view.php
 
-require_once 'authCheck.php'; // this should define CURRENT_CITIZEN_ID
+require_once 'authCheck.php'; 
 
-// Get the logged-in citizen's data
 $citID = CURRENT_CITIZEN_ID ?? null;
 
 $citizen = [];
@@ -43,7 +41,6 @@ require('view/partials/sidebar.php');
   <div class="content">
     
     <div class="top-bar" id="top-controls">
-    <!-- leave empty -->
     </div>
 
  

@@ -5,7 +5,7 @@ require_once('db_con.php');
 function get_map_data_cached() {
     global $db;
     
-    // Check cache (expires after 5 minutes)
+    // Check cache 
     $cache_file = __DIR__ . '/../../cache/map_clusters.json';
     $cache_time = 300; // 5 minutes
     
@@ -16,7 +16,7 @@ function get_map_data_cached() {
         return isset($cached_data['clusters']) ? $cached_data['clusters'] : $cached_data;
     }
     
-    // Cache miss - fetch fresh data
+    // Cache miss 
     $result = get_fresh_cluster_data($db);
     
     // Save to cache
@@ -67,7 +67,7 @@ function get_fresh_cluster_data($db) {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10); // 10 second timeout
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         
         $response = curl_exec($ch);
@@ -105,7 +105,7 @@ function get_fresh_cluster_data($db) {
             return get_default_cluster_data();
         }
         
-        // The Flask API now returns: { clusters: [...], cluster_analysis: {...}, summary: {...} }
+     
         // Merge the original data with cluster assignments
         if (isset($cluster_result['clusters'])) {
             $merged = [];

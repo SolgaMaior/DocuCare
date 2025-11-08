@@ -19,7 +19,6 @@
     <div class="filter-bar">
       <form method="GET" action="index.php" class="filter-form" id="filterForm" style="display: flex; gap: 0.5rem; align-items: center;">
         <input type="hidden" name="page" value="<?= $_GET['page'] ?? 'inventory' ?>">
-        <!-- REMOVE the hardcoded paging input - we'll set it dynamically in JS -->
 
         <label for="category" style="font-weight: bold;">Filter:</label>
         <select name="category" id="category" onchange="this.form.submit()">
@@ -91,7 +90,6 @@
 
     <div class="card inventory-card">
       <div class="inventory-main">
-        <!-- Inventory Table -->
         <div class="inventory-table-wrap">
           <table class="inventory-table" id="inventoryTable">
             <thead>
@@ -158,7 +156,6 @@
           <?php endif; ?>
         </div>
 
-        <!-- Right column: statistics -->
         <aside class="inventory-stats">
           <div class="stats-card">
             <h4>Inventory Chart</h4>
@@ -238,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.body.appendChild(popup);
 
-  // Auto-hide after 8 seconds
+  // Auto-hide
   setTimeout(() => {
     popup.style.transition = "opacity 0.5s";
     popup.style.opacity = "0";

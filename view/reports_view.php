@@ -17,7 +17,6 @@
   <div class="content">
     
 
-    <!-- Report Controls -->
     <div class="report-controls no-print">
       <div class="filter-bar">
         <form method="GET" action="" class="filter-form">
@@ -49,7 +48,6 @@
       </div>
     </div>
 
-    <!-- Report Header -->
     <div class="report-header">
       <div class="report-title">
         <h1>Barangay Health Center Report</h1>
@@ -74,7 +72,6 @@
       </div>
     </div>
 
-    <!-- Report Content -->
     <div class="report-content">
       <?php if ($reportType === 'overview'): ?>
         <?php include __DIR__ . '/reports/overview_report.php'; ?>
@@ -87,7 +84,6 @@
       <?php endif; ?>
     </div>
 
-    <!-- Report Footer -->
     <div class="report-footer print-only">
       <div class="signature-section">
         <div class="signature-box">

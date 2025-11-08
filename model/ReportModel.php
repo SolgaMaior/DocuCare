@@ -3,9 +3,7 @@
 
 require_once('model/databases/db_con.php');
 
-/**
- * Get citizen statistics
- */
+
 function get_citizen_statistics($purokID = null, $startDate = null, $endDate = null) {
     global $db;
 
@@ -33,9 +31,7 @@ function get_citizen_statistics($purokID = null, $startDate = null, $endDate = n
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-/**
- * Get illness statistics
- */
+
 function get_illness_statistics($purokID = null, $startDate = null, $endDate = null) {
     global $db;
 
@@ -73,9 +69,7 @@ function get_illness_statistics($purokID = null, $startDate = null, $endDate = n
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-/**
- * Get appointment statistics
- */
+
 function get_appointment_statistics($startDate = null, $endDate = null) {
     global $db;
 
@@ -104,9 +98,7 @@ function get_appointment_statistics($startDate = null, $endDate = null) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-/**
- * Get inventory statistics
- */
+
 function get_inventory_statistics() {
     global $db;
 
@@ -124,18 +116,14 @@ function get_inventory_statistics() {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-/**
- * Get purok list
- */
+
 function get_puroks() {
     global $db;
     $stmt = $db->query("SELECT purokID, purokName FROM purok ORDER BY purokName ASC");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-/**
- * Get citizens by purok
- */
+
 function get_citizens_by_purok_report($purokID = null) {
     global $db;
 
@@ -160,9 +148,7 @@ function get_citizens_by_purok_report($purokID = null) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-/**
- * Get detailed citizen list for report
- */
+
 function get_citizens_list_report($purokID = null, $limit = 100) {
     global $db;
 
@@ -202,9 +188,6 @@ function get_citizens_list_report($purokID = null, $limit = 100) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-/**
- * Get illness trends over time
- */
 function get_illness_trends($months = 6) {
     global $db;
 
@@ -223,9 +206,7 @@ function get_illness_trends($months = 6) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-/**
- * Get low stock items
- */
+
 function get_low_stock_items() {
     global $db;
     $query = "SELECT name, stock, category, status

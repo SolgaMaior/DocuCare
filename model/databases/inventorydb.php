@@ -1,5 +1,4 @@
 <?php
-// model/Inventorydb.php
 
 function get_inventory($category = 'all', $search = '', $page = 1, $perPage = 15) {
     global $db;

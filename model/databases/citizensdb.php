@@ -57,7 +57,7 @@ function get_citizens_by_id($citID)
     return $citizen;
 }
 
-// In citizensdb.php
+
 function get_citizens_by_purok($purokID, $page = 1, $perPage = 15)
 {
     global $db;
@@ -91,7 +91,7 @@ function get_citizens_by_purok($purokID, $page = 1, $perPage = 15)
     return $result;
 }
 
-// Add function to get total count
+
 function get_citizens_count($purokID)
 {
     global $db;
@@ -131,8 +131,8 @@ function get_citizen_file_data($citID)
             'filename' => $file['file_name'],
             'mime' => $file['mime_type'],
             // new paths:
-            'path' => "model/record_file_func/display_file.php?id=$id", // for <img src="">
-            'view' => "index.php?page=download_file&id=$id"             // for <a href>
+            'path' => "model/record_file_func/display_file.php?id=$id", 
+            'view' => "index.php?page=download_file&id=$id"             
         ];
     }
     return $result;
@@ -265,13 +265,13 @@ function update_citizen($citID, $firstname, $middlename, $lastname, $purokID, $b
     $statement->closeCursor();
 }
 
-//OTHER FUNCTIONS
+
 
 function restore_citizen($citID)
 {
     global $db;
     
-    // Validate input
+
     if (!is_numeric($citID) || $citID <= 0) {
         return false;
     }
@@ -290,7 +290,7 @@ function archive_citizen($citID)
 {
     global $db;
     
-    // Validate input
+
     if (!is_numeric($citID) || $citID <= 0) {
         return false;
     }
@@ -309,7 +309,7 @@ function checkCitizenExists($firstname, $middlename, $lastname)
 {
     global $db;
     
-    // Validate inputs
+
     if (empty($firstname) || empty($lastname)) {
         return false;
     }
@@ -330,17 +330,17 @@ function search_citizens($searchTerm, $purokID = 'all', $page = 1, $perPage = 15
     global $db;
     $offset = ($page - 1) * $perPage;
     
-    // Prepare search pattern
+
     $searchPattern = "%{$searchTerm}%";
     
-    // Base query with search conditions
+
     $baseWhere = "(firstname LIKE :search OR 
                    middlename LIKE :search OR 
                    lastname LIKE :search OR 
                    contactnum LIKE :search OR 
                    occupation LIKE :search)";
     
-    // Add purok filter
+
     if ($purokID === 'all') {
         $whereClause = "$baseWhere AND isArchived = 0";
     } elseif ($purokID === 'archived') {
@@ -349,7 +349,7 @@ function search_citizens($searchTerm, $purokID = 'all', $page = 1, $perPage = 15
         $whereClause = "$baseWhere AND purokID = :purokID AND isArchived = 0";
     }
     
-    // Main query
+
     $query = "SELECT citID, firstname, middlename, lastname, birth_date, sex, 
               civilstatus, occupation, contactnum, purokID, isArchived,
               TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) as age

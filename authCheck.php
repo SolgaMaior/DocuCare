@@ -13,7 +13,7 @@ function validateAuthToken($token, $db) {
     }
 
     try {
-        // Split the token (userID:hash)
+        // Split the token
         $parts = explode(':', $token, 2);
         if (count($parts) !== 2) {
             return false;
@@ -35,7 +35,7 @@ function validateAuthToken($token, $db) {
         }
 
         // Verify the hash using secret key from config
-        $expectedHash = hash_hmac('sha256', (string)$userID, SECRET_KEY); //  cast to string again
+        $expectedHash = hash_hmac('sha256', (string)$userID, SECRET_KEY); 
 
         if (!hash_equals($expectedHash, $hash)) {
             return false;
@@ -53,7 +53,6 @@ $authToken = $_COOKIE[COOKIE_NAME] ?? null;
 $user = validateAuthToken($authToken, $db);
 
 if (!$user) {
-    // Clear invalid cookie
     setcookie(
         COOKIE_NAME,
         '',
@@ -66,7 +65,7 @@ if (!$user) {
     exit;
 }
 
-// Make user data available globally (similar to session)
+// Make user data available globally 
 define('CURRENT_USER_ID', $user['userID']);
 define('CURRENT_USER_EMAIL', $user['email']);
 define('CURRENT_CITIZEN_ID', $user['citID'] ?? null);

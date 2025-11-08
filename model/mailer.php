@@ -13,7 +13,7 @@ function send_appointment_status($id, $status, $email) {
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'docucareph@gmail.com';
-        $mail->Password = app_password; // App password, not Gmail login
+        $mail->Password = app_password; 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
@@ -47,7 +47,7 @@ function send_account_approval_status($email, $status) {
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'docucareph@gmail.com';
-        $mail->Password = app_password; // App password, not Gmail login
+        $mail->Password = app_password; 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 

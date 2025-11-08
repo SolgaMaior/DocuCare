@@ -269,7 +269,6 @@ require('view/partials/sidebar.php');
               </div>
           </div>
 
-          <!-- Your existing medical diagnosis form -->
           <div class="medical-files-section" style="margin-top: 1rem;">
               <h4>Medical Diagnosis</h4>
 
