@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     weight: 3,
     fillColor: 'blue',
     fillOpacity: 0.1
-  }).addTo(map).bindPopup("Barangay Pinanggalingan");
+  }).addTo(map).bindPopup("Barangay Santiago");
 
   const clusterColors = ['#ffeda0', '#feb24c', '#fd8d3c', '#fc4e2a', '#e31a1c'];
 
