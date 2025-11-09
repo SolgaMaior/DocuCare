@@ -14,7 +14,7 @@
     data: {
       labels: labels,
       datasets: [{
-        label: 'Citizens per Purok',
+        label: 'Purok Population',
         data: values,
         backgroundColor: [
           '#ff6384',

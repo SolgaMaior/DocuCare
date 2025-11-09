@@ -35,7 +35,6 @@
             
             <?php if (empty($pendingAccounts)): ?>
                 <div class="no-accounts">
-                    <div class="no-accounts-icon" style="color: #fff;">👥</div>
                     <h3>No Pending Accounts</h3>
                     <p>All accounts have been reviewed. New account requests will appear here.</p>
                 </div>
