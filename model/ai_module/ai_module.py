@@ -36,6 +36,7 @@ def cluster_data():
 
         df = pd.DataFrame(data)
         print(data)
+        
         # Normalize column names
         df.rename(columns=lambda x: x.lower().strip(), inplace=True)
         if "purokname" in df.columns:
@@ -94,8 +95,8 @@ def cluster_data():
         # Assign severity per purok
         max_cases = df["total_cases"].max()
         df["severity"] = df["total_cases"].apply(
-            lambda x: "high" if x > max_cases * 0.6
-            else "medium" if x > max_cases * 0.3
+            lambda x: "high" if x > 30
+            else "medium" if x > 15
             else "low"
         )
 
