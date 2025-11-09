@@ -57,10 +57,13 @@ require('view/partials/sidebar.php');
                             <td>
                                 <?php if ($app['status'] !== 'Approved' && $app['status'] !== 'Denied'): ?>
                                     <button style="padding-top: 5px; padding-bottom: 5px;" class="btn btn-outline" onclick="editAppointment(<?= $app['id'] ?>)">Edit</button>
+                                    <a href="index.php?page=appointments&delete_id=<?= $app['id'] ?>" onclick="return confirm('Delete this appointment?');" class="btn btn-outline">Delete</a>
                                 <?php else: ?>
                                     <button style="padding-top: 5px; padding-bottom: 5px; opacity: 0.5; cursor: not-allowed;" class="btn btn-outline" disabled title="Cannot edit approved appointment">Edit</button>
+                                    <a style="opacity: 0.5; cursor: not-allowed;" class="btn btn-outline" disabled title="Cannot delete approved appointment">Delete</a>
                                 <?php endif; ?>
-                                <a href="index.php?page=appointments&delete_id=<?= $app['id'] ?>" onclick="return confirm('Delete this appointment?');" class="btn btn-outline">Delete</a>
+
+                                
                             </td>
                         </tr>
                     <?php endforeach; ?>
