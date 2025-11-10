@@ -24,7 +24,7 @@ def cluster_data():
 
         if isinstance(payload, list):
             data = payload
-            distance_threshold = 3.88  
+            distance_threshold = 3.85  
         elif isinstance(payload, dict):
             data = payload.get("data", [])
             distance_threshold = float(payload.get("distance_threshold", 3.88))
