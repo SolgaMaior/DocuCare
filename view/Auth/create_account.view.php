@@ -37,12 +37,12 @@
         <div class="name-group">
           <div class="input-group half">
             <label for="firstname">First Name</label>
-            <input type="text" id="firstname" name="firstname" placeholder="Enter first name" required>
+            <input type="text" id="firstname" name="firstname" placeholder="Enter first name" required oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '');">
           </div>
 
           <div class="input-group half">
             <label for="lastname">Last Name</label>
-            <input type="text" id="lastname" name="lastname" placeholder="Enter last name" required>
+            <input type="text" id="lastname" name="lastname" placeholder="Enter last name" required oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '');">
           </div>
         </div>
 
