@@ -9,6 +9,15 @@ require_once('authCheck.php'); // ensures CURRENT_USER_* are defined
   #Title {
     font-family: 'Cormorant SC', serif;
   }
+  .sidebar a,
+  .sidebar a:hover,
+  .sidebar a:focus {
+    text-decoration: none;
+    font-size: 1rem;
+  }
+  .sidebar a span {
+    font-size: 1rem;
+  }
   </style>
 
 <div class="sidebar">
