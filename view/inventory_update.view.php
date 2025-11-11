@@ -85,7 +85,9 @@
                         <span class="stock-value" onclick="InventoryApp.enableEdit(this)"><?= $item['stock'] ?></span>
                         <input type="number" class="stock-input" min="0" value="<?= $item['stock'] ?>" 
                                onblur="InventoryApp.saveEdit(this)" 
-                               onkeydown="InventoryApp.handleKey(event, this)">
+                               onkeydown="InventoryApp.handleKey(event, this)"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                               
                         <input type="hidden" name="stocks[<?= $item['id'] ?>]" value="<?= $item['stock'] ?>">
                     </div>
                   </td>
@@ -162,13 +164,13 @@
     <span class="close" onclick="closeModal()">&times;</span>
     <h3>Add New Item</h3>
     <form method="POST">
-      <input type="text" name="new_item_name" placeholder="Item Name" required>
+      <input type="text" name="new_item_name" placeholder="Item Name" required oninput="this.value = this.value.replace(/[^A-Za-z ]/g, ''); ">
       <select name="new_item_category" required>
         <option value="">Select Category</option>
         <option value="medicine">Medicine</option>
         <option value="equipment">Equipment</option>
       </select>
-      <input type="number" name="new_item_stock" placeholder="Initial Stock" min="0" required>
+      <input type="number" name="new_item_stock" placeholder="Initial Stock" min="0" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
       <div style="display:flex; gap:10px; justify-content:center; margin-top:8px;">
         <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
         <button type="submit" style="background:#2e72a5; color:white;">Add Stocks</button>
