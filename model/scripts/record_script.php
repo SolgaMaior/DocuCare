@@ -600,6 +600,8 @@
   const citizenTableBody = document.getElementById('citizenTableBody');
   const searchBox = document.querySelector('.search-box');
 
+
+
   function performSearch(e) {
     e.preventDefault();
     const searchTerm = searchInput.value.trim();
@@ -621,7 +623,6 @@
       searchBox.querySelector('form').appendChild(clearBtn);
     }
 
-    // Continue with your fetch search...
     fetch(`model/ajax/search_citizens.php?search=${encodeURIComponent(searchTerm)}&purokID=${purokID}`)
       .then(response => response.json())
       .then(data => {
@@ -635,7 +636,20 @@
           return;
         }
 
-        // Build table rows (same as before)
+        // **FIX: Update citizensData array with search results**
+        // Clear existing data and populate with search results
+        citizensData.length = 0; // Clear array
+        data.citizens.forEach(citizen => {
+          citizensData.push(citizen);
+          
+          // Also update the photo, medical files, diagnoses, and illness records for each citizen
+          citizenPhotos[citizen.citID] = `model/record_file_func/display_image.php?citID=${citizen.citID}`;
+          
+          // Fetch additional data for each citizen
+          fetchCitizenData(citizen.citID);
+        });
+
+        // Build table rows
         let html = '';
         data.citizens.forEach(citizen => {
           html += `
@@ -671,6 +685,39 @@
         console.error('Search error:', error);
         citizenTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Search failed. Please try again.</td></tr>';
       });
+  }
+
+  // **NEW FUNCTION: Fetch additional citizen data (medical files, diagnoses, illness records)**
+  function fetchCitizenData(citID) {
+    // Fetch medical files
+    fetch(`model/ajax/get_citizen_files.php?citID=${citID}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.files) {
+          citizenMedicalFiles[citID] = data.files;
+        }
+      })
+      .catch(error => console.error('Error fetching files:', error));
+
+    // Fetch diagnoses
+    fetch(`model/ajax/get_citizen_diagnoses.php?citID=${citID}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.diagnoses) {
+          citizenDiagnoses[citID] = data.diagnoses;
+        }
+      })
+      .catch(error => console.error('Error fetching diagnoses:', error));
+
+    // Fetch illness records
+    fetch(`model/ajax/get_citizen_illness.php?citID=${citID}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.illness_records) {
+          citizenIllnessRecords[citID] = data.illness_records;
+        }
+      })
+      .catch(error => console.error('Error fetching illness records:', error));
   }
 
   if (searchForm) {
