@@ -225,21 +225,47 @@ function get_citizens_list_report($purokID = null, $limit = 100) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function get_illness_trends($months = 1) {
+// UPDATED: Now accepts purokID, startDate, and endDate parameters
+function get_illness_trends($purokID = null, $startDate = null, $endDate = null) {
     global $db;
 
+    // Build base query
     $query = "SELECT 
                 DATE_FORMAT(ir.record_date, '%Y-%m') as month,
                 i.illness_name,
                 COUNT(ir.recordID) as count
               FROM illness_records ir
               JOIN illnesses i ON ir.illness_id = i.illness_id
-              WHERE ir.record_date >= DATE_SUB(CURDATE(), INTERVAL ? MONTH)
-              GROUP BY DATE_FORMAT(ir.record_date, '%Y-%m'), i.illness_id, i.illness_name
-              ORDER BY month DESC, count DESC";
+              WHERE 1=1";
+
+    $params = [];
+
+    // Apply filters
+    if ($purokID) {
+        $query .= " AND ir.purokID = ?";
+        $params[] = $purokID;
+    }
+
+    if ($startDate) {
+        $query .= " AND ir.record_date >= ?";
+        $params[] = $startDate;
+    }
+
+    if ($endDate) {
+        $query .= " AND ir.record_date <= ?";
+        $params[] = $endDate;
+    }
+
+    // If no date filters provided, default to last 6 months
+    if (!$startDate && !$endDate) {
+        $query .= " AND ir.record_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)";
+    }
+
+    $query .= " GROUP BY DATE_FORMAT(ir.record_date, '%Y-%m'), i.illness_id, i.illness_name
+                ORDER BY month DESC, count DESC";
 
     $stmt = $db->prepare($query);
-    $stmt->execute([$months]);
+    $stmt->execute($params);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
