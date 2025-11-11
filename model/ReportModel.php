@@ -225,7 +225,7 @@ function get_citizens_list_report($purokID = null, $limit = 100) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function get_illness_trends($months = 6) {
+function get_illness_trends($months = 1) {
     global $db;
 
     $query = "SELECT 

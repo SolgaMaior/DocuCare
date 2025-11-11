@@ -203,44 +203,78 @@
         window.location.href = "index.php?page=inventory_update";
       });
     });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const lowStockItems = <?php echo json_encode(array_values($lowStockItems)); ?>;
+
+    if (!Array.isArray(lowStockItems) || lowStockItems.length === 0) {
+      sessionStorage.removeItem('lowStockSignature');
+      return;
+    }
+
+    const signature = lowStockItems.slice().sort().join('|');
+    const previousSignature = sessionStorage.getItem('lowStockSignature');
+
+
+    if (previousSignature !== signature) {
+      const popup = document.createElement("div");
+      Object.assign(popup.style, {
+        position: "fixed",
+        top: "20px",
+        right: "20px",
+        background: "#f44336",
+        color: "#fff",
+        padding: "15px",
+        borderRadius: "10px",
+        boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+        zIndex: "9999",
+        maxWidth: "350px",
+        fontFamily: "Arial, sans-serif",
+        lineHeight: "1.5",
+      });
+      popup.innerHTML = `
+        <strong>⚠ Low Stock Alert!</strong><br>
+        The following items are running low:<br>
+        <ul style="margin:10px 0 0 15px; padding:0;">
+          ${lowStockItems.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
+        </ul>
+        <button id="dismissPopup" style="
+          display:block;
+          margin-top:10px;
+          padding:6px 10px;
+          border-radius:6px;
+          border:none;
+          cursor:pointer;
+          background:rgba(255,255,255,0.15);
+          color:#fff;
+        ">Dismiss</button>
+      `;
+
+      document.body.appendChild(popup);
+
+      document.getElementById("dismissPopup").addEventListener("click", () => popup.remove());
+
+      setTimeout(() => {
+        popup.style.transition = "opacity 0.5s";
+        popup.style.opacity = "0";
+        setTimeout(() => popup.remove(), 500);
+      }, 8000);
+
+      //  Mark as shown for this session
+      sessionStorage.setItem('lowStockSignature', signature);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+  });
   </script>
 
-  <?php if (!empty($lowStockItems) && $showLowStockPopup): ?>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const lowStockList = <?php echo json_encode($lowStockItems); ?>;
-  const popup = document.createElement("div");
-  popup.style.position = "fixed";
-  popup.style.top = "20px";
-  popup.style.right = "20px";
-  popup.style.background = "#f44336";
-  popup.style.color = "#fff";
-  popup.style.padding = "15px";
-  popup.style.borderRadius = "10px";
-  popup.style.boxShadow = "0 4px 8px rgba(0,0,0,0.3)";
-  popup.style.zIndex = "9999";
-  popup.style.maxWidth = "350px";
-  popup.style.fontFamily = "Arial, sans-serif";
-  popup.style.lineHeight = "1.5";
-  popup.innerHTML = `
-    <strong>⚠ Low Stock Alert!</strong><br>
-    The following items are running low:<br>
-    <ul style="margin: 10px 0 0 15px; padding: 0;">
-      ${lowStockList.map(item => `<li>${item}</li>`).join('')}
-    </ul>
-  `;
-
-  document.body.appendChild(popup);
-
-  // Auto-hide
-  setTimeout(() => {
-    popup.style.transition = "opacity 0.5s";
-    popup.style.opacity = "0";
-    setTimeout(() => popup.remove(), 500);
-  }, 8000);
-});
-</script>
-<?php endif; ?>
 
 </body>
 </html>

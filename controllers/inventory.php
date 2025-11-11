@@ -32,19 +32,12 @@ try {
     $totalPages = 0;
     $stats = ['total_items' => 0, 'in_stock' => 0, 'low_stock' => 0, 'out_stock' => 0];
 }
-
-// --- Low-stock popup logic ---
-$lowStockItems = array_filter($inventory, fn($item) => $item['stock'] < 50 );
+$lowStockItems = array_filter($inventory, fn($item) => $item['stock'] < 50);
 $lowStockItems = array_column($lowStockItems, 'name');
 
-$previousLowStock = $_SESSION['previous_low_stock'] ?? [];
-$showLowStockPopup = (!empty($lowStockItems) && $lowStockItems !== $previousLowStock);
+$_SESSION['previous_low_stock'] = $lowStockItems;
 
-if ($showLowStockPopup) {
-    $_SESSION['previous_low_stock'] = $lowStockItems;
-} elseif (empty($lowStockItems)) {
-    unset($_SESSION['previous_low_stock']);
-}
+
 
 // --- Load view ---
 require('view/inventory.view.php');

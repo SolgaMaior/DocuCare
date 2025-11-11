@@ -192,7 +192,6 @@ document
     // Clear and close modal
     form.reset();
     closeModal();
-    showToast("Added to table. Click Update Stocks to save.", "success");
   });
 
 document.querySelector("#updateStocksBtn")?.addEventListener("click", () => {

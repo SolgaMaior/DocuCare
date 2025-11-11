@@ -59,7 +59,7 @@
 <!-- Illness Trends -->
 <?php if (!empty($illnessTrends)): ?>
 <div class="report-section">
-  <h2>Illness Trends (Last 6 Months)</h2>
+  <h2>Illness Trends</h2>
   
   <div class="chart-container">
     <canvas id="trendsChart"></canvas>

@@ -14,6 +14,9 @@
   text-align: center;
   
 }
+tr{
+  justify-content: center;
+}
 
 .approval-header h2 {
   margin: 0;
@@ -42,7 +45,7 @@
   color: #ffffff;
   font-weight: 600;
   padding: 16px 20px;
-  text-align: left;
+  text-align: center;
   border-bottom: 2px solid #e9ecef;
   font-size: 0.9rem;
   text-transform: uppercase;

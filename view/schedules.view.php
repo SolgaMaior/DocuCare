@@ -30,8 +30,8 @@ require('view/partials/sidebar.php');
             
             <label for="status" style="font-weight: bold;">Filter by Status:</label>
             <select name="status" id="status" style="height: 2.5rem;" onchange="this.form.submit()" class="btn btn-outline">
-                <option value="all" <?= (!isset($_GET['status']) || $_GET['status'] === 'all') ? 'selected' : '' ?>>All</option>
                 <option value="Pending" <?= (isset($_GET['status']) && $_GET['status'] === 'Pending') ? 'selected' : '' ?>>Pending</option>
+                <option value="all" <?= (!isset($_GET['status']) || $_GET['status'] === 'all') ? 'selected' : '' ?>>All</option>
                 <option value="Approved" <?= (isset($_GET['status']) && $_GET['status'] === 'Approved') ? 'selected' : '' ?>>Approved</option>
                 <option value="Denied" <?= (isset($_GET['status']) && $_GET['status'] === 'Denied') ? 'selected' : '' ?>>Denied</option>
             </select>
