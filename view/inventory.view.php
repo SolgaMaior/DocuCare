@@ -104,24 +104,21 @@
               <?php if (!empty($inventory)): ?>
                 <?php foreach ($inventory as $item): ?>
                   <?php
-                    $statusClass = '';
-                    $statusText = '';
-                    if ($item['stock'] > 10) {
-                      $statusClass = 'in-stock';
-                      $statusText = 'In-stock';
-                    } elseif ($item['stock'] > 0) {
-                      $statusClass = 'low-stock';
-                      $statusText = 'Low-stock';
-                    } else {
-                      $statusClass = 'out-stock';
-                      $statusText = 'Out of Stock';
-                    }
+                    // Map database status to CSS class
+                    $statusMap = [
+                      'in-stock' => ['class' => 'in-stock', 'text' => 'In-stock'],
+                      'low-stock' => ['class' => 'low-stock', 'text' => 'Low-stock'],
+                      'out-stock' => ['class' => 'out-stock', 'text' => 'Out of Stock'],
+                      'no-stock' => ['class' => 'out-stock', 'text' => 'Out of Stock']
+                    ];
+                    
+                    $status = $statusMap[$item['status']] ?? ['class' => 'in-stock', 'text' => 'In-stock'];
                   ?>
                   <tr>
                     <td class="col-name"><?= htmlspecialchars($item['name']) ?></td>
                     <td class="col-stock" style="text-align:center;"><?= htmlspecialchars($item['stock']) ?></td>
                     <td class="col-status" style="text-align:center;">
-                      <span class="status-pill <?= $statusClass ?>"><?= $statusText ?></span>
+                      <span class="status-pill <?= $status['class'] ?>"><?= $status['text'] ?></span>
                     </td>
                     <td class="col-category" style="text-align:center;">
                       <?= ucfirst(htmlspecialchars($item['category'])) ?>

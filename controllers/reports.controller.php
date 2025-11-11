@@ -33,6 +33,7 @@ switch ($reportType) {
         
     case 'health':
         $data['illnessStats'] = get_illness_statistics($purokID, $startDate, $endDate);
+        $data['illnessDetailedStats'] = get_illness_by_purok($purokID, $startDate, $endDate); // Add this
         $data['illnessTrends'] = get_illness_trends(6);
         $data['appointmentStats'] = get_appointment_statistics($startDate, $endDate);
         break;
@@ -47,6 +48,7 @@ switch ($reportType) {
         $data['citizenStats'] = get_citizen_statistics();
         $data['illnessStats'] = get_illness_statistics(null, $startDate, $endDate);
         $data['appointmentStats'] = get_appointment_statistics($startDate, $endDate);
+        $data['illnessDetailedStats'] = get_illness_by_purok($purokID, $startDate, $endDate); 
         $data['inventoryStats'] = get_inventory_statistics();
         $data['citizensByPurok'] = get_citizens_by_purok_report();
         break;

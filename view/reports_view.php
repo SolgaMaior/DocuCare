@@ -29,14 +29,17 @@
             <option value="inventory" <?= $reportType === 'inventory' ? 'selected' : '' ?>>Inventory Report</option>
           </select>
 
-          <select name="purok">
-            <option value="">All Puroks</option>
-            <?php foreach ($puroks as $purok): ?>
-              <option value="<?= $purok['purokID'] ?>" <?= $purokID == $purok['purokID'] ? 'selected' : '' ?>>
-                <?= htmlspecialchars($purok['purokName']) ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
+
+          <?php if ($reportType !== 'overview' && $reportType !== 'inventory'): ?>
+            <select name="purok">
+              <option value="">All Puroks</option>
+              <?php foreach ($puroks as $purok): ?>
+                <option value="<?= $purok['purokID'] ?>" <?= $purokID == $purok['purokID'] ? 'selected' : '' ?>>
+                  <?= htmlspecialchars($purok['purokName']) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          <?php endif; ?>
 
           <input type="date" name="start_date" value="<?= $startDate ?>" placeholder="Start Date">
           <input type="date" name="end_date" value="<?= $endDate ?>" placeholder="End Date">

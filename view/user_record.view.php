@@ -4,11 +4,11 @@ require_once 'authCheck.php';
 
 $citID = CURRENT_CITIZEN_ID ?? null;
 
-$citizen = [];
+$citizens = [];  // Change to plural
 if ($citID) {
     $data = get_citizens_by_id($citID);
     if ($data) {
-        $citizen[] = $data;
+        $citizens[] = $data;  // Now it matches what JavaScript expects
     }
 }
 ?>
@@ -58,8 +58,8 @@ require('view/partials/sidebar.php');
         </thead>
 
         <tbody id="citizenTableBody"> 
-          <?php if (!empty($citizen)): ?>
-            <?php foreach ($citizen as $citizen): ?>
+          <?php if (!empty($citizens)): ?>  <!-- Change to $citizens -->
+            <?php foreach ($citizens as $citizen): ?>
               <tr>
                 <td style="display: flex; justify-content: center; align-items: center;">
                   <img id="profileImage_"
@@ -72,7 +72,6 @@ require('view/partials/sidebar.php');
                 <td><?= htmlspecialchars($citizen['middlename'] ?? ''); ?></td>
                 <td><?= htmlspecialchars($citizen['purokID'] ?? ''); ?></td>
                 <td>
-                  <!-- Archive / Unarchive -->
                   <form method="POST" action="" style="display: inline;">
                     <input type="hidden" name="action"
                       value="<?= $citizen['isArchived'] == 1 ? 'unarchive_citizen' : 'archive_citizen' ?>">
@@ -80,7 +79,6 @@ require('view/partials/sidebar.php');
                     <button type="button" class="btn btn-outline" onclick="showEditForm(<?= $citizen['citID']; ?>)">Edit</button>
                     <button type="button" class="btn btn-outline" onclick="showViewForm(<?= $citizen['citID']; ?>)">View</button>
                   </form>
-
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -118,17 +116,17 @@ require('view/partials/sidebar.php');
 
             <div class="form-field">
               <label for="lastName">Last Name</label>
-              <input type="text" name="last_name" id="lastName" required autocomplete="off">
+              <input type="text" name="last_name" id="lastName" required autocomplete="off" pattern="[A-Za-z ]+" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, ''); ">
             </div>
 
             <div class="form-field">
               <label for="firstName">First Name</label>
-              <input type="text" name="first_name" id="firstName" required autocomplete="off">
+              <input type="text" name="first_name" id="firstName" required autocomplete="off" pattern="[A-Za-z ]+" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, ''); ">
             </div>
 
             <div class="form-field">
               <label for="middleName">Middle Name</label>
-              <input type="text" name="middle_name" id="middleName" autocomplete="off">
+              <input type="text" name="middle_name" id="middleName" autocomplete="off" pattern="[A-Za-z ]+" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, ''); ">
             </div>
 
             <div class="form-field">
@@ -147,7 +145,7 @@ require('view/partials/sidebar.php');
 
             <div class="form-field">
               <label for="ageDisplay">Age</label>
-              <input type="text" id="ageDisplay" readonly style="background-color: #f5f5f5; cursor: not-allowed;">
+              <input type="text" id="ageDisplay" readonly style="background-color: #f5f5f5; cursor: not-allowed;" pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
             </div>
 
             <div class="form-field">
@@ -163,12 +161,12 @@ require('view/partials/sidebar.php');
 
             <div class="form-field">
               <label for="occupation">Occupation</label>
-              <input type="text" name="occupation" id="occupation" required autocomplete="off">
+              <input type="text" name="occupation" id="occupation" required autocomplete="off" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, ''); ">>
             </div>
 
             <div class="form-field">
               <label for="contactnum">Contact Number</label>
-              <input type="tel" name="contactnum" id="contactnum" required autocomplete="off" pattern="[0-9]{10,11}">
+              <input type="tel" name="contactnum" id="contactnum" required autocomplete="off" pattern="[0-9]{10,11}" oninput="this.value = this.value.replace(/[^0-9]/g, '');" minlength="11"maxlength="11" placeholder="09*********">
             </div>
 
             <div class="form-field">

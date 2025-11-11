@@ -32,7 +32,44 @@ function get_citizen_statistics($purokID = null, $startDate = null, $endDate = n
 }
 
 
+// For top diseases overall (used in chart)
 function get_illness_statistics($purokID = null, $startDate = null, $endDate = null) {
+    global $db;
+
+    $query = "SELECT 
+                i.illness_name,
+                COUNT(ir.recordID) as case_count
+              FROM illness_records ir
+              JOIN illnesses i ON ir.illness_id = i.illness_id
+              WHERE 1=1";
+
+    $params = [];
+
+    if ($purokID) {
+        $query .= " AND ir.purokID = ?";
+        $params[] = $purokID;
+    }
+
+    if ($startDate) {
+        $query .= " AND ir.record_date >= ?";
+        $params[] = $startDate;
+    }
+
+    if ($endDate) {
+        $query .= " AND ir.record_date <= ?";
+        $params[] = $endDate;
+    }
+
+    $query .= " GROUP BY i.illness_id, i.illness_name
+                ORDER BY case_count DESC";
+
+    $stmt = $db->prepare($query);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+function get_illness_by_purok($purokID = null, $startDate = null, $endDate = null) {
     global $db;
 
     $query = "SELECT 

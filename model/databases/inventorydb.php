@@ -4,21 +4,17 @@ function get_inventory($category = 'all', $search = '', $page = 1, $perPage = 15
     global $db;
     $offset = ($page - 1) * $perPage;
     
-    $query = "SELECT * FROM inventory WHERE 1=1";
+    $query = "SELECT id, name, category, stock, status FROM inventory WHERE 1=1"; // Add status here
     $params = [];
-
     if ($category !== 'all') {
         $query .= " AND category = ?";
         $params[] = $category;
     }
-
     if (!empty($search)) {
         $query .= " AND name LIKE ?";
         $params[] = "%$search%";
     }
-
     $query .= " ORDER BY name ASC LIMIT $perPage OFFSET $offset";
-
     $stmt = $db->prepare($query);
     $stmt->execute($params);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);

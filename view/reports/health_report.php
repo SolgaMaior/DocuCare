@@ -40,8 +40,8 @@
       </tr>
     </thead>
     <tbody>
-      <?php if (!empty($illnessStats)): ?>
-        <?php foreach ($illnessStats as $index => $illness): ?>
+      <?php if (!empty($illnessDetailedStats)): ?>
+        <?php foreach ($illnessDetailedStats as $index => $illness): ?>
           <tr>
             <td><?= $index + 1 ?></td>
             <td><?= htmlspecialchars($illness['illness_name']) ?></td>
@@ -134,7 +134,7 @@ new Chart(illnessCtx, {
     indexAxis: 'y',
     plugins: {
       legend: { display: false },
-      title: { display: true, text: 'Top 8 Illnesses' }
+      title: { display: true, text: 'Top Illnesses' }
     },
     scales: {
       x: { beginAtZero: true }

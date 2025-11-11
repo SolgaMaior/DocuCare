@@ -120,9 +120,9 @@
       </tr>
     </thead>
     <tbody>
-      <?php if (!empty($illnessStats)): ?>
+      <?php if (!empty($illnessDetailedStats)): ?>
         <?php 
-        $topCases = array_slice($illnessStats, 0, 10);
+        $topCases = array_slice($illnessDetailedStats, 0, 10);
         foreach ($topCases as $illness): 
         ?>
           <tr>

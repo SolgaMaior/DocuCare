@@ -34,7 +34,7 @@ try {
 }
 
 // --- Low-stock popup logic ---
-$lowStockItems = array_filter($inventory, fn($item) => $item['stock'] < 10);
+$lowStockItems = array_filter($inventory, fn($item) => $item['stock'] < 50 );
 $lowStockItems = array_column($lowStockItems, 'name');
 
 $previousLowStock = $_SESSION['previous_low_stock'] ?? [];
