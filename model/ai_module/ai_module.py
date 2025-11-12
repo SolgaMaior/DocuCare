@@ -11,10 +11,7 @@ CORS(app)
 
 @app.route("/cluster", methods=["POST"])
 def cluster_data():
-    """
-    Perform hierarchical clustering on purok disease data (distance-based).
-    Returns cluster assignments, severity levels, and cluster-level disease trends.
-    """
+
     try:
         payload = request.get_json()
         print(payload)
